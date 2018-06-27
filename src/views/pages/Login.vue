@@ -45,15 +45,20 @@
         </div>
       </div>
     </div>
+    <generic-dialog></generic-dialog>
   </div>
 </template>
 
 <script>
 // import * as constants from '@/store/constants.json'
 // import axios from 'axios'
+import GenericDialog from '@/dialogs/GenericDialog'
 
 export default {
   name: 'Login',
+  components: {
+    'generic-dialog': GenericDialog
+  },
   data () {
     return {
       credentials: {
@@ -86,11 +91,15 @@ export default {
       console.log('Login => vm.$store.dispatch(login)')
       vm.$store.dispatch('login', {
         credentials: vm.credentials,
-        callback: (valid) => {
+        callback: (valid, isSupervisor) => {
           console.log('Login :: callback: status: ', status)
           console.log('Login :: callback: token: ' + vm.$store.getters.token)
           if (valid) {
-            vm.$router.push({name: 'Dashboard'})
+            if (isSupervisor) {
+              vm.$router.push({name: 'SuperDashboard'})
+            } else {
+              vm.$router.push({name: 'Dashboard'})
+            }
           } else {
             vm.$dialog.alert('Access Denied!')
           }

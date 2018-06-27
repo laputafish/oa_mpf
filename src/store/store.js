@@ -10,6 +10,7 @@ import meetings from './modules/meetings/meetings'
 import equipments from './modules/equipments/equipments'
 import fileManager from './modules/fileManager/fileManager'
 import dragging from './modules/dragging/dragging'
+import dialogs from './modules/dialogs/dialogs'
 
 import Cookies from 'js-cookie'
 
@@ -24,7 +25,8 @@ export const store = new Vuex.Store({
     meetings,
     equipments,
     fileManager,
-    dragging
+    dragging,
+    dialogs
   },
   plugins: [
     createPersistedState({

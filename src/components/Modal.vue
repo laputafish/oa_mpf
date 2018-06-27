@@ -16,7 +16,7 @@
             </slot>
           </div>
 
-          <div class="modal-footer">
+          <div class="modal-footer" v-show="showModalFooter">
             <slot name="footer">
               default footer
               <button class="modal-default-button" @click="$emit('close')">
@@ -30,6 +30,17 @@
     </div>
   </transition>
 </template>
+
+<script>
+export default {
+  props: {
+    showModalFooter: {
+      type: Boolean,
+      default: true
+    }
+  }
+}
+</script>
 
 <style>
   .modal-mask {

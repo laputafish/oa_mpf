@@ -11,7 +11,10 @@ import Vue from 'vue'
 const state = {
   ...data,
   token: null,
+  oaAuth: null,
+  email: '',
   user: null,
+  isSupervisor: false,
   activeMenu: '',
   publicFolder: null
 }
@@ -176,7 +179,7 @@ const mutations = {
   setUser (state, payload) {
     state.user = payload.user
     if (typeof payload.callback === 'function') {
-      payload.callback(true)
+      payload.callback(true, state.isSupervisor)
     }
   },
   setToken (state, token) {
@@ -241,8 +244,11 @@ const mutations = {
   },
   setPublicFolder (state, payload) {
     state.publicFolder = payload
-  }
+  },
 
+  setOAAuth (state, payload) {
+    state.oaAuth = payload
+  }
 }
 
 const actions = {
@@ -257,8 +263,8 @@ const actions = {
       Vue.axios.defaults.headers.common['Content-Type'] = 'application/json'
       Vue.axios.defaults.headers.common['Accept'] = 'application/json'
       console.log('store :: checkToken :: getters.token')
-      dispatch('fetchUser').then(function () {
-        console.log('store :: fetchUser :: user:', getters.user)
+      dispatch('fetchUserByToken').then(function () {
+        console.log('store :: fetchUserByToken :: user:', getters.user)
         if (getters.user) {
           console.log('store :: checkToken :: getters.user')
           result = true
@@ -364,27 +370,23 @@ const actions = {
     await dispatch('updateToken', null)
   },
 
-  async fetchUser ({ getters, state, commit, dispatch }, callback) {
-    console.log('store :: fetchUser')
+  async fetchUserByToken ({ getters, state, commit, dispatch }, callback) {
     // let token = getters.token
     let url = constants.apiUrl + '/user'
     // Try to get user profile
     try {
-      console.log('fetchUser :: axios.get("' + url + '")')
       await Vue.axios.get(url).then(function (response) {
-        console.log('fetchUser :: after get: response: ', response)
         dispatch(types.SET_USER, {
           user: response.data,
           callback: callback
         }).then(function () {
-          console.log('fetchUser >> dispatch(ser_user).then: user', getters.user)
+          console.log('fetchUserByToken >> dispatch(ser_user).then: user', getters.user)
         })
       })
     } catch (e) {
       // Reset store
       // await dispatch('reset')
     }
-    console.log('fetchUser ends')
   },
 
   async fetch ({ getters, state, commit, dispatch }) {
@@ -408,7 +410,75 @@ const actions = {
     }
   },
 
+  async loginOA ({commit, dispatch, getters, state}, {credentials, authorized, callback}) {
+    try {
+      let url = constants.apiUrl + '/auth/login'
+      let data = {
+        authorized: authorized,
+        email: credentials.email,
+        password: credentials.password,
+        teamId: null
+      }
+      await Vue.axios.post(url, data).then(function (response) {
+        if (response.data.status) {
+          commit('setOAAuth', {...response.data.result, email: credentials.email})
+          dispatch('fetchUser')
+        } else {
+          // Here is unreachable, failed login won't be handled here.
+          alert('cannot login')
+        }
+      }, function (error) {
+        console.log('login :: error: ', error)
+        // dispatch('login', {credentials, callback})
+      })
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        throw new Error('Bad credentials')
+      }
+      throw error
+    }
+  },
+
   async login ({ commit, dispatch, getters }, { credentials, callback }) {
+    console.log('store :: login starts :: credentials: ', credentials)
+    try {
+      let url = constants.url + '/oauth/token'
+      let data = {
+        username: credentials.email,
+        password: credentials.password,
+        grant_type: 'password',
+        client_id: constants.CLIENT_ID,
+        client_secret: constants.CLIENT_SECRET
+      }
+      // Send credentials to API
+      await Vue.axios.post(url, data).then(function (response) {
+        // let data = response.data
+        let authorized = true
+        // commit('setToken', data.access_token)
+        // dispatch('updateToken', data.access_token)
+        console.log('store :: login >> dispatch(fetchUserByToken)')
+        dispatch('loginOA', {credentials, authorized, callback})
+
+        // dispatch('fetchUserByToken', callback).then(function () {
+        //   console.log('store :; login :: commit >> fetchUserByToken :: user:', getters.user)
+        // })
+      }, function (error) {
+        console.log('login :: error: ', error)
+        let authorized = false
+        dispatch('loginOA', {credentials, authorized, callback})
+        // commit('showModal', {title: 'Warning', message: error.response.data.message}, {root: true})
+        // dispatch('loginOA', {credentials, callback})
+        // console.log('store :: login :: /oauth/token error: ', error)
+      })
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        throw new Error('Bad credentials')
+      }
+      throw error
+    }
+  },
+
+  async login0 ({ commit, dispatch, getters }, { credentials, callback }) {
     console.log('store :: login starts :: credentials: ', credentials)
     try {
       let url = constants.url + '/oauth/token'
@@ -426,11 +496,12 @@ const actions = {
         console.log('store :: login >> commit(setToken)')
         commit('setToken', data.access_token)
         // dispatch('updateToken', data.access_token)
-        console.log('store :: login >> dispatch(fetchUser)')
-        dispatch('fetchUser', callback).then(function () {
-          console.log('store :; login :: commit >> fetchUser :: user:', getters.user)
+        console.log('store :: login >> dispatch(fetchUserByToken)')
+        dispatch('fetchUserByToken', callback).then(function () {
+          console.log('store :; login :: commit >> fetchUserByToken :: user:', getters.user)
         })
       }, function (error) {
+        dispatch('loginOA', {credentials, callback})
         console.log('store :: login :: /oauth/token error: ', error)
       })
     } catch (error) {
