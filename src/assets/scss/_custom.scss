@@ -1,0 +1,121 @@
+// Here you can add other styles
+
+.modal.show.d-block {
+  margin-top: 50px;
+}
+//::-webkit-input-placeholder {
+//  color:    #777;
+//}
+//:-moz-placeholder {
+//  color:    #777;
+//}
+//::-moz-placeholder {
+//  color:    #777;
+//}
+//:-ms-input-placeholder {
+//  color:    #777;
+//}
+
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: rgba(128,128,128,.5) !important;
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: rgba(128,128,128,.5) !important;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: rgba(128,128,128,.5) !important;
+}
+
+.btn-xs {
+  padding: 0.1rem 0.05rem;
+  line-height: 1;
+  margin-top: -7px;
+}
+
+.text-black-10 {
+  color: rgba(0,0,0,.1)
+}
+
+.text-black-20 {
+  color: rgba(0,0,0,.2)
+}
+
+.no-text-decoration:hover {
+  text-decoration: none;
+}
+
+.btn.btn-default:disabled {
+  cursor: default;
+}
+
+.btn.btn-default,
+.btn.btn-default:hover:disabled {
+  background-color: rgba(221, 221, 221, .6);
+  color: rgba(0,0,0,.5);
+}
+
+.btn.btn-default:hover {
+  background-color: rgba(221, 221, 221, 1);
+  color: rgba(0,0,0,1);
+}
+
+ul.dropdown-menu {
+  padding: 5px;
+}
+
+ul.dropdown-menu > li > a {
+  width: 100%;
+  display: block;
+  color: black;
+  padding: 0 3px;
+}
+
+ul.dropdown-menu > li > a:hover {
+  background-color: lightgray;
+  color: white;
+  text-decoration: none;
+}
+
+.tooltip-inner {
+  background: rgba(0,0,0,.6) !important;
+}
+
+.modal-footer > div {
+  text-align: center;
+}
+
+.modal-footer button,
+.modal-header button {
+  min-width: 80px;
+
+}
+
+.halo-tree .node-title {
+  border: 1px transparent solid;
+}
+
+.modal-wrapper {
+  vertical-align: top !important;
+}
+
+.modal-container {
+  margin-top: 60px !important;
+}
+
+.dashboard-panel {
+  display: none;
+}
+
+.dashboard-panel.active-panel {
+  display: flex;
+}
+
+@media(min-width: 576px) {
+  .dashboard-panel {
+    display: flex;
+  }
+}
