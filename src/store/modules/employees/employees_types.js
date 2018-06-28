@@ -1,0 +1,4 @@
+// export const GET_EQUIPMENTS = 'GET_EQUIPMENTS'
+// export const HOLD_SCANNER = 'HOLD_SCANNER'
+// export const RELEASE_SCANNER = 'RELEASE_SCANNER'
+export const FETCH_GROUPS = 'FETCH_GROUPS'

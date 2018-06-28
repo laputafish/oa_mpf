@@ -3,7 +3,7 @@
     <div slot="header" class="text-left header flex-grow-1" style="position:relative;"
       v-show="modalTitle">
       <button class="btn btn-primary pull-right"
-              @click="onCloseClicked">Close
+              @click="onCloseClicked">{{ $t('buttons.close') }}
       </button>
       <h3 class="dialog-title d-inline">
         {{ modalTitle }}
@@ -14,7 +14,7 @@
     </div>
     <div slot="footer">
       <button class="btn btn-primary"
-              @click="onCloseClicked">Close
+              @click="onCloseClicked">{{ $t('buttons.close') }}
       </button>
     </div>
   </yoov-modal>

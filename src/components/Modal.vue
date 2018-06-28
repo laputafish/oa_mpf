@@ -72,7 +72,7 @@ export default {
   }
 
   .modal-header {
-    padding:0.5rem;
+    padding:1rem 1rem 0.5rem 1rem;
   }
   .modal-header h3 {
     /*margin-top: 0;*/

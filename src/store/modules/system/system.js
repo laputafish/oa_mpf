@@ -11,7 +11,13 @@ import Vue from 'vue'
 const state = {
   ...data,
   token: null,
+
   oaAuth: null,
+  // tokenType: "JWT"
+  // accessToken: "ey....cA",
+  // expiresIn: 30
+  // refreshToken: "21..aH"
+
   email: '',
   user: null,
   isSupervisor: false,
@@ -422,10 +428,13 @@ const actions = {
       await Vue.axios.post(url, data).then(function (response) {
         if (response.data.status) {
           commit('setOAAuth', {...response.data.result, email: credentials.email})
-          dispatch('fetchUser')
+          commit('setToken', response.data.token)
+          dispatch('fetchUserByToken', callback)
         } else {
-          // Here is unreachable, failed login won't be handled here.
-          alert('cannot login')
+          commit('showModal', {
+            title: app.$t('general.warning'),
+            message: app.$t('messages.access_denied')
+          }, {root: true})
         }
       }, function (error) {
         console.log('login :: error: ', error)

@@ -58,6 +58,13 @@
   color: rgba(0,0,0,.5);
 }
 
+.btn.btn-width-50 {
+  width: 50px;
+}
+.btn.btn-width-80 {
+  width: 80px;
+}
+
 .btn.btn-default:hover {
   background-color: rgba(221, 221, 221, 1);
   color: rgba(0,0,0,1);
@@ -118,4 +125,23 @@ ul.dropdown-menu > li > a:hover {
   .dashboard-panel {
     display: flex;
   }
+}
+
+.card.bg-primary {
+  border-color: #28ADA7 !important;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #28ada7 !important;
+  border-color: #28ada7 !important;
+}
+
+.btn-primary:hover {
+  background-color: #1E847F !important;
+  border-color: #1d7b77 !important;
+}
+
+.bg-primary {
+  background-color: #28ada7 !important;
 }

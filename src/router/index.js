@@ -84,7 +84,8 @@ import HeaderPage2 from '@/views/headerPages/HeaderPage2'
 import HeaderPage3 from '@/views/headerPages/HeaderPage3'
 
 // OA
-import MpfManager from '@/views/oa/MpfManager/MpfManager'
+import MpfManagement from '@/views/oa/mpfManagement/MpfManagement'
+import TaxForms from '@/views/oa/taxForms/TaxForms'
 
 // import jQuery from 'jquery'
 // window.jQuery = jQuery
@@ -100,23 +101,28 @@ export default new Router({
     {
       path: '/',
       redirect: '/mpf_manager',
-      name: 'Home',
+      name: 'general.home',
       component: Full,
       children: [
         {
           path: 'profile',
-          name: 'Profile',
+          name: 'general.profile',
           component: OAProfile
         },
         {
           path: 'dashboard',
-          name: 'Dashboard',
+          name: 'general.dashboard',
           component: OADashboard
         },
         {
-          path: 'mpf_manager',
-          name: 'MPF Manager',
-          component: MpfManager
+          path: 'mpf_management',
+          name: 'mpf.mpf_management',
+          component: MpfManagement
+        },
+        {
+          path: 'tax_forms',
+          name: 'tax.tax_forms',
+          component: TaxForms
         },
         {
           path: '/app',
@@ -164,7 +170,7 @@ export default new Router({
 
         {
           path: 'folders/:folderId?/:folderName?',
-          name: 'File Manager',
+          name: 'file.file_manager',
           component: FileManager
         },
         // {

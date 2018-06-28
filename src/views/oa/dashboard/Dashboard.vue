@@ -13,7 +13,6 @@
       </button>
     </div>
     <div class="d-flex flex-column-reverse flex-sm-row">
-      <h4>Hello {{ $t('lang') }}</h4>
       <yoov-room-booking class="dashboard-panel"
                          :class="{'active-panel':activePanel==='roomBooking'}"></yoov-room-booking>
       <yoov-scanner-box class="dashboard-panel"

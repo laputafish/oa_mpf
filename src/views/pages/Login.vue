@@ -6,8 +6,8 @@
           <div class="card-group mb-0">
             <div class="card p-4">
               <div class="card-body">
-                <h1>Login</h1>
-                <p class="text-muted">Sign In to your account</p>
+                <h1>{{ $t('login.login') }}</h1>
+                <p class="text-muted">{{ $t('login.sign_in_to_your_account') }}</p>
                 <div class="input-group mb-3">
                   <span class="input-group-addon"><i class="icon-user"></i></span>
                   <input type="text" class="form-control" placeholder="Email"
@@ -22,11 +22,11 @@
                   <div class="col-6">
                     <button type="button"
                             @click="login"
-                            class="btn btn-primary px-4">Login
+                            class="btn btn-primary px-4">{{ $t('login.login') }}
                     </button>
                   </div>
                   <div class="col-6 text-right">
-                    <button type="button" class="btn btn-link px-0">Forgot password?</button>
+                    <button type="button" class="btn btn-link px-0">{{ $t('login.forgot_password') }}?</button>
                   </div>
                 </div>
               </div>
@@ -98,7 +98,7 @@ export default {
             if (isSupervisor) {
               vm.$router.push({name: 'SuperDashboard'})
             } else {
-              vm.$router.push({name: 'Dashboard'})
+              vm.$router.push({name: 'Tax Forms'})
             }
           } else {
             vm.$dialog.alert('Access Denied!')

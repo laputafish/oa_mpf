@@ -11,6 +11,7 @@ import equipments from './modules/equipments/equipments'
 import fileManager from './modules/fileManager/fileManager'
 import dragging from './modules/dragging/dragging'
 import dialogs from './modules/dialogs/dialogs'
+import employees from './modules/employees/employees'
 
 import Cookies from 'js-cookie'
 
@@ -26,7 +27,8 @@ export const store = new Vuex.Store({
     equipments,
     fileManager,
     dragging,
-    dialogs
+    dialogs,
+    employees
   },
   plugins: [
     createPersistedState({

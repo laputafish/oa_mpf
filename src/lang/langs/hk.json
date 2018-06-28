@@ -1,3 +1,37 @@
 {
-  "lang": "hk"
+  "lang": "hk",
+  "general": {
+    "all_staff": "所有員工",
+    "warning": "警告",
+    "employees": "員工",
+    "dashboard": "儀表板",
+    "profile": "我的檔案",
+    "home": "首頁"
+  },
+  "messages": {
+    "access_denied": "沒有相關權限!"
+  },
+  "buttons": {
+    "close": "關閉"
+  },
+  "login": {
+    "login": "登入",
+    "sign_in_to_your_account": "登入你的帳戶",
+    "forgot_password": "忘記密碼"
+  },
+  "tax": {
+    "tax_forms": "報稅表"
+  },
+  "mpf": {
+    "mpf_management": "MPF 管理"
+  },
+  "folder": {
+    "personal_folder": "個人資料匣",
+    "public_folder": "共用資料匣",
+    "shared_folder": "分享資料匣"
+  },
+  "file": {
+    "file_manager": "檔案管理員"
+  }
+
 }

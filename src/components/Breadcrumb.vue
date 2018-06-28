@@ -26,7 +26,7 @@ export default {
         item = item.meta && item.meta.label
       }
       if (item.name) {
-        item = item.name
+        item = this.$t(item.name)
       }
       return item
     }
