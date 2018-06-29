@@ -38,7 +38,7 @@ export default {
             vm.$store.dispatch('SET_USER', {user: null})
           ]
           Promise.all(promises).then(function (response) {
-            vm.$router.push('/pages/login')
+            vm.$router.push('/login')
           })
           break
       }

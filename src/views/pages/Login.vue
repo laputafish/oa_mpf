@@ -46,6 +46,11 @@
       </div>
     </div>
     <generic-dialog></generic-dialog>
+    <team-selection-dialog
+      v-show="showingTeamSelectionDialog"
+      :teams="teams"
+      @close="showingTeamSelectionDialog=false"
+      @onTeamSelected="onTeamSelectedHandler"></team-selection-dialog>
   </div>
 </template>
 
@@ -53,17 +58,20 @@
 // import * as constants from '@/store/constants.json'
 // import axios from 'axios'
 import GenericDialog from '@/dialogs/GenericDialog'
+import TeamSelectionDialog from '@/dialogs/TeamSelectionDialog'
 
 export default {
   name: 'Login',
   components: {
-    'generic-dialog': GenericDialog
+    'generic-dialog': GenericDialog,
+    'team-selection-dialog': TeamSelectionDialog
   },
   data () {
     return {
+      showingTeamSelectionDialog: false,
       credentials: {
-        email: 'yoovtest1@gmail.com',
-        password: 'yoovyoov'
+        email: 'domaccount@gmail.com',
+        password: 'yoovYoov1_'
       }
     }
   },
@@ -77,35 +85,69 @@ export default {
     },
     user () {
       return this.$store.getters.user
+    },
+    teams () {
+      return this.$store.getters.teams
     }
   },
   mounted () {
+    // this.$store.dispatch('FETCH_TEAMS')
   },
   methods: {
+    onTeamSelectedHandler (team) {
+      let vm = this
+      vm.$cookie.set('teamId', team.id)
+      vm.$store.dispatch('SET_ACTIVE_TEAM', team).then(function () {
+        vm.$router.push({name: 'tax.tax_forms'})
+      })
+    },
     setToken (value) {
       console.log('setToken :: value:', value)
       this.$store.dispatch('SET_TOKEN', value)
     },
     login () {
       let vm = this
-      console.log('Login => vm.$store.dispatch(login)')
+      // console.log('Login => vm.$store.dispatch(login)')
       vm.$store.dispatch('login', {
         credentials: vm.credentials,
         callback: (valid, isSupervisor) => {
-          console.log('Login :: callback: status: ', status)
-          console.log('Login :: callback: token: ' + vm.$store.getters.token)
+          // console.log('Login :: callback: status: ', status)
+          // console.log('Login :: callback: token: ' + vm.$store.getters.token)
+          // console.log('Login :: $cookie.get(teamId): ' + vm.$cookie.get('teamId'))
           if (valid) {
             if (isSupervisor) {
               vm.$router.push({name: 'SuperDashboard'})
             } else {
-              vm.$router.push({name: 'Tax Forms'})
+              let teamId = vm.$cookie.get('teamId')
+              if (teamId) {
+                vm.$store.dispatch('FETCH_TEAMS').then(function () {
+                  let selectedTeam = null
+                  let loopTeam = null
+                  console.log('after dispatch(FETCH_TEAMS) :: teamId = ' + teamId)
+                  console.log('after dispatch(FETCH_TEAMS) :: teams: ', vm.teams)
+                  for (loopTeam in vm.teams) {
+                    if (loopTeam.id === teamId) {
+                      selectedTeam = loopTeam
+                      vm.$store.dispatch('SET_ACTIVE_TEAM', loopTeam)
+                      break
+                    }
+                  }
+                  if (selectedTeam === null) {
+                    vm.showingTeamSelectionDialog = true
+                  } else {
+                    vm.$router.push({name: 'tax.tax_forms'})
+                  }
+                })
+              } else {
+                vm.$router.push({name: 'team.team_selection'})
+              }
             }
           } else {
             vm.$dialog.alert('Access Denied!')
           }
         }
       })
-      console.log('after dispatch(login)')
+      // console.log('after dispatch(login)')
       // let url = constants.apiUrl + '/auth'
       // axios.post(url, vm.credentials).then(function (response) {
       //   let data = response.data

@@ -9,6 +9,8 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import $ from 'jquery'
 import Vue from 'vue'
+// import VueRouter from 'vue-router'
+
 import VueMq from 'vue-mq'
 import Vue2TouchEvents from 'vue2-touch-events'
 import VeeValidate from 'vee-validate'
@@ -27,6 +29,7 @@ import Datatable from 'vue2-datatable-component'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import Moment from 'vue-moment'
+import VueCookie from 'vue-cookie'
 
 // import customLocale from 'vue2-datatable-component/locale/custom'
 
@@ -40,6 +43,7 @@ import 'bootstrap'
 import BootstrapVue from 'bootstrap-vue/dist/bootstrap-vue.esm'
 // import {Carousel} from 'bootstrap-vue/es/components'
 import App from './App'
+// import router from './router'
 import router from './router'
 import VTooltip from 'v-tooltip'
 // import jQuery from 'jquery'
@@ -75,6 +79,7 @@ Vue.use(VModal, {dynamic: true})
 Vue.use(VuejsDialog)
 Vue.use(BootstrapVue)
 Vue.use(Moment)
+Vue.use(VueCookie)
 
 // Vue.use(datePicker)
 // Vue.directive('tooltip', VTooltip)
@@ -116,6 +121,37 @@ Vue.filter('formatSize', function (size) {
 // }))
 
 /* eslint-disable no-new */
+// router.beforeEnter = (to, from, next) => {
+//   alert('beforeEnter')
+//   if (to.name !== 'general.login') {
+//     console.log('beforeEnter this: ', this.app)
+//   } else {
+//     next()
+//   }
+// }
+
+// Vue.use(VueRouter)
+//
+// let router = new VueRouter({
+//   mode: 'history',
+//   linkActiveClass: 'open active',
+//   beforeEach: (to, from, next) => {
+//     alert('beforeach')
+//   },
+//   scrollBehavior: () => ({y: 0}),
+//   routes: [{
+//     beforeEnter: (to, from, next) => {
+//       if (to.name !== 'general.login') {
+//         console.log('beforeEnter this.app: ', this.app)
+//         next()
+//       } else {
+//         next()
+//       }
+//     },
+//     ...routes
+//   }]
+// })
+
 export const app = new Vue({
   el: '#app',
   router,

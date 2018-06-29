@@ -1,6 +1,5 @@
-// import {app} from '@/main'
 import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Router from 'vue-router'
 
 // Containers
 import Full from '@/containers/Full'
@@ -87,26 +86,25 @@ import HeaderPage3 from '@/views/headerPages/HeaderPage3'
 // OA
 import MpfManagement from '@/views/oa/mpfManagement/MpfManagement'
 import TaxForms from '@/views/oa/taxForms/TaxForms'
-import TeamSelection from '@/views/oa/teamSelection/TeamSelection'
 
 // import jQuery from 'jquery'
 // window.jQuery = jQuery
 // window.$ = jQuery
 
-Vue.use(VueRouter)
+Vue.use(Router)
 
-export default new VueRouter({
+export default new Router({
   mode: 'history',
   linkActiveClass: 'open active',
   scrollBehavior: () => ({ y: 0 }),
+  // beforeRouteEnter: (to, from, next) => {
+  //   console.log('beforeEach :: to: ', to)
+  //   alert('beforeEach')
+  // },
   routes: [
     {
       path: '/',
       redirect: '/tax_forms',
-      // beforeEnter: (to, from, next) => {
-      //   alert('beforeEach')
-      //   console.log('app: ', app)
-      // },
       name: 'general.home',
       component: Full,
       children: [
@@ -128,6 +126,9 @@ export default new VueRouter({
         {
           path: 'tax_forms',
           name: 'tax.tax_forms',
+          // beforeEnter: (to, from, next) => {
+          //   next()
+          // },
           component: TaxForms
         },
         {
@@ -451,13 +452,8 @@ export default new VueRouter({
       // ]
     },
     {
-      path: '/team_selection',
-      name: 'team.team_selection',
-      component: TeamSelection
-    },
-    {
       path: '/login',
-      name: 'Login',
+      name: 'general.login',
       component: Login
     },
     {
@@ -478,11 +474,11 @@ export default new VueRouter({
           name: 'Page500',
           component: Page500
         },
-        // {
-        //   path: 'login',
-        //   name: 'PagesLogin',
-        //   component: Login
-        // },
+        {
+          path: 'login',
+          name: 'PagesLogin',
+          component: Login
+        },
         {
           path: 'register',
           name: 'Register',

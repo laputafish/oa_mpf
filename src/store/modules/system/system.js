@@ -1,12 +1,11 @@
+import Vue from 'vue'
 import {app} from '@/main'
+import * as constants from '../../constants'
 
 import Cookie from 'cookie'
 import Cookies from 'js-cookie'
 import * as types from './system_types'
 import data from '../data.json'
-import * as constants from '../../constants'
-import axios from 'axios'
-import Vue from 'vue'
 
 const state = {
   ...data,
@@ -40,6 +39,9 @@ const transformFolders = folders => {
 const getters = {
   token (state) {
     return state.token
+  },
+  oaToken (state) {
+    return state.oaAuth.accessToken
   },
   loggedIn (state) {
     console.log('store :: getters.loggedIn')
@@ -253,7 +255,9 @@ const mutations = {
   },
 
   setOAAuth (state, payload) {
+    console.log('setOAAuth: oaAuth: ', JSON.stringify(payload))
     state.oaAuth = payload
+    console.log('setOAAuth: oaAuth: ', state.oaAuth)
   }
 }
 
@@ -386,7 +390,7 @@ const actions = {
           user: response.data,
           callback: callback
         }).then(function () {
-          console.log('fetchUserByToken >> dispatch(ser_user).then: user', getters.user)
+          console.log('fetchUserByToken >> dispatch(SET_USER).then: user', getters.user)
         })
       })
     } catch (e) {
@@ -427,7 +431,8 @@ const actions = {
       }
       await Vue.axios.post(url, data).then(function (response) {
         if (response.data.status) {
-          commit('setOAAuth', {...response.data.result, email: credentials.email})
+          console.log('loginOA :: post :: response.data.oaAuth: ', response.data.result)
+          commit('setOAAuth', {...response.data.oaAuth, email: credentials.email})
           commit('setToken', response.data.token)
           dispatch('fetchUserByToken', callback)
         } else {
@@ -540,7 +545,7 @@ const actions = {
     let data = {
       type: 'public'
     }
-    await axios.get(apiUrl, {params: data}).then(function (response) {
+    await Vue.axios.get(apiUrl, {params: data}).then(function (response) {
       commit('setPublicFolder', response.data)
     })
   },

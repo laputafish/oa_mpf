@@ -2,7 +2,8 @@
   <transition name="modal">
     <div class="modal-mask">
       <div class="modal-wrapper">
-        <div class="modal-container">
+        <div class="modal-container"
+             :class="modalSizeClass">
 
           <div class="modal-header">
             <slot name="header">
@@ -34,6 +35,10 @@
 <script>
 export default {
   props: {
+    modalSizeClass: {
+      type: String,
+      default: 'modal-default-size'
+    },
     showModalFooter: {
       type: Boolean,
       default: true
@@ -60,8 +65,11 @@ export default {
     vertical-align: middle;
   }
 
-  .modal-container {
+  .modal-default-size {
     width: 480px;
+  }
+
+  .modal-container {
     margin: 0px auto;
     padding: 0;
     background-color: #fff;

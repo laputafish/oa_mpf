@@ -12,7 +12,9 @@
     "access_denied": "沒有相關權限!"
   },
   "buttons": {
-    "close": "關閉"
+    "close": "關閉",
+    "ok": "確定",
+    "cancel": "取消"
   },
   "login": {
     "login": "登入",
@@ -32,6 +34,9 @@
   },
   "file": {
     "file_manager": "檔案管理員"
+  },
+  "team": {
+    "team_selection": "選擇團隊"
   }
 
 }
