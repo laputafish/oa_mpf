@@ -110,11 +110,14 @@ export default {
       let vm = this
       vm.$cookie.set('teamId', team.id)
       vm.$store.dispatch('SET_ACTIVE_TEAM', team).then(function () {
-        vm.$store.dispatch('FETCH_SELF')
-        vm.$store.dispatch('FETCH_EMPLOYEES')
-        vm.$store.dispatch('FETCH_GROUPS')
-
-        vm.$router.push({name: 'tax.tax_forms'})
+        let promises = [
+          vm.$store.dispatch('FETCH_SELF'),
+          vm.$store.dispatch('FETCH_EMPLOYEES'),
+          vm.$store.dispatch('FETCH_GROUPS')
+        ]
+        Promise.all(promises).then(function () {
+          vm.$router.push({name: 'tax.tax_forms'})
+        })
       })
     },
     setToken (value) {

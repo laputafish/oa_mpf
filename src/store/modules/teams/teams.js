@@ -1,5 +1,4 @@
 import Vue from 'vue'
-// import {app} from '@/main'
 import * as constants from '../../constants'
 import * as types from './teams_types'
 
@@ -33,19 +32,9 @@ const mutations = {
 }
 
 const actions = {
-  async [types.FETCH_TEAMS] ({rootState, state, commit, dispatch, getters}) {
-    let url = constants.oaApiUrl + '/teams?include=currency'
-
-    // Vue.axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
-    // Vue.axios.defaults.headers.common['Content-Type'] = 'application/json'
-    // Vue.axios.defaults.headers.common['Accept'] = 'application/json'
-    let config = {
-      headers: {
-        'Authorization': rootState.system.oaAuth.tokenType + ' ' + rootState.system.oaAuth.accessToken,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json, text/plain, */*'
-      }
-    }
+  async [types.FETCH_TEAMS] ({rootGetters, state, commit}) {
+    let url = constants.oaApiUrl + '/t/teams?include=currency'
+    let config = rootGetters.oaApiHeaderConfig
     await Vue.axios.get(url, config).then(response => {
       if (response.data.status) {
         console.log('FETCH_TEAMS :: response.data.result : ', response.data.result)

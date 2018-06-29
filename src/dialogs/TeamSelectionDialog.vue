@@ -81,6 +81,7 @@ export default {
   .team-list ul li {
     height: 40px;
     padding: 2px 3px;
+    cursor: pointer;
   }
 
   .team-list ul li .company-name-container small {

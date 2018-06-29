@@ -53,6 +53,7 @@ export default {
     display: inline-block;
     cursor: pointer;
     color: darkgray;
+    white-space: nowrap;
     background-color: transparent;
   }
   .tax-group.tax-group-selected {

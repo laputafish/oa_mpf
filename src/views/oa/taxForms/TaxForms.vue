@@ -43,7 +43,13 @@
             <input class="form-control ng-untouched ng-pristine ng-valid" type="text" placeholder="搜索員工">
           </div>
           <div class="flex-grow-1">
-
+            <div class="employee-item"
+                 v-for="employee in employees"
+                 :key="employee.id">
+              <img :src="getAvatar(employee)"/>
+              {{ employee.displayName }}
+            </div>
+            {{ employees.length }}
           </div>
         </div>
       </div>
@@ -57,6 +63,7 @@
 <script>
 import GroupHierarchicalItem from '@/views/components/GroupHierarchicalItem'
 import YoovRadioButtons from '@/components/YoovRadioButtons'
+import constants from '@/store/constants.json'
 
 export default {
   components: {
@@ -87,13 +94,21 @@ export default {
   },
   computed: {
     groups () {
-      return this.$store.getters.groups
+      return this.$store.getters.groupTree
+    },
+    employees () {
+      return this.$store.getters.employees
+    }
+  },
+  watch: {
+    employees: function (val) {
+
     }
   },
   mounted () {
     let vm = this
     this.$store.dispatch('FETCH_GROUPS').then(function () {
-      console.log('mounted :: FETCH_GROUPS: ', vm.groups)
+      vm.selectedGroup = vm.groups[0]
     })
     // let vm = this
     // vm.groups = [
@@ -119,6 +134,14 @@ export default {
     // vm.selectedGroup = vm.groups[0]
   },
   methods: {
+    getAvatar (employee) {
+      // let vm = this
+      if (employee.avatar) {
+        return employee.avatarUrl
+      } else {
+        return constants.oaApiHost + employee.avatarUrl
+      }
+    },
     onGroupSelectedHandler (group) {
       console.log('TaxForms :: onGroupSelectedHandler :: group: ', group)
       this.selectedGroup = group
@@ -176,5 +199,11 @@ export default {
     left: 0;
     right: 0;
     bottom: -17px;
+  }
+
+  .employee-item {
+    width: 240px;
+    height: 160px;
+    display: inline-block;
   }
 </style>

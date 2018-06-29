@@ -13,19 +13,25 @@ const getters = {
   },
   activeTeam: (state) => {
     return state.activeTeam
+  },
+  activeTeamId: (state) => {
+    return state.activeTeam.id
   }
 }
 
 const mutations = {
   setActiveTeam: (state, payload) => {
     state.activeTeam = payload
+  },
+  setProfile: (state, payload) => {
+    state.profile = payload
   }
 }
 
 const actions = {
-  async [types.FETCH_SELF] ({rootState, state, commit, dispatch, getters}) {
-    let url = constants.oaApiUrl + '/users/self'
-    let headerConfig = rootState.system.oaApiHeaderConfig
+  async [types.FETCH_SELF] ({rootGetters, state, commit}) {
+    let url = constants.oaApiUrl + '/t/users/self'
+    let headerConfig = rootGetters.oaApiHeaderConfig
     await Vue.axios.get(url, headerConfig).then(response => {
       if (response.data.status) {
         commit('setProfile', response.data.result)
