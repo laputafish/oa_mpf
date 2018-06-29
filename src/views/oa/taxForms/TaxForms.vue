@@ -66,7 +66,6 @@ export default {
   data () {
     return {
       selectedGroup: null,
-      groups: [],
       yearlys: [
         {title: '02/03', selected: false},
         {title: '03/04', selected: false},
@@ -86,29 +85,38 @@ export default {
       ]
     }
   },
+  computed: {
+    groups () {
+      return this.$store.getters.groups
+    }
+  },
   mounted () {
     let vm = this
-    vm.groups = [
-      {
-        name: vm.$t('general.all_staff'),
-        children: [
-          {name: 'Administration Team'},
-          {name: 'Marketing Team'},
-          {name: 'Accounting Team'},
-          {name: 'Sales Team'},
-          {
-            name: 'Technical Team',
-            children: [
-              {name: 'Mobile Apps Development Team'},
-              {name: 'Web Development Team'},
-              {name: 'Desktop Development Team'}
-            ]
-          },
-          {name: 'Management Team'}
-        ]
-      }
-    ]
-    vm.selectedGroup = vm.groups[0]
+    this.$store.dispatch('FETCH_GROUPS').then(function () {
+      console.log('mounted :: FETCH_GROUPS: ', vm.groups)
+    })
+    // let vm = this
+    // vm.groups = [
+    //   {
+    //     name: vm.$t('general.all_staff'),
+    //     children: [
+    //       {name: 'Administration Team'},
+    //       {name: 'Marketing Team'},
+    //       {name: 'Accounting Team'},
+    //       {name: 'Sales Team'},
+    //       {
+    //         name: 'Technical Team',
+    //         children: [
+    //           {name: 'Mobile Apps Development Team'},
+    //           {name: 'Web Development Team'},
+    //           {name: 'Desktop Development Team'}
+    //         ]
+    //       },
+    //       {name: 'Management Team'}
+    //     ]
+    //   }
+    // ]
+    // vm.selectedGroup = vm.groups[0]
   },
   methods: {
     onGroupSelectedHandler (group) {

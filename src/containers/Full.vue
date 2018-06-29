@@ -14,6 +14,11 @@
       <app-aside/>
     </div>
     <app-footer/>
+    <team-selection-dialog
+      v-show="showTeamSelection"
+      :teams="teams"
+      @onTeamSelected="onTeamSelectedHandler"
+      @close="closeTeamSelectionDialog"></team-selection-dialog>
   </div>
 </template>
 
@@ -25,6 +30,7 @@ import {
   AppAside as appAside,
   AppFooter as appFooter} from '../components/index.js'
 import Breadcrumb from '../components/Breadcrumb.vue'
+import TeamSelectionDialog from '@/dialogs/TeamSelectionDialog'
 
 export default {
   name: 'full',
@@ -33,7 +39,8 @@ export default {
     sidebar,
     appAside,
     appFooter,
-    breadcrumb: Breadcrumb
+    breadcrumb: Breadcrumb,
+    teamSelectionDialog: TeamSelectionDialog
   },
   data () {
     return {
@@ -61,9 +68,6 @@ export default {
     vm.$store.dispatch('GET_EQUIPMENTS').then(function () {
       console.log('finished: get equipments')
     })
-    // vm.$store.dispatch('GET_PUBLIC_FOLDERS').then(function () {
-    //   console.log('finished: get public folders')
-    // })
   },
   computed: {
     isMobile () {
@@ -81,6 +85,26 @@ export default {
     },
     user () {
       return this.$store.getters.user
+    },
+    showTeamSelection () {
+      return this.$store.getters.showTeamSelection
+    },
+    teams () {
+      return this.$store.getters.teams
+    }
+  },
+  methods: {
+    onTeamSelectedHandler (team) {
+      let vm = this
+      vm.$cookie.set('teamId', team.id)
+      vm.$store.dispatch('SET_ACTIVE_TEAM', team).then(function () {
+        this.$store.dispatch('FETCH_SELF')
+        this.$store.dispatch('FETCH_EMPLOYEES')
+        this.$store.dispatch('FETCH_GROUPS')
+      })
+    },
+    closeTeamSelectionDialog () {
+      this.$store.commit('hideTeamSelection')
     }
   }
 }

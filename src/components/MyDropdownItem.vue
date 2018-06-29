@@ -6,14 +6,21 @@
   <b-dropdown-item v-else-if="menuItem.link" :to="menuItem.link">
     <i class="fa" :class="menuItem.icon"></i>
     <span>
-      {{ menuItem.title }}
+      {{ $t(menuItem.titleTag) }}
     </span>
     <span v-if="menuItem.badgeNo" class="badge" :class="menuItem.badgeClass">{{ menuItem.badgeNo }}</span>
   </b-dropdown-item>
-  <b-dropdown-item v-else @click="processCommand(menuItem.command)">
+  <b-dropdown-item v-else-if="menuItem.popup" @click="processPopup(menuItem.popup)">
     <i class="fa" :class="menuItem.icon"></i>
     <span>
-      {{ menuItem.title }}
+      {{ $t(menuItem.titleTag) }}
+    </span>
+    <span v-if="menuItem.badgeNo" class="badge" :class="menuItem.badgeClass">{{ menuItem.badgeNo }}</span>
+  </b-dropdown-item>
+  <b-dropdown-item v-else-if="menuItem.command" @click="processCommand(menuItem.command)">
+    <i class="fa" :class="menuItem.icon"></i>
+    <span>
+      {{ $t(menuItem.titleTag) }}
     </span>
     <span v-if="menuItem.badgeNo" class="badge" :class="menuItem.badgeClass">{{ menuItem.badgeNo }}</span>
   </b-dropdown-item>
@@ -29,6 +36,14 @@ export default {
     }
   },
   methods: {
+    processPopup (popup) {
+      let vm = this
+      switch (popup) {
+        case 'teamSelection':
+          vm.$store.commit('showTeamSelection')
+          break
+      }
+    },
     processCommand (command) {
       let vm = this
       switch (command) {

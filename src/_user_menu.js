@@ -3,8 +3,9 @@ export default {
     {
       sectionTitle: 'Account',
       menuItems: [
-        {icon: 'fa-address-card', link: '/profile', title: 'Profile'},
-        {icon: 'fa-lock', command: 'logout', title: 'Logout'}
+        {icon: 'fa-users', popup: 'teamSelection', titleTag: 'team.company_team'},
+        {icon: 'fa-address-card', link: '/profile', titleTag: 'general.profile'},
+        {icon: 'fa-lock', command: 'logout', titleTag: 'login.logout'}
 
         // {icon: 'fa-bell-o', link: '/pages/login', title: 'Updates', badgeClass: 'badge-info', badgeNo: 42},
         // {icon: 'fa-envelope-o', title: 'Messages', badgeClass: 'badge-success', badgeNo: 42},

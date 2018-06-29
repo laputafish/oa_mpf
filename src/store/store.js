@@ -13,6 +13,8 @@ import dragging from './modules/dragging/dragging'
 import dialogs from './modules/dialogs/dialogs'
 import employees from './modules/employees/employees'
 import teams from './modules/teams/teams'
+import groups from './modules/groups/groups'
+import user from './modules/user/user'
 
 import Cookies from 'js-cookie'
 
@@ -30,7 +32,9 @@ export const store = new Vuex.Store({
     dragging,
     dialogs,
     employees,
-    teams
+    teams,
+    groups,
+    user
   },
   plugins: [
     createPersistedState({

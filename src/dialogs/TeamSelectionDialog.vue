@@ -13,6 +13,7 @@
             @click="selectedTeam=team"
             :key="team.id"
             v-for="team in teams"
+            :class="{selected:selectedTeam==team}"
             class="d-flex d-row align-items-center">
             <div class="company-logo d-flex flex-row mr-2 align-items-center justify-content-center">
               <img :src="team.logoUrl"/>
@@ -106,7 +107,8 @@ export default {
 
   }
 
-  .team-list ul > li:hover {
+  .team-list ul > li:hover,
+  .team-list ul > li.selected:hover {
     background-color: #37D1CA;
     color: white;
   }

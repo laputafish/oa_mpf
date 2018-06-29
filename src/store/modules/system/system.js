@@ -40,6 +40,24 @@ const getters = {
   token (state) {
     return state.token
   },
+  oaApiHeaderConfig (state) {
+    return {
+      headers: {
+        'Authorization': state.oaAuth.tokenType + ' ' + state.oaAuth.accessToken,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json, text/plain, */*'
+      }
+    }
+  },
+  apiHeaderConfig (state) {
+    return {
+      headers: {
+        'Authorization': 'Bearer ' + state.token,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json, text/plain, */*'
+      }
+    }
+  },
   oaToken (state) {
     return state.oaAuth.accessToken
   },

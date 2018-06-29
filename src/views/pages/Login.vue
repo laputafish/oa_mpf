@@ -6,7 +6,7 @@
           <div class="card-group mb-0">
             <div class="card p-4">
               <div class="card-body">
-                <h1>{{ $t('login.login') }}</h1>
+                <h1 @click="onTitleClicked">{{ $t('login.login') }}</h1>
                 <p class="text-muted">{{ $t('login.sign_in_to_your_account') }}</p>
                 <div class="input-group mb-3">
                   <span class="input-group-addon"><i class="icon-user"></i></span>
@@ -48,7 +48,6 @@
     <generic-dialog></generic-dialog>
     <team-selection-dialog
       v-show="showingTeamSelectionDialog"
-      :teams="teams"
       @close="showingTeamSelectionDialog=false"
       @onTeamSelected="onTeamSelectedHandler"></team-selection-dialog>
   </div>
@@ -68,6 +67,7 @@ export default {
   },
   data () {
     return {
+      titleClicked: 0,
       showingTeamSelectionDialog: false,
       credentials: {
         email: 'domaccount@gmail.com',
@@ -88,16 +88,32 @@ export default {
     },
     teams () {
       return this.$store.getters.teams
+    },
+    groups () {
+      return this.$store.getters.groups
     }
   },
   mounted () {
     // this.$store.dispatch('FETCH_TEAMS')
   },
   methods: {
+    onTitleClicked () {
+      let vm = this
+      vm.titleClicked++
+      if (this.titleClicked >= 3) {
+        vm.credentials.email = 'testing@hkce.com'
+        vm.credentials.password = '123456'
+        vm.titleClicked = 0
+      }
+    },
     onTeamSelectedHandler (team) {
       let vm = this
       vm.$cookie.set('teamId', team.id)
       vm.$store.dispatch('SET_ACTIVE_TEAM', team).then(function () {
+        vm.$store.dispatch('FETCH_SELF')
+        vm.$store.dispatch('FETCH_EMPLOYEES')
+        vm.$store.dispatch('FETCH_GROUPS')
+
         vm.$router.push({name: 'tax.tax_forms'})
       })
     },
