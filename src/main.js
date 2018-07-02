@@ -163,5 +163,6 @@ export const app = new Vue({
   }
 })
 
+console.log('main.js :: app: ', app)
 window['vue'] = app
 window.store = store

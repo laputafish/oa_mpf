@@ -6,7 +6,7 @@
     <div class="app-body">
       <sidebar :navItems="nav"/>
       <main class="main">
-        <breadcrumb :list="list" class="mb-xs-1 mb-sm-3"/>
+        <breadcrumb :list="routeList" class="mb-xs-1 mb-sm-3"/>
         <div class="container-fluid">
           <router-view></router-view>
         </div>
@@ -52,11 +52,7 @@ export default {
     let vm = this
     vm.$store.dispatch('checkToken', {
       callback: function (status) {
-        console.log('checkToken :: token = ' + vm.$store.getters.token.substr(0, 10))
-        if (status) {
-          console.log('if status')
-        } else {
-          console.log('if not status')
+        if (!status) {
           vm.$router.push({name: 'Login'})
         }
       }
@@ -79,8 +75,8 @@ export default {
     name () {
       return 'name not specified' // his.$route.name
     },
-    list () {
-      console.log('Full :: list: ', this.$route.matched)
+    routeList () {
+      console.log('Full :: routeList: ', this.$route.matched)
       return this.$route.matched
     },
     user () {

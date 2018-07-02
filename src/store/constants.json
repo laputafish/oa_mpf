@@ -1,6 +1,7 @@
 {
 	"url": "http://yoovapi",
   "apiUrl": "http://yoovapi/apiv2",
+  "mediaUrl": "http://yoovapi/apiv2/media/icons",
   "oaApiHost": "https://hr.yoov.com",
   "oaApiUrl": "https://hr.yoov.com/api/v1",
   "CLIENT_ID": 2,

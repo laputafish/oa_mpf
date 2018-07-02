@@ -21,7 +21,7 @@ const moveChild = (groupList, pos) => {
 }
 
 const showGroup = (group) => {
-  console.log('id=' + group.id + ' parent id=' + group.parentId + '  children count=' + group.children.length)
+//  console.log('id=' + group.id + ' parent id=' + group.parentId + '  children count=' + group.children.length)
 }
 
 const sortGroupByName = (groupList) => {
@@ -78,9 +78,10 @@ const getters = {
     }
 
     result = sortGroupByName(result)
+    console.log('getters.groupTree: app: ', app)
     return [{
       id: 0,
-      name: app.$t('general.all_staff'),
+      nameTag: 'general.all_staff',
       children: result
     }]
   }

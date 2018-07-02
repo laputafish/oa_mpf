@@ -35,6 +35,7 @@ const actions = {
   async [types.FETCH_TEAMS] ({rootGetters, state, commit}) {
     let url = constants.oaApiUrl + '/t/teams?include=currency'
     let config = rootGetters.oaApiHeaderConfig
+    console.log('fetch teams: config: ', config)
     await Vue.axios.get(url, config).then(response => {
       if (response.data.status) {
         console.log('FETCH_TEAMS :: response.data.result : ', response.data.result)

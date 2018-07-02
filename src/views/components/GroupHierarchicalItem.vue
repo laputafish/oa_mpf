@@ -2,7 +2,7 @@
   <li>
     <div @click="onCurrentGroupSelected()"
          :class="{'tax-group-selected':selectedGroup===groupItem}"
-         class="tax-group">{{ groupItem.name }}</div>
+         class="tax-group">{{ groupItem.nameTag ? $t(groupItem.nameTag) : groupItem.name }}</div>
     <ul>
     <group-hierarchical-item
         :groupItem="group"

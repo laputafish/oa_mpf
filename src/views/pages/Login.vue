@@ -158,7 +158,9 @@ export default {
                   }
                 })
               } else {
-                vm.$router.push({name: 'team.team_selection'})
+                vm.$store.dispatch('FETCH_TEAMS').then(function () {
+                  vm.showingTeamSelectionDialog = true
+                })
               }
             }
           } else {

@@ -5,7 +5,7 @@
         <button type="button" class="pull-right btn-width-80 btn btn-default">
           <i class="fa fa-gear"></i>
         </button>
-        <h2>{{ $t('tax.tax_forms') }}</h2>
+        <h2>{{ (typeof $t === 'function') ? $t('tax.tax_forms') : 'not defined' }}</h2>
       </div>
     </div>
     <div class="d-flex flex-row mb-3">
@@ -15,13 +15,13 @@
 
       <div ref="yearlyWrapper" id="yearly-wrapper" class="yearly-scroller-wrapper">
         <yoov-radio-buttons
-          @moveToLast="onYearlysInit"
-          ref="yearlyBox"
-          id="yearly-box"
-          class="flex-grow-1 yearly-scroller"
-          :buttons="yearlys"
-          :fieldName="'title'"
-          @click="onYearlySelected"></yoov-radio-buttons>
+            @moveToLast="onYearlysInit"
+            ref="yearlyBox"
+            id="yearly-box"
+            class="flex-grow-1 yearly-scroller"
+            :buttons="yearlys"
+            :fieldName="'title'"
+            @click="onYearlySelected"></yoov-radio-buttons>
       </div>
 
       <button type="button" @click="onNextYearClicked" class="btn-width-50 btn-sm btn btn-default pull-right">
@@ -31,11 +31,11 @@
     <div class="d-flex flex-row">
       <ul class="hierarchical-group-list flex-grow-0">
         <group-hierarchical-item
-          :groupItem="group"
-          @onGroupSelected="onGroupSelectedHandler"
-          v-for="(group, index) in groups"
-          :selectedGroup="selectedGroup"
-          :key="index"></group-hierarchical-item>
+            :groupItem="group"
+            @onGroupSelected="onGroupSelectedHandler"
+            v-for="(group, index) in groups"
+            :selectedGroup="selectedGroup"
+            :key="index"></group-hierarchical-item>
       </ul>
       <div class="flex-grow-1">
         <div class="d-flex flex-column">
@@ -46,16 +46,37 @@
             <div class="employee-item"
                  v-for="employee in employees"
                  :key="employee.id">
-              <img :src="getAvatar(employee)"/>
-              {{ employee.displayName }}
+              <div class="d-flex flex-column align-items-center">
+                <div class="d-flex flex-row">
+                  <div class="selection-box-column d-flex flex-column justify-content-center align-items-center">
+                    <button type="button"
+                      class="btn btn-sm btn-default"
+                      style="margin-bottom: 0.5rem;">
+                      <i class="fa fa-square"></i>
+                    </button>
+                    <button type="button"
+                    class="btn btn-sm btn-default">
+                      <i class="fa fa-check-square"></i>
+                    </button>
+                  </div>
+                  <div class="employee-content d-flex flex-column align-items-center">
+                    <img class="employee-avatar" :src="getAvatar(employee)"/>
+                  </div>
+                  <div class="employee-document-column d-flex flex-column align-items-center justify-content-center">
+                    <div class="document-icon">
+                      <img :src="mediaUrl + '/defaults/pdf'"/>
+                    </div>
+                    <button type="button" class="btn-generate btn btn-sm btn-success">
+                      <i class="fa fa-fw fa-play"></i>
+                    </button>
+                  </div>
+                </div>
+                <small class="employee-name">{{ employee.displayName }}</small>
+              </div>
             </div>
-            {{ employees.length }}
           </div>
         </div>
       </div>
-
-    </div>
-    <div class="d-flex flex-column">
     </div>
   </div>
 </template>
@@ -93,6 +114,9 @@ export default {
     }
   },
   computed: {
+    mediaUrl () {
+      return constants.mediaUrl
+    },
     groups () {
       return this.$store.getters.groupTree
     },
@@ -102,7 +126,6 @@ export default {
   },
   watch: {
     employees: function (val) {
-
     }
   },
   mounted () {
@@ -185,6 +208,7 @@ export default {
     padding: 5px 10px;
     border-radius: 5px;
   }
+
   .yearly-scroller-wrapper {
     overflow: hidden;
     position: relative;
@@ -201,9 +225,51 @@ export default {
     bottom: -17px;
   }
 
+  .employee-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50rem;
+  }
+
+  .employee-item:hover {
+    background-color: #28ADA7;
+    color: white;
+  }
+  .employee-item:hover .selection-box-column {
+    visibility: visible;
+  }
+  .employee-document-column .btn-generate {
+    display: none;
+    margin-top: 0.1rem;
+    height: 1.8rem;
+  }
+  .employee-item:hover .employee-document-column .btn-generate {
+    display: block;
+  }
+  .employee-content {
+    width: 84px;
+  }
+
+  .employee-name {
+    overflow-x: hidden;
+    text-align: center;
+  }
+  .selection-box-column {
+    visibility: hidden;
+    padding-right: 0.5rem;
+  }
+  .selection-box-column button {
+    /*margin: 0 0.5rem 0.5rem 0;*/
+  }
   .employee-item {
-    width: 240px;
-    height: 160px;
+    width:auto;
+    padding: 0.5rem;
     display: inline-block;
+    border-radius: 0.5rem;
+  }
+
+  .document-icon img {
+    width: 48px;
+    height: 48px;
   }
 </style>

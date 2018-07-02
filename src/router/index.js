@@ -109,6 +109,10 @@ export default new VueRouter({
       // },
       name: 'general.home',
       component: Full,
+      beforeEnter: (from, to, next) => {
+        alert('beforeRouteEnter')
+        next()
+      },
       children: [
         {
           path: 'profile',

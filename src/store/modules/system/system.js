@@ -10,8 +10,7 @@ import data from '../data.json'
 const state = {
   ...data,
   token: null,
-
-  oaAuth: null,
+  //  oaAuth: null,
   // tokenType: "JWT"
   // accessToken: "ey....cA",
   // expiresIn: 30
@@ -19,6 +18,11 @@ const state = {
 
   email: '',
   user: null,
+  // user.oa_token_type
+  // user.oa_access_token
+  // user.oa_expires_in
+  // user.oa_refresh_token
+
   isSupervisor: false,
   activeMenu: '',
   publicFolder: null
@@ -37,13 +41,19 @@ const transformFolders = folders => {
 }
 
 const getters = {
+  cookieToken (state) {
+    const cookieStr = process.browser ? document.cookie : this.app.context.req.headers.cookie
+    const cookies = Cookie.parse(cookieStr || '') || {}
+    return cookies['ccmsToken']
+  },
+
   token (state) {
     return state.token
   },
   oaApiHeaderConfig (state) {
     return {
       headers: {
-        'Authorization': state.oaAuth.tokenType + ' ' + state.oaAuth.accessToken,
+        'Authorization': state.user.oa_token_type + ' ' + state.user.oa_access_token,
         'Content-Type': 'application/json',
         'Accept': 'application/json, text/plain, */*'
       }
@@ -59,7 +69,7 @@ const getters = {
     }
   },
   oaToken (state) {
-    return state.oaAuth.accessToken
+    return state.user.oa_access_token
   },
   loggedIn (state) {
     console.log('store :: getters.loggedIn')
@@ -211,10 +221,10 @@ const mutations = {
   setToken (state, token) {
     localStorage.setItem('token', token)
     state.token = token
-    Vue.axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
-    Vue.axios.defaults.headers.common['Content-Type'] = 'application/json'
-    Vue.axios.defaults.headers.common['Accept'] = 'application/json'
-    console.log('store :: setToken :: localStorage.setItem :: token = ' + token)
+    // Vue.axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
+    // Vue.axios.defaults.headers.common['Content-Type'] = 'application/json'
+    // Vue.axios.defaults.headers.common['Accept'] = 'application/json'
+    // console.log('store :: setToken :: localStorage.setItem :: token = ' + token)
   },
   [types.SET_ACTIVE_MENU] (state, data) {
     state.activeMenu = data
@@ -273,40 +283,46 @@ const mutations = {
   },
 
   setOAAuth (state, payload) {
-    console.log('setOAAuth: oaAuth: ', JSON.stringify(payload))
     state.oaAuth = payload
-    console.log('setOAAuth: oaAuth: ', state.oaAuth)
+  },
+
+  setCookieToken (state, token) {
+    console.log('setCookieToken: token:', token)
+    Cookies.set('ccmsToken', token, {expires: 1})
+  },
+
+  removeCookieToken () {
+    Cookies.remove('ccmsToken')
   }
 }
 
 const actions = {
   async checkToken ({ commit, getters, dispatch }, payload) {
-    let token = localStorage.getItem('token')
+    // let token = localStorage.getItem('token')
+    let token = getters.cookieToken
+    console.log('store :: checkToken :: token=' + token.substr(0, 10) + '...')
     this.token = token
-    dispatch(types.SET_TOKEN, token)
-    console.log('store :: checkToken :: token=' + token.substr(0, 10))
     let result = false
     if (token) {
-      Vue.axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
-      Vue.axios.defaults.headers.common['Content-Type'] = 'application/json'
-      Vue.axios.defaults.headers.common['Accept'] = 'application/json'
-      console.log('store :: checkToken :: getters.token')
-      dispatch('fetchUserByToken').then(function () {
-        console.log('store :: fetchUserByToken :: user:', getters.user)
-        if (getters.user) {
-          console.log('store :: checkToken :: getters.user')
-          result = true
-          if (typeof payload.callback === 'function') {
-            console.log('store :: checkToken :: payload.callback === function')
-            payload.callback(result)
+      await dispatch(types.SET_TOKEN, token).then(function () {
+        console.log('store :: checkToken :: getters.token')
+        dispatch('fetchUserByToken').then(function () {
+          console.log('store :: fetchUserByToken :: user:', getters.user)
+          if (getters.user) {
+            console.log('store :: checkToken :: getters.user')
+            result = true
+            if (typeof payload.callback === 'function') {
+              console.log('store :: checkToken :: payload.callback === function')
+              payload.callback(result)
+            }
+          } else {
+            console.log('store :: checkToken :: not getters.user')
+            if (typeof payload.callback === 'function') {
+              console.log('store :: checkToken :: payload.callback === function')
+              payload.callback(result)
+            }
           }
-        } else {
-          console.log('store :: checkToken :: not getters.user')
-          if (typeof payload.callback === 'function') {
-            console.log('store :: checkToken :: payload.callback === function')
-            payload.callback(result)
-          }
-        }
+        })
       })
     } else {
       console.log('store :: checkToken :: not getters.token')
@@ -323,33 +339,48 @@ const actions = {
 
   [types.SET_TOKEN] ({commit}, token) {
     commit('setToken', token)
-    if (!token) {
-      Vue.axios.defaults.headers.common['Authorization'] = ''
-      Vue.axios.defaults.headers.common['Content-Type'] = ''
-      Vue.axios.defaults.headers.common['Accept'] = ''
-    }
+    // if (!token) {
+    //   Vue.axios.defaults.headers.common['Authorization'] = ''
+    //   Vue.axios.defaults.headers.common['Content-Type'] = ''
+    //   Vue.axios.defaults.headers.common['Accept'] = ''
+    // }
   },
 
   async nuxtServerInit ({dispatch}, {req}) {
     await dispatch('fetch')
   },
 
+  async updateOAAuth ({ commit }, oaAuth) {
+    commit('setOAAuth', oaAuth)
+    if (process.browser) {
+      if (oaAuth) {
+        Cookies.set('oaAuth', oaAuth, {expires: 1})
+      } else {
+        Cookies.remove('oaAuth')
+      }
+    } else {
+      let params = {
+        domain: '/'
+      }
+      if (!oaAuth) {
+        let expires
+        let date = new Date()
+        expires = date.setDate(date.getDate() + 1)
+        params.expires = new Date(expires)
+      }
+    }
+  },
+
   // Update token
   async updateToken ({ commit }, token) {
-    console.log('store :: updatetoken => commit(updateToken) starts')
-    // Update token in store's state
     commit('setToken', token)
-    // Set Authorization token for all axios requests
-    // await axios.this.$axios.setToken(token, '')
-    // Update cookies
-    console.log('store :: updateToken => commit(updateToken) :: process.browser: ', process.browser)
     if (process.browser) {
-      console.log('store :: updateToken => commit(updateToken) :: with process.browser')
       // ...Browser
       if (token) {
-        Cookies.set('ccmsToken', token, { expires: 1 })
+        console.log('updateToken before commit(setCookieToken) token: ', token)
+        commit('setCookieToken', token)
       } else {
-        Cookies.remove('ccmsToken')
+        commit('removeCookieToken')
       }
     } else {
       console.log('store commit(updateToken) :: without process.browser')
@@ -364,23 +395,21 @@ const actions = {
         params.expires = new Date(expires)
       }
     }
-    Vue.axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
-    Vue.axios.defaults.headers.common['Content-Type'] = 'application/json'
-    Vue.axios.defaults.headers.common['Accept'] = 'application/json'
+    // Vue.axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
+    // Vue.axios.defaults.headers.common['Content-Type'] = 'application/json'
+    // Vue.axios.defaults.headers.common['Accept'] = 'application/json'
     // this.app.context.res.setHeader('Authorization', Cookie.serialize('ccmsToken', token, params))
     // console.log('Axios: ', this.$axios.defaults.headers.common.Authorization)
     console.log('store :: commit(updateToken) ends')
   },
 
   // Fetch Token
-  async fetchToken ({ dispatch }) {
+  async fetchToken ({ getters, dispatch }) {
     console.log('store :: fetchToken')
     let token
     // Try to extract token from cookies
     if (!token) {
-      const cookieStr = process.browser ? document.cookie : this.app.context.req.headers.cookie
-      const cookies = Cookie.parse(cookieStr || '') || {}
-      token = cookies['ccmsToken']
+      token = getters.cookieToken
     }
     if (token) {
       await dispatch('updateToken', token)
@@ -396,25 +425,22 @@ const actions = {
   async reset ({ dispatch, commit }) {
     commit('setUser', null)
     await dispatch('updateToken', null)
+    await dispatch('updateOAAuth', null)
   },
 
   async fetchUserByToken ({ getters, state, commit, dispatch }, callback) {
     // let token = getters.token
     let url = constants.apiUrl + '/user'
+    let config = getters.apiHeaderConfig
     // Try to get user profile
-    try {
-      await Vue.axios.get(url).then(function (response) {
-        dispatch(types.SET_USER, {
-          user: response.data,
-          callback: callback
-        }).then(function () {
-          console.log('fetchUserByToken >> dispatch(SET_USER).then: user', getters.user)
-        })
+    Vue.axios.get(url, config).then(function (response) {
+      dispatch(types.SET_USER, {
+        user: response.data,
+        callback: callback
+      }).then(function () {
+        console.log('fetchUserByToken >> dispatch(SET_USER).then: user', getters.user)
       })
-    } catch (e) {
-      // Reset store
-      // await dispatch('reset')
-    }
+    })
   },
 
   async fetch ({ getters, state, commit, dispatch }) {
@@ -429,7 +455,8 @@ const actions = {
 
     // Try to get user profile
     try {
-      await Vue.axios.get(url).then(function (response) {
+      let config = getters.apiHeaderConfig
+      await Vue.axios.get(url, config).then(function (response) {
         commit('setUser', response.data.user)
       })
     } catch (e) {
@@ -438,19 +465,56 @@ const actions = {
     }
   },
 
+  // use token
+  // async connectOA ({commit, dispatch, getters, state}, {token, callback}) {
+  //   try {
+  //     let url = constants.apiUrl + '/auth/connect_oa'
+  //     let config = getters.apiHeaderConfig
+  //
+  //     await Vue.axios.post(url, data, config).then(function (response) {
+  //       if (response.data.status) {
+  //         console.log('connectOA :: post :: response.data.oaAuth: ', response.data.result)
+  //         commit('setOAAuth', {...response.data.oaAuth, email: credentials.email})
+  //         commit('setToken', response.data.token)
+  //         dispatch('fetchUserByToken', callback)
+  //       } else {
+  //         commit('showModal', {
+  //           title: app.$t('general.warning'),
+  //           message: app.$t('messages.access_denied')
+  //         }, {root: true})
+  //       }
+  //     }, function (error) {
+  //       console.log('login :: error: ', error)
+  //       // dispatch('login', {credentials, callback})
+  //     })
+  //   } catch (error) {
+  //     if (error.response && error.response.status === 401) {
+  //       throw new Error('Bad credentials')
+  //     }
+  //     throw error
+  //   }
+  // },
+
+  // use email and password
   async loginOA ({commit, dispatch, getters, state}, {credentials, authorized, callback}) {
     try {
-      let url = constants.apiUrl + '/auth/login'
+      let url = constants.apiUrl + '/auth/login_oa'
       let data = {
         authorized: authorized,
         email: credentials.email,
         password: credentials.password,
         teamId: null
       }
-      await Vue.axios.post(url, data).then(function (response) {
+      let config = getters.apiHeaderConfig
+      await Vue.axios.post(url, data, config).then(function (response) {
         if (response.data.status) {
-          console.log('loginOA :: post :: response.data.oaAuth: ', response.data.result)
-          commit('setOAAuth', {...response.data.oaAuth, email: credentials.email})
+          // status = true, supervisor or not
+
+          // console.log('loginOA :: post :: response.data.oaAuth: ', response.data.result)
+          // commit('setOAAuth', {...response.data.oaAuth, email: credentials.email})
+
+          console.log('loginOA :: before commit(setCookieToken) : token : ', response.data.token)
+          commit('setCookieToken', response.data.token)
           commit('setToken', response.data.token)
           dispatch('fetchUserByToken', callback)
         } else {
@@ -510,39 +574,39 @@ const actions = {
     }
   },
 
-  async login0 ({ commit, dispatch, getters }, { credentials, callback }) {
-    console.log('store :: login starts :: credentials: ', credentials)
-    try {
-      let url = constants.url + '/oauth/token'
-      let data = {
-        username: credentials.email,
-        password: credentials.password,
-        grant_type: 'password',
-        client_id: constants.CLIENT_ID,
-        client_secret: constants.CLIENT_SECRET
-      }
-      // Send credentials to API
-      await Vue.axios.post(url, data).then(function (response) {
-        console.log('store :: axios :: /oauth/token: response: ', response)
-        let data = response.data
-        console.log('store :: login >> commit(setToken)')
-        commit('setToken', data.access_token)
-        // dispatch('updateToken', data.access_token)
-        console.log('store :: login >> dispatch(fetchUserByToken)')
-        dispatch('fetchUserByToken', callback).then(function () {
-          console.log('store :; login :: commit >> fetchUserByToken :: user:', getters.user)
-        })
-      }, function (error) {
-        dispatch('loginOA', {credentials, callback})
-        console.log('store :: login :: /oauth/token error: ', error)
-      })
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        throw new Error('Bad credentials')
-      }
-      throw error
-    }
-  },
+  // async login0 ({ commit, dispatch, getters }, { credentials, callback }) {
+  //   console.log('store :: login starts :: credentials: ', credentials)
+  //   try {
+  //     let url = constants.url + '/oauth/token'
+  //     let data = {
+  //       username: credentials.email,
+  //       password: credentials.password,
+  //       grant_type: 'password',
+  //       client_id: constants.CLIENT_ID,
+  //       client_secret: constants.CLIENT_SECRET
+  //     }
+  //     // Send credentials to API
+  //     await Vue.axios.post(url, data).then(function (response) {
+  //       console.log('store :: axios :: /oauth/token: response: ', response)
+  //       let data = response.data
+  //       console.log('store :: login >> commit(setToken)')
+  //       commit('setToken', data.access_token)
+  //       // dispatch('updateToken', data.access_token)
+  //       console.log('store :: login >> dispatch(fetchUserByToken)')
+  //       dispatch('fetchUserByToken', callback).then(function () {
+  //         console.log('store :; login :: commit >> fetchUserByToken :: user:', getters.user)
+  //       })
+  //     }, function (error) {
+  //       dispatch('loginOA', {credentials, callback})
+  //       console.log('store :: login :: /oauth/token error: ', error)
+  //     })
+  //   } catch (error) {
+  //     if (error.response && error.response.status === 401) {
+  //       throw new Error('Bad credentials')
+  //     }
+  //     throw error
+  //   }
+  // },
 
   // Logout
   async logout ({ dispatch, state }) {
@@ -558,12 +622,16 @@ const actions = {
     commit('setUser', payload)
   },
 
-  async [types.GET_PUBLIC_FOLDERS] ({commit}, payload) {
+  async [types.GET_PUBLIC_FOLDERS] ({getters, commit}, payload) {
     let apiUrl = constants.apiUrl + '/folders'
-    let data = {
-      type: 'public'
+    let config = {
+      ...getters.apiHeaderConfig,
+      params: {
+        type: 'public'
+      }
     }
-    await Vue.axios.get(apiUrl, {params: data}).then(function (response) {
+
+    await Vue.axios.get(apiUrl, config).then(function (response) {
       commit('setPublicFolder', response.data)
     })
   },

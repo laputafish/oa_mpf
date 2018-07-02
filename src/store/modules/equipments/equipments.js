@@ -41,9 +41,10 @@ const mutations = {
 }
 
 const actions = {
-  async [types.GET_EQUIPMENTS] ({state, commit, dispatch}) {
+  async [types.GET_EQUIPMENTS] ({rootGetters, state, commit, dispatch}) {
     let apiUrl = constants.apiUrl + '/equipments'
-    await axios.get(apiUrl).then(function (response) {
+    let config = rootGetters.apiHeaderConfig
+    await axios.get(apiUrl, config).then(function (response) {
       commit('setEquipments', response.data)
     })
   },
