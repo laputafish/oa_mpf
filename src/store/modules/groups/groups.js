@@ -149,10 +149,34 @@ const mutations = {
     //     break
     //   }
     // }
+  },
+  setSelectedEmployeeIds: (state, payload) => {
+    state.selectedEmployeeIds = payload
   }
 }
 
 const actions = {
+  async [types.TOGGLE_EMPLOYEE_SELECTION] ({commit}) {
+    let p = this.selectedEmployeeIds.indexOf(employee.id)
+    if (p === -1) {
+      this.selectedEmployeeIds.push(employee.id)
+    } else {
+      this.selectedEmployeeIds.splice(p, 1)
+    }
+  },
+
+  async [types.CLEAR_EMPLOYEE_SELECTION] ({commit}) {
+    commit('clearEmployeeSelection')
+  },
+
+  async [types.SELECT_ALL_EMPLOYEES] ({getters, commit}) {
+    let result = []
+    for (var i = 0; i < getters.employees.length; i++) {
+      result.push(getters.employees[i].id)
+    }
+    commit('setSelectedEmployeeIds', result)
+  },
+
   async [types.SELECT_GROUP] ({commit}, payload) {
     commit('selectGroup', payload)
   },

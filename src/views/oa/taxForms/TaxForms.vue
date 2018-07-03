@@ -77,7 +77,7 @@
                   <div class="selection-box-column d-flex flex-column justify-content-center align-items-center">
                     <button type="button"
                       class="btn btn-sm btn-default"
-                      @click="selectEmployee(employee)"
+                      @click="toggleEmployee(employee)"
                       style="margin-bottom: 0.5rem;">
                       <i class="fa"
                          :class="{'fa-check-square':employeeSelected(employee), 'fa-square':!employeeSelected(employee)}"
@@ -256,33 +256,19 @@ export default {
     toggleAll () {
       let vm = this
       if (vm.selectedGroup) {
-        if (vm.selectedGroup.id === 0) {
-          // all employess
-          if (vm.$store.getters.isAllEmployeesSelected) {
-            vm.$store.dispatch('CLEAR_EMPLOYEE_SELECTION')
-          } else {
-            vm.$store.dispatch('SELECT_ALL_EMPLOYEES')
-          }
+        // all employess
+        if (vm.$store.getters.isAllEmployeesSelected) {
+          vm.$store.dispatch('CLEAR_EMPLOYEE_SELECTION')
         } else {
-          // selected group
-          if (vm.$store.getters.isAllGroupEmployeesSelected) {
-            vm.$store.dispatch('CLEAR_GROUP_EMPLOYEE_SELECTION')
-          } else {
-            vm.$store.dispatch('SELECT_ALL_GROUP_EMPLOYEES')
-          }
+          vm.$store.dispatch('SELECT_ALL_EMPLOYEES')
         }
       }
     },
     employeeSelected (employee) {
       return this.selectedEmployeeIds.indexOf(employee.id) >= 0
     },
-    selectEmployee (employee) {
-      let p = this.selectedEmployeeIds.indexOf(employee.id)
-      if (p === -1) {
-        this.selectedEmployeeIds.push(employee.id)
-      } else {
-        this.selectedEmployeeIds.splice(p, 1)
-      }
+    toggleEmployee (employee) {
+      this.$store.dispatch('TOGGLE_EMPLOYEE_SELECTION', employee)
     },
     getAvatar (employee) {
       // let vm = this
