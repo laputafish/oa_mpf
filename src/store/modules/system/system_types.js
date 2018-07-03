@@ -1,10 +1,15 @@
 export const SET_ACTIVE_MENU = 'SET_ACTIVE_MENU'
 export const REPOSITION_CATEGORY = 'REPOSITION_CATEGORY'
 export const MOVE_PRODUCT_CATEGORY = 'MOVE_PRODUCT_CATEGORY'
+export const CLEAR_COOKIE_TOKEN = 'CLEAR_COOKIE_TOKEN'
 
 export const SET_USER = 'SET_USER'
 export const SET_TOKEN = 'SET_TOKEN'
+export const REMOVE_COOKIE_TOKEN = 'REMOVE_COOKIE_TOKEN'
 export const SET_OAAUTH = 'SET_OAAUTH'
+
+// set memory active team
+export const SET_ACTIVE_TEAM = 'SET_ACTIVE_TEAM'
 
 export const SET_TEAM = 'SET_TEAM'
 export const FETCH_USER = 'FETCH_USER'

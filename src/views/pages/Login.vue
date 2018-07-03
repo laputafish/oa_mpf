@@ -94,6 +94,7 @@ export default {
     }
   },
   mounted () {
+    // this.$store.dispatch('CLEAR_COOKIE_TOKEN')
     // this.$store.dispatch('FETCH_TEAMS')
   },
   methods: {
@@ -136,14 +137,18 @@ export default {
             if (isSupervisor) {
               vm.$router.push({name: 'SuperDashboard'})
             } else {
-              let teamId = vm.$cookie.get('teamId')
+              console.log('login :: if not isSupervisor   user: ', vm.$store.getters.user)
+              let teamId = vm.$store.getters.user.oa_last_team_id
               if (teamId) {
                 vm.$store.dispatch('FETCH_TEAMS').then(function () {
                   let selectedTeam = null
-                  let loopTeam = null
                   console.log('after dispatch(FETCH_TEAMS) :: teamId = ' + teamId)
                   console.log('after dispatch(FETCH_TEAMS) :: teams: ', vm.teams)
-                  for (loopTeam in vm.teams) {
+                  console.log('belong team check : team id = ' + teamId)
+                  var loopTeam = null
+                  for (var i = 0; i < vm.teams.length; i++) {
+                    loopTeam = vm.teams[i]
+                    console.log('loopo team id = ' + loopTeam.id)
                     if (loopTeam.id === teamId) {
                       selectedTeam = loopTeam
                       vm.$store.dispatch('SET_ACTIVE_TEAM', loopTeam)

@@ -92,9 +92,7 @@ export default {
       console.log('finished: get equipments')
     })
     if (vm.user) {
-      this.$store.dispatch('FETCH_SELF')
-      this.$store.dispatch('FETCH_EMPLOYEES')
-      this.$store.dispatch('FETCH_GROUPS')
+      vm.loadGroupsAndEmployees()
     }
   },
   watch: {
@@ -104,20 +102,24 @@ export default {
         console.log('Full.vue watch(user) :: router.push(/login)  val: ', val)
         vm.$router.push('/login')
       } else {
-        this.$store.dispatch('FETCH_SELF')
-        this.$store.dispatch('FETCH_EMPLOYEES')
-        this.$store.dispatch('FETCH_GROUPS')
+        vm.loadGroupsAndEmployees()
       }
     }
   },
   methods: {
+    loadGroupsAndEmployees () {
+      let vm = this
+      vm.$store.dispatch('FETCH_SELF').then(function () {
+        vm.$store.dispatch('FETCH_EMPLOYEES').then(function () {
+          vm.$store.dispatch('FETCH_GROUPS')
+        })
+      })
+    },
     onTeamSelectedHandler (team) {
       let vm = this
       console.log('Full.vue :: onTeamSelectedHandler')
       vm.$store.dispatch('SET_TEAM', team).then(function () {
-        this.$store.dispatch('FETCH_SELF')
-        this.$store.dispatch('FETCH_EMPLOYEES')
-        this.$store.dispatch('FETCH_GROUPS')
+        vm.loadGroupsAndEmployees()
       })
     },
     closeTeamSelectionDialog () {

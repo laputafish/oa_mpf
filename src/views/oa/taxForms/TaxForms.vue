@@ -2,14 +2,29 @@
   <div class="tax-forms animated fadeIn mx-3">
     <div class="row">
       <div class="col-sm-12">
-        <button type="button" class="pull-right btn-width-80 btn btn-default">
+        <button type="button" class="ml-1 pull-right btn-width-80 btn btn-default">
           <i class="fa fa-gear"></i>
+        </button>
+        <button type="button" class="ml-1 pull-right btn-width-80 btn btn-default">
+          <i class="fa fa-play"></i>
+        </button>
+        <button type="button" class="ml-1 pull-right btn-width-80 btn btn-default">
+          <i class="fa fa-close"></i>
+        </button>
+        <button type="button"
+                @click="toggleAll"
+                class="ml-1 pull-right btn-width-80 btn btn-default">
+          <i class="fa fa-check-square mr-1"></i>
+          /
+          <i class="fa fa-square"></i>
         </button>
         <h2>{{ (typeof $t === 'function') ? $t('tax.tax_forms') : 'not defined' }}</h2>
       </div>
     </div>
     <div class="d-flex flex-row mb-3">
-      <button type="button" @click="onPrevYearClicked" class="btn-width-50 btn-sm btn btn-default pull-left">
+      <button type="button"
+              @click="onPrevYearClicked"
+              class="btn-width-50 btn-sm btn btn-default pull-left">
         <i class="fa fa-caret-left"></i>
       </button>
 
@@ -39,11 +54,22 @@
       </ul>
       <div class="flex-grow-1">
         <div class="d-flex flex-column">
-          <div class="flex-grow-0">
-            <input class="form-control ng-untouched ng-pristine ng-valid" type="text" placeholder="搜索員工">
+          <div class="flex-grow-0" v-if="groups[0].length>0">
+            <div class="input-group">
+              <input class="form-control ng-untouched ng-pristine ng-valid"
+                     v-model="searchEmployee"
+                     type="text" placeholder="搜索員工">
+              <div class="input-group-append">
+                <button class="btn btn-default" type="button"
+                  @click="searchEmployee=''">
+                  <i class="fa fa-close fa-fw"></i>
+                </button>
+              </div>
+            </div>
           </div>
           <div class="flex-grow-1">
-            <div class="employee-item"
+            <div class="employee-item mr-1 mb-1"
+                 :class="{'selected':selectedEmployeeIds.indexOf(employee.id)>=0}"
                  v-for="employee in employees"
                  :key="employee.id">
               <div class="d-flex flex-column align-items-center">
@@ -51,12 +77,15 @@
                   <div class="selection-box-column d-flex flex-column justify-content-center align-items-center">
                     <button type="button"
                       class="btn btn-sm btn-default"
+                      @click="selectEmployee(employee)"
                       style="margin-bottom: 0.5rem;">
-                      <i class="fa fa-square"></i>
+                      <i class="fa"
+                         :class="{'fa-check-square':employeeSelected(employee), 'fa-square':!employeeSelected(employee)}"
+                         ></i>
                     </button>
                     <button type="button"
                     class="btn btn-sm btn-default">
-                      <i class="fa fa-check-square"></i>
+                      <i class="fa fa-circle"></i>
                     </button>
                   </div>
                   <div class="employee-content d-flex flex-column align-items-center">
@@ -93,7 +122,8 @@ export default {
   },
   data () {
     return {
-      storedSelectedGroup: null,
+      startEmployeeNode: null,
+      searchEmployee: '',
       yearlys: [
         {title: '02/03', selected: false},
         {title: '03/04', selected: false},
@@ -114,6 +144,21 @@ export default {
     }
   },
   computed: {
+    selectedEmployeeIds () {
+      return this.$store.getters.selectedEmployeeIds
+    },
+    allEmployeesSelected () {
+      let vm = this
+      let result = false
+      if (vm.selectedGroup) {
+        if (vm.selectedGroup.id === 0) {
+          result = vm.$store.getters.isAllEmployeesSelected
+        } else {
+          result = vm.$store.getters.isAllGroupEmployeesSelected
+        }
+      }
+      return result
+    },
     mediaUrl () {
       return constants.mediaUrl
     },
@@ -127,21 +172,35 @@ export default {
       return this.$store.getters.user
     },
     selectedGroup () {
-      let vm = this
-      if (vm.groups.length === 0) {
-        return null
-      } else {
-        if (vm.storedSelectedGroup === null) {
-          vm.storedSelectedGroup = vm.groups[0]
-        }
-        return vm.storedSelectedGroup
-      }
+      return this.$store.getters.selectedGroup
+      // let vm = this
+      // if (vm.groups.length === 0) {
+      //   return null
+      // } else {
+      //   if (vm.storedSelectedGroup === null || vm.storedSelectedGroup.id === 0) {
+      //     vm.storedSelectedGroup = vm.groups[0]
+      //   }
+      //   return vm.storedSelectedGroup
+      // }
     }
   },
   watch: {
+    selectedGroup: function (val) {
+      this.$store.dispatch('CLEAR_EMPLOYEE_SELECTION')
+      // this.selectedEmployeeIds = []
+    },
     groups: {
       handler: function (val) {
-        console.log('TaxForms.vue :: watch(groups) groups:', val)
+        this.$store.dispatch('SELECT_GROUP', val[0])
+        // alert('watch(groups)')
+        // if (this.$store.selectedGroup === null) {
+        // }
+
+        // let vm = this
+        // if (vm.selectedGroup === null) {
+        //   vm.selectedGroup = vm.groups[0]
+        // }
+        // console.log('TaxForms.vue :: watch(groups) groups:', val)
       },
       deep: true
     },
@@ -153,9 +212,11 @@ export default {
       console.log('TaxForms.vue :: watch(user) user:', val)
       vm.$store.dispatch('FETCH_GROUPS')
     }
-
   },
+
   mounted () {
+    this.initSelectedGroup()
+
     console.log('TaxForms.vue mounted')
     // let vm = this
     // if (vm.user && vm.user.oa_last_team_id) {
@@ -188,6 +249,41 @@ export default {
     // vm.selectedGroup = vm.groups[0]
   },
   methods: {
+    initSelectedGroup () {
+      let vm = this
+      this.$store.dispatch('SELECT_GROUP', vm.groups[0])
+    },
+    toggleAll () {
+      let vm = this
+      if (vm.selectedGroup) {
+        if (vm.selectedGroup.id === 0) {
+          // all employess
+          if (vm.$store.getters.isAllEmployeesSelected) {
+            vm.$store.dispatch('CLEAR_EMPLOYEE_SELECTION')
+          } else {
+            vm.$store.dispatch('SELECT_ALL_EMPLOYEES')
+          }
+        } else {
+          // selected group
+          if (vm.$store.getters.isAllGroupEmployeesSelected) {
+            vm.$store.dispatch('CLEAR_GROUP_EMPLOYEE_SELECTION')
+          } else {
+            vm.$store.dispatch('SELECT_ALL_GROUP_EMPLOYEES')
+          }
+        }
+      }
+    },
+    employeeSelected (employee) {
+      return this.selectedEmployeeIds.indexOf(employee.id) >= 0
+    },
+    selectEmployee (employee) {
+      let p = this.selectedEmployeeIds.indexOf(employee.id)
+      if (p === -1) {
+        this.selectedEmployeeIds.push(employee.id)
+      } else {
+        this.selectedEmployeeIds.splice(p, 1)
+      }
+    },
     getAvatar (employee) {
       // let vm = this
       if (employee.avatar) {
@@ -197,8 +293,9 @@ export default {
       }
     },
     onGroupSelectedHandler (group) {
-      console.log('TaxForms :: onGroupSelectedHandler :: group: ', group)
-      this.storedSelectedGroup = group
+      this.$store.dispatch('SELECT_GROUP', group)
+      // console.log('TaxForms :: onGroupSelectedHandler :: group: ', group)
+      // this.storedSelectedGroup = group
     },
     onYearlySelected (yearlyItem) {
       console.log('onYearlySelected :: yearlyItem: ', yearlyItem)
@@ -231,6 +328,12 @@ export default {
 </script>
 
 <style>
+  #yearly-wrapper {
+    background-color: rgba(221, 221, 221, 0.6);
+  }
+  #yearly-box {
+    text-align: center;
+  }
   .hierarchical-group-list li {
     margin: 0;
   }
@@ -263,10 +366,20 @@ export default {
   }
 
   .employee-item:hover {
+    background-color: rgba(221, 221, 221, 0.6);
+  }
+
+  .employee-item.selected {
     background-color: #28ADA7;
+    /* highlight #1E847F !important */
     color: white;
   }
-  .employee-item:hover .selection-box-column {
+
+  .employee-item.selected:hover {
+    background-color: #1E847F;
+  }
+  .employee-item:hover .selection-box-column,
+  .employee-item.selected .selection-box-column {
     visibility: visible;
   }
   .employee-document-column .btn-generate {

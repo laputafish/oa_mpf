@@ -4,7 +4,10 @@ import * as constants from '../../constants'
 import * as types from './groups_types'
 
 const state = {
-  groups: []
+  selectedEmployeeIds: [],
+  groups: [],
+  employees: [],
+  selectedGroup: null
 }
 
 const moveChild = (groupList, pos) => {
@@ -36,6 +39,36 @@ const sortGroupByName = (groupList) => {
 }
 
 const getters = {
+  employees: state => {
+    return state.selectedGroup === null
+      ? []
+      : state.selectedGroup.employees
+  },
+  selectedEmployeeIds: state => {
+    return state.selectedEmployeeIds
+  },
+  isAllEmployeesSelected: (state) => {
+    let result = false
+    let employee
+    if (state.selectedGroup) {
+      result = true
+      let employees = state.selectedGroup.id === 0
+        ? state.employees
+        : state.selectedGroup.employees
+
+      for (var i = 0; i < employees.length; i++) {
+        employee = state.selectedGroup.employees[i]
+        if (state.selectedEmployeeIds.indexOf(employee.id) === -1) {
+          result = false
+          break
+        }
+      }
+    }
+    return result
+  },
+  selectedGroup: (state) => {
+    return state.selectedGroup
+  },
   groups: (state) => {
     return state.groups
   },
@@ -79,21 +112,59 @@ const getters = {
 
     result = sortGroupByName(result)
     console.log('getters.groupTree: app: ', app)
-    return [{
+
+    let rootGroup = {
       id: 0,
+      employees: state.employees,
       nameTag: 'general.all_staff',
       children: result
-    }]
+    }
+    // if (state.selectedGroup === null) {
+    //   state.selectedGroup = state.rootGroup
+    // }
+
+    return [rootGroup]
   }
 }
 
 const mutations = {
+  setEmployees: (state, payload) => {
+    state.employees = payload
+  },
   setGroups: (state, payload) => {
     state.groups = payload
+  },
+  clearEmployeeSelection: (state) => {
+    state.selectedEmployeeIds = []
+  },
+  selectGroup: (state, payload) => {
+    state.selectedGroup = payload
+    //
+    // if (payload.id === 0) {
+    //   state
+    // }
+    // for (var i = 0; i < state.groups.length; i++) {
+    //   if (state.groups[i] === payload) {
+    //     state.selectedGroup = state.groups[i]
+    //     break
+    //   }
+    // }
   }
 }
 
 const actions = {
+  async [types.SELECT_GROUP] ({commit}, payload) {
+    commit('selectGroup', payload)
+  },
+
+  async [types.CLEAR_GROUP_SELECTION] ({commit}) {
+    commit('clearGroupSelection')
+  },
+
+  async [types.CLEAR_EMPLOYEE_SELECTION] ({commit}) {
+    commit('clearEmployeeSelection')
+  },
+
   async [types.FETCH_GROUPS] ({rootGetters, state, commit, dispatch, getters}) {
     console.log('groups.js :: FETCH_GROUPS : rootGetters.user: ', rootGetters.user)
     console.log('groups.js :: FETCH_GROUPS : rootGetters.user.oa_last_item_id = ' + rootGetters.user.oa_last_team_id)
@@ -118,7 +189,24 @@ const actions = {
     } else {
       commit('setGroups', [])
     }
+  },
+
+  async [types.FETCH_EMPLOYEES] ({rootGetters, state, commit, dispatch, getters}) {
+    let url = constants.oaApiUrl + '/user/employees'
+    let config = rootGetters.oaApiHeaderConfig
+    config['params'] = {
+      state: 'active',
+      include: 'groups,workingGroups,permissions',
+      teamId: rootGetters.user.oa_last_team_id
+    }
+    await Vue.axios.get(url, config).then(response => {
+      if (response.data.status) {
+        commit('setEmployees', response.data.result)
+        console.log('FETCH_EMPLOYEES: employees: ', response.data.result)
+      }
+    })
   }
+
 }
 
 export default {

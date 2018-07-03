@@ -172,10 +172,6 @@ export const app = new Vue({
     // i.e.
     // Fue.vue is mounted before
     //
-    console.log('Vue.$cookie: ', Vue.$cookie)
-    console.log('Vue.$cookies: ', Vue.$cookies)
-    console.log('Vue: ', Vue)
-    console.log('this: ', this)
   },
   beforeCreate: function () {
     console.log('main.js beforeCreate')

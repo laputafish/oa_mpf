@@ -50,7 +50,8 @@ export default {
         case 'logout':
           let promises = [
             vm.$store.dispatch('SET_TOKEN', null),
-            vm.$store.dispatch('SET_USER', {user: null})
+            vm.$store.dispatch('SET_USER', {user: null}),
+            vm.$store.dispatch('REMOVE_COOKIE_TOKEN')
           ]
           Promise.all(promises).then(function (response) {
             vm.$router.push('/login')

@@ -306,8 +306,7 @@ const actions = {
   async checkToken ({ commit, getters, dispatch }, payload) {
     // let token = localStorage.getItem('token')
     let token = getters.cookieToken
-    console.log('store :: checkToken :: token=' + token.substr(0, 10) + '...')
-    this.token = token
+    console.log('checkToken token=getters.cookieToken   token=' + token)
     let result = false
     if (token) {
       console.log('store :: checkToken dispatch(SET_TOKEN)')
@@ -380,6 +379,10 @@ const actions = {
     }
   },
 
+  async [types.REMOVE_COOKIE_TOKEN] ({commit}) {
+    commit('removeCookieToken')
+  },
+
   // Update token
   async updateToken ({ commit }, token) {
     commit('setToken', token)
@@ -389,6 +392,7 @@ const actions = {
         console.log('updateToken before commit(setCookieToken) token: ', token)
         commit('setCookieToken', token)
       } else {
+        alert('removecookieToken')
         commit('removeCookieToken')
       }
     } else {
@@ -432,6 +436,7 @@ const actions = {
 
   // Reset
   async reset ({ dispatch, commit }) {
+    alert('reset')
     commit('setUser', null)
     await dispatch('updateToken', null)
     await dispatch('updateOAAuth', null)
@@ -448,6 +453,10 @@ const actions = {
     await Vue.axios.put(url, data, headerConfig).then(function (response) {
       commit('setActiveTeam', payload)
     })
+  },
+
+  async [types.SET_ACTIVE_TEAM] ({commit}, payload) {
+    commit('setActiveTeam', payload)
   },
 
   async fetchUserByToken ({ getters, state, commit, dispatch }, callback) {
