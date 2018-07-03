@@ -30,6 +30,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import Moment from 'vue-moment'
 import VueCookie from 'vue-cookie'
+import VueCookies from 'vue-cookies'
 
 // import customLocale from 'vue2-datatable-component/locale/custom'
 
@@ -80,6 +81,7 @@ Vue.use(VuejsDialog)
 Vue.use(BootstrapVue)
 Vue.use(Moment)
 Vue.use(VueCookie)
+Vue.use(VueCookies)
 
 // Vue.use(datePicker)
 // Vue.directive('tooltip', VTooltip)
@@ -152,15 +154,46 @@ Vue.filter('formatSize', function (size) {
 //   }]
 // })
 
+// let checkToken = () => {
+//   let token = getCookieToken()
+//   alert('token = ' + token)
+//   return true
+// }
+
 export const app = new Vue({
   el: '#app',
   router,
   store,
   i18n,
   template: '<App/>',
+  mounted () {
+    // after current component is mounted
+    //
+    // i.e.
+    // Fue.vue is mounted before
+    //
+    console.log('Vue.$cookie: ', Vue.$cookie)
+    console.log('Vue.$cookies: ', Vue.$cookies)
+    console.log('Vue: ', Vue)
+    console.log('this: ', this)
+  },
+  beforeCreate: function () {
+    console.log('main.js beforeCreate')
+  },
+  // created: function () {
+  //   let token = getCookieToken()
+  //   console.log('main.js created :: token = ' + token)
+  // },
   components: {
     App
   }
+  // ,
+  // methods: {
+  //   checkToken: function () {
+  //     alert('checkToken')
+  //     return true
+  //   }
+  // }
 })
 
 console.log('main.js :: app: ', app)

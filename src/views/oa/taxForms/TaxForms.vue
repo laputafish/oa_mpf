@@ -93,7 +93,7 @@ export default {
   },
   data () {
     return {
-      selectedGroup: null,
+      storedSelectedGroup: null,
       yearlys: [
         {title: '02/03', selected: false},
         {title: '03/04', selected: false},
@@ -122,17 +122,48 @@ export default {
     },
     employees () {
       return this.$store.getters.employees
+    },
+    user () {
+      return this.$store.getters.user
+    },
+    selectedGroup () {
+      let vm = this
+      if (vm.groups.length === 0) {
+        return null
+      } else {
+        if (vm.storedSelectedGroup === null) {
+          vm.storedSelectedGroup = vm.groups[0]
+        }
+        return vm.storedSelectedGroup
+      }
     }
   },
   watch: {
+    groups: {
+      handler: function (val) {
+        console.log('TaxForms.vue :: watch(groups) groups:', val)
+      },
+      deep: true
+    },
     employees: function (val) {
+      console.log('TaxForms.vue :: watch(employees) employees:', val)
+    },
+    user: function (val) {
+      let vm = this
+      console.log('TaxForms.vue :: watch(user) user:', val)
+      vm.$store.dispatch('FETCH_GROUPS')
     }
+
   },
   mounted () {
-    let vm = this
-    this.$store.dispatch('FETCH_GROUPS').then(function () {
-      vm.selectedGroup = vm.groups[0]
-    })
+    console.log('TaxForms.vue mounted')
+    // let vm = this
+    // if (vm.user && vm.user.oa_last_team_id) {
+    //   this.$store.dispatch('FETCH_GROUPS').then(function () {
+    //     vm.selectedGroup = vm.groups[0]
+    //   })
+    //   this.$store.dispatch('FETCH_EMPLOYEES')
+    // }
     // let vm = this
     // vm.groups = [
     //   {
@@ -167,7 +198,7 @@ export default {
     },
     onGroupSelectedHandler (group) {
       console.log('TaxForms :: onGroupSelectedHandler :: group: ', group)
-      this.selectedGroup = group
+      this.storedSelectedGroup = group
     },
     onYearlySelected (yearlyItem) {
       console.log('onYearlySelected :: yearlyItem: ', yearlyItem)

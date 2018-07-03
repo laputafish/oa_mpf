@@ -2,6 +2,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
+// import Cookie from 'cookie'
+// import Cookies from 'js-cookie'
+
 // Containers
 import Full from '@/containers/Full'
 
@@ -95,6 +98,18 @@ import TeamSelection from '@/views/oa/teamSelection/TeamSelection'
 
 Vue.use(VueRouter)
 
+// let getCookieToken = () => {
+//   const cookieStr = process.browser ? document.cookie : this.app.context.req.headers.cookie
+//   const cookies = Cookie.parse(cookieStr || '') || {}
+//   return cookies['ccmsToken']
+// }
+
+// let checkToken = () => {
+//   let token = getCookieToken()
+//   alert('token = ' + token)
+//   return true
+// }
+//
 export default new VueRouter({
   mode: 'history',
   linkActiveClass: 'open active',
@@ -109,10 +124,13 @@ export default new VueRouter({
       // },
       name: 'general.home',
       component: Full,
-      beforeEnter: (from, to, next) => {
-        alert('beforeRouteEnter')
-        next()
-      },
+      // beforeEnter: (from, to, next) => {
+      //   if (checkToken()) {
+      //     next()
+      //   } else {
+      //     next(false)
+      //   }
+      // },
       children: [
         {
           path: 'profile',

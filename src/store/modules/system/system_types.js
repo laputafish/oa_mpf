@@ -6,6 +6,7 @@ export const SET_USER = 'SET_USER'
 export const SET_TOKEN = 'SET_TOKEN'
 export const SET_OAAUTH = 'SET_OAAUTH'
 
+export const SET_TEAM = 'SET_TEAM'
 export const FETCH_USER = 'FETCH_USER'
 export const GET_PUBLIC_FOLDERS = 'GET_PUBLIC_FOLDERS'
 export const SET_LANG = 'SET_LANG'

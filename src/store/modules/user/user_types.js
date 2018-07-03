@@ -1,2 +1,2 @@
 export const FETCH_SELF = 'FETCH_SELF'
-export const SET_ACTIVE_TEAM = 'SET_ACTIVE_TEAM'
+export const SET_TEAM = 'SET_TEAM'

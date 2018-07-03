@@ -47,24 +47,6 @@ export default {
       nav: nav.items
     }
   },
-  created () {
-    console.log('Full.vue created starts')
-    let vm = this
-    vm.$store.dispatch('checkToken', {
-      callback: function (status) {
-        if (!status) {
-          vm.$router.push({name: 'Login'})
-        }
-      }
-    })
-  },
-  mounted () {
-    let vm = this
-    console.log('Full.vue mounted')
-    vm.$store.dispatch('GET_EQUIPMENTS').then(function () {
-      console.log('finished: get equipments')
-    })
-  },
   computed: {
     isMobile () {
       return this.$mq === 'mobile'
@@ -80,20 +62,59 @@ export default {
       return this.$route.matched
     },
     user () {
+      console.log('Full.vue :: computed(user)')
       return this.$store.getters.user
     },
     showTeamSelection () {
+      console.log('Full.vue :: computed(showTeamSelection)')
       return this.$store.getters.showTeamSelection
     },
     teams () {
+      console.log('Full.vue :: computed(teams)')
       return this.$store.getters.teams
+    }
+  },
+  created () {
+    let vm = this
+    console.log('Full.vue :: created')
+    vm.$store.dispatch('checkToken', {
+      callback: function (status) {
+        if (!status) {
+          vm.$router.push({name: 'Login'})
+        }
+      }
+    })
+  },
+  mounted () {
+    let vm = this
+    console.log('Full.vue mounted user: ', vm.user)
+    vm.$store.dispatch('GET_EQUIPMENTS').then(function () {
+      console.log('finished: get equipments')
+    })
+    if (vm.user) {
+      this.$store.dispatch('FETCH_SELF')
+      this.$store.dispatch('FETCH_EMPLOYEES')
+      this.$store.dispatch('FETCH_GROUPS')
+    }
+  },
+  watch: {
+    user: function (val) {
+      let vm = this
+      if (!val.oa_last_team_id) {
+        console.log('Full.vue watch(user) :: router.push(/login)  val: ', val)
+        vm.$router.push('/login')
+      } else {
+        this.$store.dispatch('FETCH_SELF')
+        this.$store.dispatch('FETCH_EMPLOYEES')
+        this.$store.dispatch('FETCH_GROUPS')
+      }
     }
   },
   methods: {
     onTeamSelectedHandler (team) {
       let vm = this
-      vm.$cookie.set('teamId', team.id)
-      vm.$store.dispatch('SET_ACTIVE_TEAM', team).then(function () {
+      console.log('Full.vue :: onTeamSelectedHandler')
+      vm.$store.dispatch('SET_TEAM', team).then(function () {
         this.$store.dispatch('FETCH_SELF')
         this.$store.dispatch('FETCH_EMPLOYEES')
         this.$store.dispatch('FETCH_GROUPS')
@@ -102,6 +123,12 @@ export default {
     closeTeamSelectionDialog () {
       this.$store.commit('hideTeamSelection')
     }
+    // ,
+    // getCookieToken () {
+    //   const cookieStr = process.browser ? document.cookie : this.app.context.req.headers.cookie
+    //   const cookies = Cookie.parse(cookieStr || '') || {}
+    //   return cookies['ccmsToken']
+    // }
   }
 }
 </script>

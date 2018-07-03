@@ -26,7 +26,7 @@ const actions = {
     config['params'] = {
       state: 'active',
       include: 'groups,workingGroups,permissions',
-      teamId: rootGetters.activeTeamId
+      teamId: rootGetters.user.oa_last_team_id
     }
     await Vue.axios.get(url, config).then(response => {
       if (response.data.status) {

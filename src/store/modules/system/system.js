@@ -18,6 +18,7 @@ const state = {
 
   email: '',
   user: null,
+  activeTeam: null,
   // user.oa_token_type
   // user.oa_access_token
   // user.oa_expires_in
@@ -51,13 +52,13 @@ const getters = {
     return state.token
   },
   oaApiHeaderConfig (state) {
-    return {
+    return state.user ? {
       headers: {
         'Authorization': state.user.oa_token_type + ' ' + state.user.oa_access_token,
         'Content-Type': 'application/json',
         'Accept': 'application/json, text/plain, */*'
       }
-    }
+    } : null
   },
   apiHeaderConfig (state) {
     return {
@@ -219,7 +220,7 @@ const mutations = {
     }
   },
   setToken (state, token) {
-    localStorage.setItem('token', token)
+    // localStorage.setItem('token', token)
     state.token = token
     // Vue.axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
     // Vue.axios.defaults.headers.common['Content-Type'] = 'application/json'
@@ -286,6 +287,11 @@ const mutations = {
     state.oaAuth = payload
   },
 
+  setActiveTeam (state, payload) {
+    state.activeTeam = payload
+    state.user.oa_last_team_id = payload.id
+  },
+
   setCookieToken (state, token) {
     console.log('setCookieToken: token:', token)
     Cookies.set('ccmsToken', token, {expires: 1})
@@ -304,8 +310,11 @@ const actions = {
     this.token = token
     let result = false
     if (token) {
+      console.log('store :: checkToken dispatch(SET_TOKEN)')
       await dispatch(types.SET_TOKEN, token).then(function () {
-        console.log('store :: checkToken :: getters.token')
+        console.log('store :; checkToken dispatch(SET_TOKEN).then: token: ' + getters.token)
+        console.log('store :; checkToken dispatch(SET_TOKEN).then: fetchUserByToken.')
+
         dispatch('fetchUserByToken').then(function () {
           console.log('store :: fetchUserByToken :: user:', getters.user)
           if (getters.user) {
@@ -428,12 +437,28 @@ const actions = {
     await dispatch('updateOAAuth', null)
   },
 
+  async [types.SET_TEAM] ({rootGetters, getters, commit}, payload) {
+    // payload = team
+    let team = payload
+    let url = constants.apiUrl + '/users/' + getters.user.id
+    let headerConfig = rootGetters.apiHeaderConfig
+    let data = {
+      oa_last_team_id: team.id
+    }
+    await Vue.axios.put(url, data, headerConfig).then(function (response) {
+      commit('setActiveTeam', payload)
+    })
+  },
+
   async fetchUserByToken ({ getters, state, commit, dispatch }, callback) {
+    console.log('system.js :: fetchUserByToken')
     // let token = getters.token
     let url = constants.apiUrl + '/user'
     let config = getters.apiHeaderConfig
     // Try to get user profile
-    Vue.axios.get(url, config).then(function (response) {
+    await Vue.axios.get(url, config).then(function (response) {
+      console.log('system.js fetchUserByToken: response: ', response.data)
+      console.log('system.js fetchUserByToken ready to call SET_USER')
       dispatch(types.SET_USER, {
         user: response.data,
         callback: callback

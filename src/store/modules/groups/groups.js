@@ -95,20 +95,29 @@ const mutations = {
 
 const actions = {
   async [types.FETCH_GROUPS] ({rootGetters, state, commit, dispatch, getters}) {
-    let url = constants.oaApiUrl + '/admin/groups'
-    console.log('FETCH_GROUPS: url=' + url)
-    let config = rootGetters.oaApiHeaderConfig
-    config['params'] = {
-      teamId: rootGetters.activeTeamId
-    }
-    await Vue.axios.get(url, config).then(response => {
-      if (response.data.status) {
-        console.log('FETCH_GROUPS :: response.data.result : ', response.data.result)
-        commit('setGroups', response.data.result)
-      } else {
-        console.log('fetch groups fails')
+    console.log('groups.js :: FETCH_GROUPS : rootGetters.user: ', rootGetters.user)
+    console.log('groups.js :: FETCH_GROUPS : rootGetters.user.oa_last_item_id = ' + rootGetters.user.oa_last_team_id)
+
+    if (rootGetters.user && rootGetters.user.oa_last_team_id) {
+      let url = constants.oaApiUrl + '/admin/groups'
+      console.log('FETCH_GROUPS: url=' + url)
+      let config = rootGetters.oaApiHeaderConfig
+      console.log('FETCH_GORUPS: config: ', config)
+      config['params'] = {
+        teamId: rootGetters.user.oa_last_team_id
       }
-    })
+      await Vue.axios.get(url, config).then(response => {
+        console.log('url = ' + url + ' :: response:', response)
+        if (response.data.status) {
+          console.log('FETCH_GROUPS :: response.data.result : ', response.data.result)
+          commit('setGroups', response.data.result)
+        } else {
+          console.log('fetch groups fails')
+        }
+      })
+    } else {
+      commit('setGroups', [])
+    }
   }
 }
 

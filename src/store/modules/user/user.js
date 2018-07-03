@@ -15,7 +15,8 @@ const getters = {
     return state.activeTeam
   },
   activeTeamId: (state) => {
-    return state.activeTeam.id
+    console.log('user.js :: getters.activeItemId')
+    return state.activeTeam ? state.activeTeam.id : 0
   }
 }
 
@@ -37,10 +38,6 @@ const actions = {
         commit('setProfile', response.data.result)
       }
     })
-  },
-
-  async [types.SET_ACTIVE_TEAM] ({commit}, payload) {
-    await commit('setActiveTeam', payload)
   }
 }
 

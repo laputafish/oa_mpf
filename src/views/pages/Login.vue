@@ -108,8 +108,7 @@ export default {
     },
     onTeamSelectedHandler (team) {
       let vm = this
-      vm.$cookie.set('teamId', team.id)
-      vm.$store.dispatch('SET_ACTIVE_TEAM', team).then(function () {
+      vm.$store.dispatch('SET_TEAM', team).then(function () {
         let promises = [
           vm.$store.dispatch('FETCH_SELF'),
           vm.$store.dispatch('FETCH_EMPLOYEES'),
