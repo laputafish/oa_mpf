@@ -17,6 +17,7 @@ import groups from './modules/groups/groups'
 import user from './modules/user/user'
 import incomeParticulars from './modules/incomeParticulars/incomeParticulars'
 import payTypes from './modules_oa/payTypes/payTypes'
+import payrolls from './modules_oa/payrolls/payrolls'
 
 import Cookies from 'js-cookie'
 
@@ -37,7 +38,8 @@ export const store = new Vuex.Store({
     groups,
     user,
     incomeParticulars,
-    payTypes
+    payTypes,
+    payrolls
   },
   plugins: [
     createPersistedState({

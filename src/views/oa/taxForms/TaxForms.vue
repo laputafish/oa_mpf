@@ -4,7 +4,7 @@
     <div class="row">
       <div class="col-sm-12">
         <button type="button"
-                @click="showingTaxFormSettingsDialog=true"
+                @click="showTaxFormSettingsDialog"
                 class="ml-1 pull-right btn-width-80 btn btn-default">
           <i class="fa fa-gear"></i>
         </button>
@@ -119,6 +119,7 @@
       </div>
     </div>
     <tax-form-settings-dialog
+      @submit="saveTaxFormSettings"
       @close="showingTaxFormSettingsDialog=false"
       v-show="showingTaxFormSettingsDialog">
 
@@ -162,6 +163,12 @@ export default {
     }
   },
   computed: {
+    teamId () {
+      return this.$store.getters.teamId
+    },
+    payrolls () {
+      return this.$store.getters.payrolls
+    },
     selectingEmployeeIds () {
       return this.$store.getters.selectingEmployeeIds
     },
@@ -218,7 +225,8 @@ export default {
     },
     groups: {
       handler: function (val) {
-        this.$store.dispatch('SELECT_GROUP', val[0])
+        this.initSelectedGroup()
+        // this.$store.dispatch('SELECT_GROUP', val[0])
         // alert('watch(groups)')
         // if (this.$store.selectedGroup === null) {
         // }
@@ -238,13 +246,16 @@ export default {
       let vm = this
       console.log('TaxForms.vue :: watch(user) user:', val)
       vm.$store.dispatch('FETCH_GROUPS')
+    },
+    teamId: function (val) {
+      this.loadPayrolls()
     }
   },
 
   mounted () {
+    let vm = this
+    vm.loadPayrolls()
     this.initSelectedGroup()
-
-    console.log('TaxForms.vue mounted')
     // let vm = this
     // if (vm.user && vm.user.oa_last_team_id) {
     //   this.$store.dispatch('FETCH_GROUPS').then(function () {
@@ -276,6 +287,62 @@ export default {
     // vm.selectedGroup = vm.groups[0]
   },
   methods: {
+    getYearlyList (startedDate, endedDate) {
+      let vm = this
+      if (startedDate > endedDate) {
+        let tmp = startedDate
+        startedDate = endedDate
+        endedDate = tmp
+      }
+
+      // Get last fiscal year
+      let lastFiscalYear
+      let today = vm.$moment()
+      let fiscalYearEnd = today.format('YYYY') + '-03-31'
+      if (today.format('YYYY-MM-DD') < fiscalYearEnd) {
+        lastFiscalYear = today.year() - 2
+      } else {
+        lastFiscalYear = today.year() - 1
+      }
+
+      // Get first fiscal year
+      let firstFiscalYear
+      let startedDateMoment = vm.$moment(startedDate)
+      let startedDateYear = startedDateMoment.year()
+      if (startedDateMoment.formst('YYYY-MM-DD') < startedDateYear + '-03-31') {
+        firstFiscalYear = startedDateYear - 1
+      } else {
+        firstFiscalYear = startedDateYear
+      }
+
+      alert('firstFiscalYear = ' + firstFiscalYear + '   lastFiscalYear = ' + lastFiscalYear)
+
+    },
+    loadPayrolls () {
+      let vm = this
+      this.$store.dispatch('FETCH_PAYROLLS').then(function () {
+        let startedDate = vm.payrolls[0].startedDate
+        let endedDate = vm.payrolls[vm.payrolls.length - 1].endedDate
+        let yearlyList = vm.getYearlyList(startedDate, endedDate)
+        console.log('yearlyList: ', yearlyList)
+      })
+    },
+    showTaxFormSettingsDialog () {
+      let vm = this
+      vm.$store.dispatch('FETCH_INCOME_PARTICULARS').then(function () {
+        vm.showingTaxFormSettingsDialog = true
+      })
+    },
+    saveTaxFormSettings (params) {
+      let vm = this
+      let callback = params.callback
+      vm.$store.dispatch('UPDATE_INCOME_PARTICULARS', params.data).then(function (response) {
+        if (typeof callback === 'function') {
+          callback(response)
+        }
+      })
+    },
+
     showSettings () {
 
     },
@@ -291,14 +358,14 @@ export default {
       this.$store.dispatch('TOGGLE_TO_EMPLOYEE', employee.id)
     },
     onMouseOverBlank () {
-      this.$store.commit('setHoveringEmployeeId', 0)
+      this.$store.commit('setHoveringEmployeeId', -1)
     },
     onMouseOverEmployee (employee) {
       this.$store.commit('setHoveringEmployeeId', employee.id)
     },
     initSelectedGroup () {
       let vm = this
-      this.$store.dispatch('SELECT_GROUP', vm.groups[0])
+      vm.$store.dispatch('SELECT_GROUP', vm.groups[0])
     },
     toggleAll () {
       let vm = this

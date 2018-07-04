@@ -43,6 +43,9 @@
   "team": {
     "company_team": "公司/團隊",
     "team_selection": "選擇團隊"
+  },
+  "salary": {
+    "basic_salary": "基本薪金"
   }
 
 }

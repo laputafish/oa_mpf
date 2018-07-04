@@ -20,37 +20,53 @@
       <h6>Field Mapping</h6>
       <table class="table-striped table-striped col-sm-12">
         <tr v-for="item in inputParticulars"
-          :key="item.id">
+            :key="item.id">
           <td class="particular-label" v-tooltip="item.name">{{ item.name }}</td>
-          <td><v-select multiple v-model="item.pay_type_ids" :options="payTypes"></v-select></td>
+          <td>
+            <input v-if="item.is_default"
+                   type="text"
+                   readonly
+                   class="form-control-plaintext bg-lightgray text-darkgray px-2 border"
+                   :value="$t(item.description_tag)">
+            <v-select v-else
+                      multiple
+                      label="code"
+                      v-model="item.pay_types"
+                      :options="payTypes">
+              <template slot="option"
+                        slot-scope="option">
+                <span>[{{ option.code }}]&nbsp;{{ option.name }}</span>
+              </template>
+            </v-select>
+          </td>
         </tr>
         <!--<tr>-->
-          <!--<td>Leave Pay</td>-->
-          <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
+        <!--<td>Leave Pay</td>-->
+        <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
         <!--</tr>-->
         <!--<tr>-->
-          <!--<td>Director's Fee</td>-->
-          <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
+        <!--<td>Director's Fee</td>-->
+        <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
         <!--</tr>-->
         <!--<tr>-->
-          <!--<td>Commission/Fees</td>-->
-          <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
+        <!--<td>Commission/Fees</td>-->
+        <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
         <!--</tr>-->
         <!--<tr>-->
-          <!--<td>Bonus</td>-->
-          <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
+        <!--<td>Bonus</td>-->
+        <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
         <!--</tr>-->
         <!--<tr>-->
-          <!--<td>Back Pay</td>-->
-          <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
+        <!--<td>Back Pay</td>-->
+        <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
         <!--</tr>-->
         <!--<tr>-->
-          <!--<td>Certain PayCommission/Fees</td>-->
-          <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
+        <!--<td>Certain PayCommission/Fees</td>-->
+        <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
         <!--</tr>-->
         <!--<tr>-->
-          <!--<td>Commission/Fees</td>-->
-          <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
+        <!--<td>Commission/Fees</td>-->
+        <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
         <!--</tr>-->
 
       </table>
@@ -142,32 +158,118 @@ export default {
     'v-select': vSelect
   },
   methods: {
+    setInputParticulars () {
+      let vm = this
+      let userParticulars = []
+      if (vm.payTypes) {
+        let data = this.$store.getters.incomeParticulars
+        for (var i = 0; i < data.length; i++) {
+          var item = data[i]
+          userParticulars.push({
+            id: item.id,
+            is_default: item.is_default,
+            description_tag: item.description_tag,
+            name: item.name,
+            pay_type_ids: item.pay_type_ids,
+            pay_types: vm.payTypes
+              ? vm.payTypes.filter(payType => {
+                return item.pay_type_ids.indexOf(payType.id) >= 0
+              })
+              : []
+          })
+        }
+        console.log('computed(incomeParticulars) :: userParticulars: ', userParticulars)
+      }
+      vm.inputParticulars = userParticulars
+    },
+    onSelectPayType (item, payTypes) {
+      let vm = this
+      vm.$store.dispatch('UPDATE_INCOME_PARTICULAR_PAYTYPES', {
+        id: item.id,
+        payTypes: payTypes
+      })
+    },
     onOkClicked () {
-      alert('onOkClicked')
+      let vm = this
+      let particulars = []
+
+      let particular
+      for (var i = 0; i < vm.inputParticulars.length; i++) {
+        particular = vm.inputParticulars[i]
+        console.log('i=' + i + ': particular: ', particular)
+        particulars.push({
+          id: particular.id,
+          name: particular.name,
+          pay_type_ids: particular.pay_types.map(payType => payType.id)
+        })
+      }
+      vm.$emit('submit', {
+        data: {
+          incomeParticulars: particulars,
+          teamId: vm.teamId
+        },
+        callback: function (response) {
+          if (response.status) {
+            vm.$emit('close')
+          } else {
+
+          }
+        }
+      })
     },
     loadData () {
       let vm = this
       // alert('loadData')
-      this.$store.dispatch('FETCH_INCOME_PARTICULARS').then(function (result) {
-        vm.inputParticulars = result
+      // vm.inputParticulars = []
+      vm.$store.dispatch('FETCH_PAY_TYPES').then(function (payTypes) {
+        console.log('loadData after FETCH_PAY_TYPES :: payTypes: ', payTypes)
+        vm.$store.dispatch('FETCH_INCOME_PARTICULARS').then(function (particulars) {
+          // console.log('loadData after FETCH_INCOME_PARTICULARS :: particulars: ', particulars)
+          // let item
+          // let payTypeIdArray
+          // for (var i = 0; i < particulars.length; i++) {
+          //   item = particulars[i]
+          //   payTypeIdArray = item.pay_type_ids
+          //   vm.inputParticulars.push({
+          //     id: item.id,
+          //     is_default: item.is_default,
+          //     description_tag: item.description_tag,
+          //     name: item.name,
+          //     pay_types: payTypes.filter(payType => {
+          //       return payTypeIdArray.indexOf(payType.id) >= 0
+          //     })
+          //   })
+          // }
+        })
       })
-      this.$store.dispatch('FETCH_PAY_TYPES')
     }
   },
   computed: {
-    // incomeParticulars () {
-    //   let vm = this
-    //   vm.userParticulars = []
-    //   let data = this.$store.getters.incomeParticulars
-    //   for (var i = 0; i < data.length; i++) {
-    //     var item = data[i]
-    //     vm.userParticulars.push({
-    //       id: item.id,
-    //       name: item.name,
-    //       pay_type_ids: item.pay_item_ids
-    //     })
-    //   }
-    // },
+    incomeParticulars () {
+      return this.$store.getters.incomeParticulars
+      // let vm = this
+      // let userParticulars = []
+      // if (vm.payTypes) {
+      //   let data = this.$store.getters.incomeParticulars
+      //   for (var i = 0; i < data.length; i++) {
+      //     var item = data[i]
+      //     userParticulars.push({
+      //       id: item.id,
+      //       is_default: item.is_default,
+      //       description_tag: item.description_tag,
+      //       name: item.name,
+      //       pay_type_ids: item.pay_type_ids,
+      //       pay_types: vm.payTypes
+      //         ? vm.payTypes.filter(payType => {
+      //           return item.pay_type_ids.indexOf(payType.id) >= 0
+      //         })
+      //         : []
+      //     })
+      //   }
+      //   console.log('computed(incomeParticulars) :: userParticulars: ', userParticulars)
+      // }
+      // return userParticulars
+    },
     teamId () {
       return this.$store.getters.teamId
     },
@@ -177,8 +279,8 @@ export default {
       for (var i = 0; i < this.$store.getters.payTypes.length; i++) {
         payType = this.$store.getters.payTypes[i]
         result.push({
-          label: payType.code,
-          value: payType.id,
+          id: payType.id,
+          code: payType.code,
           name: payType.name
         })
       }
@@ -186,6 +288,9 @@ export default {
     }
   },
   watch: {
+    incomeParticulars: function (val) {
+      this.setInputParticulars()
+    },
     teamId: function (val) {
       this.loadData()
     }
@@ -204,10 +309,27 @@ export default {
   }
 
   #tax-form-settings-dialog .particular-label {
-    max-width: 80px;
+    max-width: 160px;
+    width: 160px;
     overflow-x: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
 
+  .modal-wrapper {
+    vertical-align: middle !important;
+  }
+
+  .modal-container {
+    max-height: 90%;
+    margin-top: 0 !important;
+  }
+
+  .bg-lightgray {
+    background-color: rgba(0, 0, 0, .05);
+  }
+
+  .text-darkgray {
+    color: darkgray;
+  }
 </style>

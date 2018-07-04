@@ -15,6 +15,13 @@ const getters = {
 const mutations = {
   setIncomeParticulars: (state, payload) => {
     state.incomeParticulars = payload
+  },
+  setIncomeParticularPayTypes: (state, payload) => {
+    for (var i = 0; i < state.incomeParticulars.length; i++) {
+      if (state.incomeParticulars[i].id === payload.id) {
+        state.incomeParticulars[i].pay_type_ids = payload.payTypes.map(payType => payType.id)
+      }
+    }
   }
 }
 
@@ -37,6 +44,22 @@ const actions = {
         }
       })
     })
+  },
+
+  [types.UPDATE_INCOME_PARTICULARS] ({rootGetters, commit}, payload) {
+    return new Promise((resolve, reject) => {
+      let url = constants.apiUrl + '/income_particulars'
+      let config = rootGetters.apiHeaderConfig
+      Vue.axios.post(url, payload, config).then(function (response) {
+        if (response.data.status) {
+          resolve(response.data)
+        }
+      })
+    })
+  },
+
+  [types.UPDATE_INCOME_PARTICULAR_PAYTYPES] ({rootGetters, commit}, payload) {
+    commit('setIncomeParticularPayTypes', payload)
   }
 }
 

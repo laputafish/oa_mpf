@@ -1,0 +1,1 @@
+export const FETCH_PAYROLLS = 'FETCH_PAYROLLS'

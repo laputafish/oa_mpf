@@ -180,7 +180,6 @@ const mutations = {
   },
 
   setHoveringEmployeeId: (state, payload) => {
-    console.log('setHoveringEmployeeId = ' + payload)
     state.hoveringEmployeeId = payload
     state.selectingEmployeeIds = []
     if (state.activeEmployeeId !== -1 && state.hoveringEmployeeId !== -1) {

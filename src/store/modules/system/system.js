@@ -81,7 +81,15 @@ const getters = {
     return state.user
   },
   teamId (state) {
-    return state.user ? state.user.oa_last_team_id : ''
+    let result = null
+    if (state.user) {
+      if (state.user.oa_last_team_id) {
+        if (state.user.oa_last_team_id !== null && state.user.oa_last_team_id !== 0) {
+          result = state.user.oa_last_team_id
+        }
+      }
+    }
+    return result
   },
   userFolders (state) {
     console.log('system.js :: getters.userFolders: state.user.folder: ', state.user.folder)
