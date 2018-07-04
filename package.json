@@ -48,6 +48,7 @@
     "vue-moment": "^4.0.0",
     "vue-mq": "^0.2.1",
     "vue-router": "^3.0.1",
+    "vue-select": "^2.4.0",
     "vue-sortable-tree": "^1.2.1",
     "vue-tree-halower": "^1.5.4",
     "vue-upload-component": "^2.8.9",

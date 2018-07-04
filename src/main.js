@@ -57,6 +57,7 @@ import 'simple-line-icons/scss/simple-line-icons.scss'
 // window.jQuery = jQuery
 // window.$ = jQuery
 import {i18n} from '@/lang/lang.js'
+import vSelect from 'vue-select'
 
 window.$ = $
 window.jQuery = $
@@ -102,6 +103,7 @@ Vue.mixin({
     formatCurrency: (number) => number.toFixed(2)
   }
 })
+Vue.use(vSelect)
 
 Vue.filter('formatSize', function (size) {
   if (size > 1024 * 1024 * 1024 * 1024) {

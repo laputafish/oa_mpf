@@ -80,6 +80,9 @@ const getters = {
     console.log('store :: getters.user')
     return state.user
   },
+  teamId (state) {
+    return state.user ? state.user.oa_last_team_id : ''
+  },
   userFolders (state) {
     console.log('system.js :: getters.userFolders: state.user.folder: ', state.user.folder)
     let folder = state.user.folder

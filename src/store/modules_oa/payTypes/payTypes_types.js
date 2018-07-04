@@ -1,0 +1,1 @@
+export const FETCH_PAY_TYPES = 'FETCH_PAY_TYPES'

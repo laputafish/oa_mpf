@@ -6,7 +6,10 @@
     "employees": "員工",
     "dashboard": "儀表板",
     "profile": "我的檔案",
-    "home": "首頁"
+    "home": "首頁",
+    "user_customed": "用者自訂",
+    "chinese": "中文",
+    "english": "英文"
   },
   "messages": {
     "access_denied": "沒有相關權限!"
@@ -23,7 +26,8 @@
     "forgot_password": "忘記密碼"
   },
   "tax": {
-    "tax_forms": "報稅表"
+    "tax_forms": "報稅表備忘",
+    "tax_form_settings": "報稅表備忘設定"
   },
   "mpf": {
     "mpf_management": "MPF 管理"

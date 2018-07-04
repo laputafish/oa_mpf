@@ -1,14 +1,21 @@
 <template>
-  <div class="tax-forms animated fadeIn mx-3">
+  <div class="tax-forms animated fadeIn mx-3"
+       @mouseover="onMouseOverBlank">
     <div class="row">
       <div class="col-sm-12">
-        <button type="button" class="ml-1 pull-right btn-width-80 btn btn-default">
+        <button type="button"
+                @click="showingTaxFormSettingsDialog=true"
+                class="ml-1 pull-right btn-width-80 btn btn-default">
           <i class="fa fa-gear"></i>
         </button>
-        <button type="button" class="ml-1 pull-right btn-width-80 btn btn-default">
+        <button type="button"
+                @click="generateTaxForms"
+                class="ml-1 pull-right btn-width-80 btn btn-default">
           <i class="fa fa-play"></i>
         </button>
-        <button type="button" class="ml-1 pull-right btn-width-80 btn btn-default">
+        <button type="button"
+                @click="removeTaxForms"
+                class="ml-1 pull-right btn-width-80 btn btn-default">
           <i class="fa fa-close"></i>
         </button>
         <button type="button"
@@ -69,13 +76,14 @@
           </div>
           <div class="flex-grow-1">
             <div class="employee-item mr-1 mb-1"
-                 :class="{'selected':selectedEmployeeIds.indexOf(employee.id)>=0}"
+                 :class="{'selected':selectedEmployeeIds.indexOf(employee.id)>=0, 'selecting':selectingEmployeeIds.indexOf(employee.id)>=0}"
                  v-for="employee in employees"
                  :key="employee.id">
               <div class="d-flex flex-column align-items-center">
                 <div class="d-flex flex-row">
                   <div class="selection-box-column d-flex flex-column justify-content-center align-items-center">
                     <button type="button"
+                            :class="{'btn-yellow':activeEmployeeId==employee.id,'btn-default':activeEmployeeId!=employee.id}"
                       class="btn btn-sm btn-default"
                       @click="toggleEmployee(employee)"
                       style="margin-bottom: 0.5rem;">
@@ -84,11 +92,14 @@
                          ></i>
                     </button>
                     <button type="button"
-                    class="btn btn-sm btn-default">
+                            @click="toggleEmployeeRange(employee)"
+                            @mouseover.stop="onMouseOverEmployee(employee)"
+                            class="btn btn-sm btn-default">
                       <i class="fa fa-circle"></i>
                     </button>
                   </div>
-                  <div class="employee-content d-flex flex-column align-items-center">
+                  <div class="employee-content d-flex flex-column align-items-center"
+                       @click="toggleEmployee(employee)">
                     <img class="employee-avatar" :src="getAvatar(employee)"/>
                   </div>
                   <div class="employee-document-column d-flex flex-column align-items-center justify-content-center">
@@ -107,22 +118,29 @@
         </div>
       </div>
     </div>
+    <tax-form-settings-dialog
+      @close="showingTaxFormSettingsDialog=false"
+      v-show="showingTaxFormSettingsDialog">
+
+    </tax-form-settings-dialog>
   </div>
 </template>
 
 <script>
 import GroupHierarchicalItem from '@/views/components/GroupHierarchicalItem'
+import TaxFormSettingsDialog from '@/dialogs/TaxFormSettingsDialog'
 import YoovRadioButtons from '@/components/YoovRadioButtons'
 import constants from '@/store/constants.json'
 
 export default {
   components: {
     'group-hierarchical-item': GroupHierarchicalItem,
-    'yoov-radio-buttons': YoovRadioButtons
+    'yoov-radio-buttons': YoovRadioButtons,
+    'tax-form-settings-dialog': TaxFormSettingsDialog
   },
   data () {
     return {
-      startEmployeeNode: null,
+      showingTaxFormSettingsDialog: false,
       searchEmployee: '',
       yearlys: [
         {title: '02/03', selected: false},
@@ -144,6 +162,12 @@ export default {
     }
   },
   computed: {
+    selectingEmployeeIds () {
+      return this.$store.getters.selectingEmployeeIds
+    },
+    hoveringEmployeeId () {
+      return this.$store.getters.hoveringEmployeeId
+    },
     selectedEmployeeIds () {
       return this.$store.getters.selectedEmployeeIds
     },
@@ -170,6 +194,9 @@ export default {
     },
     user () {
       return this.$store.getters.user
+    },
+    activeEmployeeId () {
+      return this.$store.getters.activeEmployeeId
     },
     selectedGroup () {
       return this.$store.getters.selectedGroup
@@ -249,6 +276,26 @@ export default {
     // vm.selectedGroup = vm.groups[0]
   },
   methods: {
+    showSettings () {
+
+    },
+
+    generateTaxForms () {
+    },
+
+    removeTaxForms () {
+
+    },
+
+    toggleEmployeeRange (employee) {
+      this.$store.dispatch('TOGGLE_TO_EMPLOYEE', employee.id)
+    },
+    onMouseOverBlank () {
+      this.$store.commit('setHoveringEmployeeId', 0)
+    },
+    onMouseOverEmployee (employee) {
+      this.$store.commit('setHoveringEmployeeId', employee.id)
+    },
     initSelectedGroup () {
       let vm = this
       this.$store.dispatch('SELECT_GROUP', vm.groups[0])
@@ -351,7 +398,8 @@ export default {
     border-radius: 50rem;
   }
 
-  .employee-item:hover {
+  .employee-item:hover,
+  .employee-item.selecting {
     background-color: rgba(221, 221, 221, 0.6);
   }
 
@@ -401,5 +449,13 @@ export default {
   .document-icon img {
     width: 48px;
     height: 48px;
+  }
+
+  .tax-forms .btn-yellow {
+    background-color: yellow;
+  }
+
+  .tax-forms .employee-content {
+    cursor: pointer;
   }
 </style>

@@ -5,6 +5,9 @@ import * as types from './groups_types'
 
 const state = {
   selectedEmployeeIds: [],
+  selectingEmployeeIds: [],
+  activeEmployeeId: -1,
+  hoveringEmployeeId: -1,
   groups: [],
   employees: [],
   selectedGroup: null
@@ -39,13 +42,22 @@ const sortGroupByName = (groupList) => {
 }
 
 const getters = {
+  selectingEmployeeIds: state => {
+    return state.selectingEmployeeIds
+  },
+  selectedEmployeeIds: state => {
+    return state.selectedEmployeeIds
+  },
+  hoveringEmployeeId: state => {
+    return state.hoveringEmployeeId
+  },
+  activeEmployeeId: state => {
+    return state.activeEmployeeId
+  },
   employees: state => {
     return state.selectedGroup === null
       ? []
       : state.selectedGroup.employees
-  },
-  selectedEmployeeIds: state => {
-    return state.selectedEmployeeIds
   },
   isAllEmployeesSelected: (state) => {
     let result = false
@@ -152,16 +164,91 @@ const mutations = {
   },
   setSelectedEmployeeIds: (state, payload) => {
     state.selectedEmployeeIds = payload
+  },
+
+  appendEmployeeId: (state, payload) => {
+    state.selectedEmployeeIds.push(payload)
+  },
+
+  removeSelectedEmployeeIdByIndex: (state, payload) => {
+    state.selectedEmployeeIds.splice(payload, 1)
+  },
+
+  setActiveEmployeeId: (state, payload) => {
+    state.activeEmployeeId = payload
+    state.selectingEmployeeIds = []
+  },
+
+  setHoveringEmployeeId: (state, payload) => {
+    console.log('setHoveringEmployeeId = ' + payload)
+    state.hoveringEmployeeId = payload
+    state.selectingEmployeeIds = []
+    if (state.activeEmployeeId !== -1 && state.hoveringEmployeeId !== -1) {
+      let employees = state.selectedGroup.employees
+      let p1 = employees.findIndex(employee => { return employee.id === state.activeEmployeeId })
+      let p2 = employees.findIndex(employee => { return employee.id === state.hoveringEmployeeId })
+      if (p1 > p2) {
+        let tmp = p1
+        p1 = p2
+        p2 = tmp
+      }
+      for (var i = p1; i <= p2; i++) {
+        state.selectingEmployeeIds.push(employees[i].id)
+      }
+    }
   }
 }
 
 const actions = {
-  async [types.TOGGLE_EMPLOYEE_SELECTION] ({commit}) {
-    let p = this.selectedEmployeeIds.indexOf(employee.id)
+  async [types.TOGGLE_TO_EMPLOYEE] ({state, commit}, payload) {
+    let targetEmployeeId = payload
+    if (state.activeEmployeeId !== 0) {
+      let employees = state.selectedGroup.employees
+      let p1 = employees.findIndex(employee => { return employee.id === state.activeEmployeeId })
+      let p2 = employees.findIndex(employee => { return employee.id === targetEmployeeId })
+      let i
+      if (p1 > p2) {
+        let tmp = p1
+        p1 = p2
+        p2 = tmp
+      }
+      let isRangeAllSelected = true
+      for (i = p1; i <= p2; i++) {
+        if (state.selectedEmployeeIds.indexOf(employees[i].id) === -1) {
+          isRangeAllSelected = false
+          break
+        }
+      }
+
+      if (isRangeAllSelected) {
+        // remove from selection
+        let p
+        for (i = p1; i <= p2; i++) {
+          p = state.selectedEmployeeIds.indexOf(employees[i].id)
+          commit('removeSelectedEmployeeIdByIndex', p)
+        }
+        commit('setActiveEmployeeId', -1)
+      } else {
+        // append to selection
+        for (i = p1; i <= p2; i++) {
+          if (state.selectedEmployeeIds.indexOf(employees[i].id) === -1) {
+            commit('appendEmployeeId', employees[i].id)
+          }
+        }
+      }
+    }
+  },
+
+  async [types.TOGGLE_EMPLOYEE_SELECTION] ({state, commit}, payload) {
+    let employee = payload
+    let p = state.selectedEmployeeIds.indexOf(employee.id)
     if (p === -1) {
-      this.selectedEmployeeIds.push(employee.id)
+      commit('appendEmployeeId', employee.id)
+      commit('setActiveEmployeeId', employee.id)
     } else {
-      this.selectedEmployeeIds.splice(p, 1)
+      console.log('TOGGLE_EMPLOYEE_SELEDCTION p = ' + p)
+      commit('removeSelectedEmployeeIdByIndex', p)
+      commit('setActiveEmployeeId', -1)
     }
   },
 
