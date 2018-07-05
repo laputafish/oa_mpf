@@ -42,7 +42,9 @@
             id="yearly-box"
             class="flex-grow-1 yearly-scroller"
             :buttons="yearlys"
-            :fieldName="'title'"
+            :labelField="'title'"
+            :valueField="'year'"
+            :selectedValue="selectedFiscalYear"
             @click="onYearlySelected"></yoov-radio-buttons>
       </div>
 
@@ -104,7 +106,10 @@
                   </div>
                   <div class="employee-document-column d-flex flex-column align-items-center justify-content-center">
                     <div class="document-icon">
-                      <img :src="mediaUrl + '/defaults/pdf'"/>
+                      <img v-if="employeeIdsWithTaxForm && employeeIdsWithTaxForm.indexOf(employee.id)>=0"
+                           :src="mediaUrl + '/defaults/tax_form_ready'"/>
+                      <img v-else
+                           :src="mediaUrl + '/defaults/tax_form_not_ready'"/>
                     </div>
                     <button type="button" class="btn-generate btn btn-sm btn-success">
                       <i class="fa fa-fw fa-play"></i>
@@ -122,7 +127,6 @@
       @submit="saveTaxFormSettings"
       @close="showingTaxFormSettingsDialog=false"
       v-show="showingTaxFormSettingsDialog">
-
     </tax-form-settings-dialog>
   </div>
 </template>
@@ -132,6 +136,7 @@ import GroupHierarchicalItem from '@/views/components/GroupHierarchicalItem'
 import TaxFormSettingsDialog from '@/dialogs/TaxFormSettingsDialog'
 import YoovRadioButtons from '@/components/YoovRadioButtons'
 import constants from '@/store/constants.json'
+import Pusher from 'pusher-js' // import Pusher
 
 export default {
   components: {
@@ -142,27 +147,15 @@ export default {
   data () {
     return {
       showingTaxFormSettingsDialog: false,
+      selectedFiscalYear: '',
       searchEmployee: '',
-      yearlys: [
-        {title: '02/03', selected: false},
-        {title: '03/04', selected: false},
-        {title: '04/05', selected: false},
-        {title: '05/06', selected: false},
-        {title: '06/07', selected: false},
-        {title: '08/09', selected: false},
-        {title: '09/10', selected: false},
-        {title: '10/11', selected: false},
-        {title: '11/12', selected: false},
-        {title: '12/13', selected: false},
-        {title: '13/14', selected: false},
-        {title: '14/15', selected: false},
-        {title: '15/16', selected: false},
-        {title: '16/17', selected: false},
-        {title: '18/19', selected: false}
-      ]
+      yearlys: []
     }
   },
   computed: {
+    employeeIdsWithTaxForm () {
+      return this.$store.employeeIdsWithTaxForm
+    },
     teamId () {
       return this.$store.getters.teamId
     },
@@ -219,6 +212,12 @@ export default {
     }
   },
   watch: {
+    // yearlys: function (val) {
+    //
+    // },
+    selectedFiscalYear: function (val) {
+      this.loadTaxForms()
+    },
     selectedGroup: function (val) {
       this.$store.dispatch('CLEAR_EMPLOYEE_SELECTION')
       // this.selectedEmployeeIds = []
@@ -286,7 +285,32 @@ export default {
     // ]
     // vm.selectedGroup = vm.groups[0]
   },
+  created () {
+    this.subscribe()
+  },
+  beforeDestroy () {
+    this.unSubscribe()
+  },
   methods: {
+    subscribe () {
+      let vm = this
+      vm.pusher = new Pusher('646e36da78e4db3ea81a', { cluster: 'ap1' })
+      vm.pusher.subscribe('tax_forms')
+      vm.pusher.bind('new_job', data => {
+        console.log('new_job :: data:', data)
+      })
+      vm.pusher.bind('new_tax_form', data => {
+        console.log('new_tax_form :: data:', data)
+      })
+    },
+
+    unSubscribe () {
+      this.pusher.disconnect()
+    },
+
+    loadTaxForms () {
+      this.$store.dispatch('FETCH_TAX_FORMS', this.selectedFiscalYear)
+    },
     getYearlyList (startedDate, endedDate) {
       let vm = this
       if (startedDate > endedDate) {
@@ -309,22 +333,35 @@ export default {
       let firstFiscalYear
       let startedDateMoment = vm.$moment(startedDate)
       let startedDateYear = startedDateMoment.year()
-      if (startedDateMoment.formst('YYYY-MM-DD') < startedDateYear + '-03-31') {
+      if (startedDateMoment.format('YYYY-MM-DD') < startedDateYear + '-03-31') {
         firstFiscalYear = startedDateYear - 1
       } else {
         firstFiscalYear = startedDateYear
       }
 
-      alert('firstFiscalYear = ' + firstFiscalYear + '   lastFiscalYear = ' + lastFiscalYear)
+      vm.yearlys = []
 
+      for (var year = firstFiscalYear; year <= lastFiscalYear; year++) {
+        vm.yearlys.push({
+          year: year.toString(),
+          title: year.toString().substr(-2) + '/' + (year + 1).toString().substr(-2),
+          selected: false
+        })
+      }
+      vm.selectedFiscalYear = lastFiscalYear.toString()
     },
     loadPayrolls () {
       let vm = this
       this.$store.dispatch('FETCH_PAYROLLS').then(function () {
-        let startedDate = vm.payrolls[0].startedDate
-        let endedDate = vm.payrolls[vm.payrolls.length - 1].endedDate
-        let yearlyList = vm.getYearlyList(startedDate, endedDate)
-        console.log('yearlyList: ', yearlyList)
+        console.log('loadPayrolls FETCH_PAYROLLS.then: vm.payrolls: ', vm.payrolls)
+        if (vm.payrolls.length > 0) {
+          let startedDate = vm.payrolls[0].startedDate
+          let endedDate = vm.payrolls[vm.payrolls.length - 1].endedDate
+          vm.getYearlyList(startedDate, endedDate)
+        } else {
+          vm.yearlys = []
+          vm.selectedFiscalYear = ''
+        }
       })
     },
     showTaxFormSettingsDialog () {
@@ -348,6 +385,7 @@ export default {
     },
 
     generateTaxForms () {
+      this.$store.dispatch('GENERATE_SELECTED_TAX_FORMS', this.selectedFiscalYear)
     },
 
     removeTaxForms () {
@@ -398,11 +436,8 @@ export default {
       // this.storedSelectedGroup = group
     },
     onYearlySelected (yearlyItem) {
-      console.log('onYearlySelected :: yearlyItem: ', yearlyItem)
-      let i
-      for (i = 0; i < this.yearlys.length; i++) {
-        this.yearlys[i].selected = this.yearlys[i].title === yearlyItem.title
-      }
+      let vm = this
+      vm.selectedFiscalYear = yearlyItem.year
     },
     onPrevYearClicked () {
       let vm = this
@@ -417,10 +452,7 @@ export default {
     onYearlysInit () {
       let vm = this
       let yearlyBox = vm.$refs.yearlyBox
-      let yearlyWrapper = vm.$refs.yearlyWrapper
-      console.log('yearlyWrapper: ', yearlyWrapper)
-      console.log('onYearlysInit :: yearlyWrapper.innerWidth: ', yearlyWrapper.innerWidth)
-      console.log('window.innerWidth = ' + window.innerWidth)
+      // let yearlyWrapper = vm.$refs.yearlyWrapper
       yearlyBox.$el.scrollLeft = window.innerWidth // yearlyWrapper.style.width
     }
   }

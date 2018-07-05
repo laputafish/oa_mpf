@@ -31,6 +31,7 @@ const actions = {
       }
       await Vue.axios.get(url, config).then(function (response) {
         if (response.data.status) {
+          console.log('FETCH_PAYROLLS :: result: ', response.data.result)
           commit('setPayrolls', response.data.result)
         }
       })

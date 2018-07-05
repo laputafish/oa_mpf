@@ -4,9 +4,9 @@
             :key="index"
             @click="onSelect(button)"
             v-for="(button, index) in buttons"
-            :class="{'btn-primary':button.selected, 'btn-default':!button.selected}"
+            :class="{'btn-primary':button[valueField]===selectedValue, 'btn-default':button[valueField]!==selectedValue}"
             class="btn btn-sm btn-width-80">
-      {{ button[fieldName] }}
+      {{ button[labelField] }}
     </button>
   </div>
 </template>
@@ -20,9 +20,17 @@ export default {
         return []
       }
     },
-    fieldName: {
+    selectedValue: {
       type: String,
       default: ''
+    },
+    labelField: {
+      type: String,
+      default: 'label'
+    },
+    valueField: {
+      type: String,
+      default: 'value'
     }
   },
   methods: {
