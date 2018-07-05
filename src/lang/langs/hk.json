@@ -9,7 +9,8 @@
     "home": "首頁",
     "user_customed": "用者自訂",
     "chinese": "中文",
-    "english": "英文"
+    "english": "英文",
+    "generating_": "處理中..."
   },
   "messages": {
     "access_denied": "沒有相關權限!"

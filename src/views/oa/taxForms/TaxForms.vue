@@ -2,30 +2,48 @@
   <div class="tax-forms animated fadeIn mx-3"
        @mouseover="onMouseOverBlank">
     <div class="row">
-      <div class="col-sm-12">
-        <button type="button"
-                @click="showTaxFormSettingsDialog"
-                class="ml-1 pull-right btn-width-80 btn btn-default">
-          <i class="fa fa-gear"></i>
-        </button>
-        <button type="button"
-                @click="generateTaxForms"
-                class="ml-1 pull-right btn-width-80 btn btn-default">
-          <i class="fa fa-play"></i>
-        </button>
-        <button type="button"
-                @click="removeTaxForms"
-                class="ml-1 pull-right btn-width-80 btn btn-default">
-          <i class="fa fa-close"></i>
-        </button>
-        <button type="button"
-                @click="toggleAll"
-                class="ml-1 pull-right btn-width-80 btn btn-default">
-          <i class="fa fa-check-square mr-1"></i>
-          /
-          <i class="fa fa-square"></i>
-        </button>
+      <div class="col-sm-3">
         <h2>{{ (typeof $t === 'function') ? $t('tax.tax_forms') : 'not defined' }}</h2>
+      </div>
+      <div class="col-sm-9 text-right" style="
+">
+        <div class="pull-right">
+          <table style="height:46px;">
+            <tbody>
+            <tr>
+              <td style="padding:0;">
+                <div
+                  v-if="generatingTaxForms"
+                  style="width: 240px; text-align: center; display: inline-block;">
+                  <small>{{ generatingProgressBar.title }}</small>
+                  <div class="progress" style="position:relative;">
+                    <div class="progress-bar progress-bar-animated progress-bar-striped"
+                      :style="generatingProgressBar.style">
+                    </div>
+                    <div style="position:absolute;width:100%;height:100%;top:0;left:0;text-align:center;">
+                      {{ generatingProgressBar.caption }}
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td style="padding:0;">
+                <button type="button" class="ml-1 btn-width-80 btn btn-default"
+                        @click="toggleAll">
+                  <i class="fa fa-check-square mr-1"></i>/<i class="fa fa-square"></i></button>
+                <button type="button" class="ml-1 btn-width-80 btn btn-default"
+                        @click="removeTaxForms">
+                  <i class="fa fa-close"></i></button>
+                <button type="button" class="ml-1 btn-width-80 btn btn-default"
+                        @click="generateTaxForms">
+                  <i class="fa fa-play"></i></button>
+                <button type="button" class="ml-1 btn-width-80 btn btn-default"
+                        @click="showTaxFormSettingsDialog">
+                  <i class="fa fa-gear"></i></button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
     <div class="d-flex flex-row mb-3">
@@ -37,15 +55,15 @@
 
       <div ref="yearlyWrapper" id="yearly-wrapper" class="yearly-scroller-wrapper">
         <yoov-radio-buttons
-            @moveToLast="onYearlysInit"
-            ref="yearlyBox"
-            id="yearly-box"
-            class="flex-grow-1 yearly-scroller"
-            :buttons="yearlys"
-            :labelField="'title'"
-            :valueField="'year'"
-            :selectedValue="selectedFiscalYear"
-            @click="onYearlySelected"></yoov-radio-buttons>
+          @moveToLast="onYearlysInit"
+          ref="yearlyBox"
+          id="yearly-box"
+          class="flex-grow-1 yearly-scroller"
+          :buttons="yearlys"
+          :labelField="'title'"
+          :valueField="'year'"
+          :selectedValue="selectedFiscalYear"
+          @click="onYearlySelected"></yoov-radio-buttons>
       </div>
 
       <button type="button" @click="onNextYearClicked" class="btn-width-50 btn-sm btn btn-default pull-right">
@@ -55,11 +73,11 @@
     <div class="d-flex flex-row">
       <ul class="hierarchical-group-list flex-grow-0">
         <group-hierarchical-item
-            :groupItem="group"
-            @onGroupSelected="onGroupSelectedHandler"
-            v-for="(group, index) in groups"
-            :selectedGroup="selectedGroup"
-            :key="index"></group-hierarchical-item>
+          :groupItem="group"
+          @onGroupSelected="onGroupSelectedHandler"
+          v-for="(group, index) in groups"
+          :selectedGroup="selectedGroup"
+          :key="index"></group-hierarchical-item>
       </ul>
       <div class="flex-grow-1">
         <div class="d-flex flex-column">
@@ -70,7 +88,7 @@
                      type="text" placeholder="搜索員工">
               <div class="input-group-append">
                 <button class="btn btn-default" type="button"
-                  @click="searchEmployee=''">
+                        @click="searchEmployee=''">
                   <i class="fa fa-close fa-fw"></i>
                 </button>
               </div>
@@ -86,12 +104,12 @@
                   <div class="selection-box-column d-flex flex-column justify-content-center align-items-center">
                     <button type="button"
                             :class="{'btn-yellow':activeEmployeeId==employee.id,'btn-default':activeEmployeeId!=employee.id}"
-                      class="btn btn-sm btn-default"
-                      @click="toggleEmployee(employee)"
-                      style="margin-bottom: 0.5rem;">
+                            class="btn btn-sm btn-default"
+                            @click="toggleEmployee(employee)"
+                            style="margin-bottom: 0.5rem;">
                       <i class="fa"
                          :class="{'fa-check-square':employeeSelected(employee), 'fa-square':!employeeSelected(employee)}"
-                         ></i>
+                      ></i>
                     </button>
                     <button type="button"
                             @click="toggleEmployeeRange(employee)"
@@ -146,10 +164,17 @@ export default {
   },
   data () {
     return {
+      pusherSubscribed: false,
+      generatingTaxForms: false,
       showingTaxFormSettingsDialog: false,
       selectedFiscalYear: '',
       searchEmployee: '',
-      yearlys: []
+      yearlys: [],
+      generatingProgressBar: {
+        title: '',
+        value: 0,
+        max: 0
+      }
     }
   },
   computed: {
@@ -247,7 +272,12 @@ export default {
       vm.$store.dispatch('FETCH_GROUPS')
     },
     teamId: function (val) {
+      let vm = this
       this.loadPayrolls()
+      if (vm.pusherSubscribed) {
+        this.unSubscribe()
+      }
+      this.subscribe()
     }
   },
 
@@ -286,26 +316,52 @@ export default {
     // vm.selectedGroup = vm.groups[0]
   },
   created () {
-    this.subscribe()
+    let vm = this
+    if (vm.itemId) {
+      vm.subscribe()
+    }
   },
   beforeDestroy () {
     this.unSubscribe()
   },
   methods: {
+    updateProgressBar (value) {
+      let vm = this
+      let percentageValue = Math.floor(100 * value / vm.generatingProgressBar.max)
+      let percentageStr = percentageValue + '%'
+      vm.generatingProgressBar.style = {width: percentageStr}
+      vm.generatingProgressBar.caption = percentageStr
+    },
+
+    updateProgress (data) {
+      let vm = this
+      let value = data.index * 2
+      if (data.item.status === 'processing') {
+        value -= 1
+      }
+      vm.updateProgressBar(value)
+    },
+
     subscribe () {
       let vm = this
-      vm.pusher = new Pusher('646e36da78e4db3ea81a', { cluster: 'ap1' })
-      vm.pusher.subscribe('tax_forms')
-      vm.pusher.bind('new_job', data => {
-        console.log('new_job :: data:', data)
-      })
-      vm.pusher.bind('new_tax_form', data => {
-        console.log('new_tax_form :: data:', data)
-      })
+      if (vm.itemId) {
+        vm.pusher = new Pusher('646e36da78e4db3ea81a', {cluster: 'ap1'})
+        vm.pusher.subscribe('team_' + vm.itemId)
+        vm.pusher.bind('new_job', data => {
+          console.log('new_job :: data:', data)
+        })
+        vm.pusher.bind('tax_form_status_updated', data => {
+          alert('tax_form_status_updated')
+          vm.updateProgress(data)
+        })
+        vm.pusherSubscribed = true
+      }
     },
 
     unSubscribe () {
-      this.pusher.disconnect()
+      if (this.pusher) {
+        this.pusher.disconnect()
+      }
     },
 
     loadTaxForms () {
@@ -380,12 +436,34 @@ export default {
       })
     },
 
-    showSettings () {
+    initProgressBar (job, total) {
+      console.log('initProgressBar job: ', job)
+      console.log('initProgressBar total: ' + total)
+      let vm = this
+      vm.generatingTaxForms = job.status === 'pending' && total > 0
+      if (total > 0) {
+        vm.prepareProgressBar(total)
+      }
+    },
 
+    prepareProgressBar (total) {
+      let vm = this
+      vm.generatingProgressBar.title = vm.$t('general.generating_')
+      vm.generatingProgressBar.value = 1
+      vm.generatingProgressBar.max = total * 2
+      vm.generatingProgressBar.caption = '0%'
+      vm.generatingProgressBar.style = {width: '0%'}
     },
 
     generateTaxForms () {
-      this.$store.dispatch('GENERATE_SELECTED_TAX_FORMS', this.selectedFiscalYear)
+      let vm = this
+      this.$store.dispatch('GENERATE_SELECTED_TAX_FORMS', this.selectedFiscalYear).then(function (response) {
+        if (response.status) {
+          let job = response.job
+          let total = response.total
+          vm.initProgressBar(job, total)
+        }
+      })
     },
 
     removeTaxForms () {
@@ -463,9 +541,11 @@ export default {
   #yearly-wrapper {
     background-color: rgba(221, 221, 221, 0.6);
   }
+
   #yearly-box {
     text-align: center;
   }
+
   .hierarchical-group-list li {
     margin: 0;
   }
@@ -511,18 +591,22 @@ export default {
   .employee-item.selected:hover {
     background-color: #1E847F;
   }
+
   .employee-item:hover .selection-box-column,
   .employee-item.selected .selection-box-column {
     visibility: visible;
   }
+
   .employee-document-column .btn-generate {
     display: none;
     margin-top: 0.1rem;
     height: 1.8rem;
   }
+
   .employee-item:hover .employee-document-column .btn-generate {
     display: block;
   }
+
   .employee-content {
     width: 84px;
   }
@@ -531,15 +615,18 @@ export default {
     overflow-x: hidden;
     text-align: center;
   }
+
   .selection-box-column {
     visibility: hidden;
     padding-right: 0.5rem;
   }
+
   .selection-box-column button {
     /*margin: 0 0.5rem 0.5rem 0;*/
   }
+
   .employee-item {
-    width:auto;
+    width: auto;
     padding: 0.5rem;
     display: inline-block;
     border-radius: 0.5rem;

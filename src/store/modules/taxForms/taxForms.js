@@ -41,20 +41,23 @@ const actions = {
     }
   },
 
-  async [types.GENERATE_SELECTED_TAX_FORMS] ({rootGetters, commit}, payload) {
-    console.log('rootGetters.teamId: ', rootGetters.teamId)
-    if (rootGetters.teamId) {
-      let url = constants.apiUrl + '/tax_forms'
-      let data = {
-        teamId: rootGetters.teamId,
-        fiscalYear: payload,
-        employeeIds: rootGetters.selectedEmployeeIds,
-        command: 'generate'
+  [types.GENERATE_SELECTED_TAX_FORMS] ({rootGetters, commit}, payload) {
+    return new Promise((resolve, reject) => {
+      console.log('rootGetters.teamId: ', rootGetters.teamId)
+      if (rootGetters.teamId) {
+        let url = constants.apiUrl + '/tax_forms'
+        let data = {
+          teamId: rootGetters.teamId,
+          fiscalYear: payload,
+          employeeIds: rootGetters.selectedEmployeeIds,
+          command: 'generate'
+        }
+        let config = rootGetters.apiHeaderConfig
+        Vue.axios.post(url, data, config).then(function (response) {
+          resolve(response.data)
+        })
       }
-      let config = rootGetters.apiHeaderConfig
-      Vue.axios.post(url, data, config).then(function (response) {
-      })
-    }
+    })
   }
 }
 
