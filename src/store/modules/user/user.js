@@ -30,11 +30,23 @@ const mutations = {
 }
 
 const actions = {
-  async [types.FETCH_SELF] ({rootGetters, state, commit}) {
+  // async [types.UPDATE_DB_USER] ({commit}, payload) {
+  //   let url = constants.oaApiUrl + '/t/users/self'
+  //   let headerConfig = rootGetters.oaApiHeaderConfig
+  //   await Vue.axios.get(url, headerConfig).then(response => {
+  //     if (response.data.status) {
+  //       dispatch('UPDATE_DB_USER', response.data.result)
+  //       commit('setProfile', response.data.result)
+  //     }
+  //   })
+  // }
+
+  async [types.FETCH_SELF] ({rootGetters, state, commit, dispatch}) {
     let url = constants.oaApiUrl + '/t/users/self'
     let headerConfig = rootGetters.oaApiHeaderConfig
     await Vue.axios.get(url, headerConfig).then(response => {
       if (response.data.status) {
+      //        dispatch('UPDATE_DB_USER', response.data.result)
         commit('setProfile', response.data.result)
       }
     })

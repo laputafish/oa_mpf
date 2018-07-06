@@ -87,6 +87,12 @@ export default {
   },
   mounted () {
     let vm = this
+    console.log('Full.vue :: mounted')
+    if (!vm.user) {
+      console.log('Full.vue :: mounted : !vm.user => login')
+      vm.$router.push({name: 'Login'})
+      return
+    }
     console.log('Full.vue mounted user: ', vm.user)
     vm.$store.dispatch('GET_EQUIPMENTS').then(function () {
       console.log('finished: get equipments')

@@ -15,13 +15,14 @@
                 <div
                   v-if="generatingTaxForms"
                   style="width: 240px; text-align: center; display: inline-block;">
-                  <small>{{ generatingProgressBar.title }}</small>
+                  <small>{{ generatingProgressBar.completed ? $t('general.completed') : $t('general.generating_') }}</small>
                   <div class="progress" style="position:relative;">
-                    <div class="progress-bar progress-bar-animated progress-bar-striped"
+                    <div class="progress-bar progress-bar-animated"
+                         :class="{'progress-bar-striped':generatingProgressBar.value<generatingProgressBar.max}"
                       :style="generatingProgressBar.style">
                     </div>
-                    <div style="position:absolute;width:100%;height:100%;top:0;left:0;text-align:center;">
-                      {{ generatingProgressBar.caption }}
+                    <div style="position:absolute;width:100%;height:100%;top:0;left:0;text-align:center;color:lightgray;">
+                      {{ generatingProgressBar.caption }}&nbsp;{{ generatingProgressBar.value }}/{{ generatingProgressBar.max }}
                     </div>
                   </div>
                 </div>
@@ -124,14 +125,24 @@
                   </div>
                   <div class="employee-document-column d-flex flex-column align-items-center justify-content-center">
                     <div class="document-icon">
-                      <img v-if="employeeIdsWithTaxForm && employeeIdsWithTaxForm.indexOf(employee.id)>=0"
-                           :src="mediaUrl + '/defaults/tax_form_ready'"/>
+                      <div v-if="hasTaxForm(employee)"
+                           @click="showTaxForm(employee)"
+                           class="document-view-button">
+                        <img :src="mediaUrl + '/defaults/tax_form_ready'"/>
+                      </div>
                       <img v-else
-                           :src="mediaUrl + '/defaults/tax_form_not_ready'"/>
+                           :src="mediaUrl + '/defaults/unknown'"/>
                     </div>
-                    <button type="button" class="btn-generate btn btn-sm btn-success">
-                      <i class="fa fa-fw fa-play"></i>
-                    </button>
+                    <div class="document-action-button btn-group">
+                      <button type="button"
+                              :disabled="!hasTaxForm(employee)"
+                              class="btn-generate btn btn-sm btn-danger p-1" style="font-size:8px;">
+                        <i class="fa fa-fw fa-close"></i>
+                      </button>
+                      <button type="button" class="btn-generate btn btn-sm btn-success p-1" style="font-size:8px;">
+                        <i class="fa fa-fw fa-play"></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <small class="employee-name">{{ employee.displayName }}</small>
@@ -173,16 +184,14 @@ export default {
       generatingProgressBar: {
         title: '',
         value: 0,
-        max: 0
+        max: 0,
+        completed: false
       }
     }
   },
   computed: {
     employeeIdsWithTaxForm () {
-      return this.$store.employeeIdsWithTaxForm
-    },
-    teamId () {
-      return this.$store.getters.teamId
+      return this.$store.getters.employeeIdsWithTaxForm
     },
     payrolls () {
       return this.$store.getters.payrolls
@@ -217,6 +226,9 @@ export default {
     employees () {
       return this.$store.getters.employees
     },
+    teamId () {
+      return this.$store.getters.teamId
+    },
     user () {
       return this.$store.getters.user
     },
@@ -234,6 +246,9 @@ export default {
       //   }
       //   return vm.storedSelectedGroup
       // }
+    },
+    taxForms () {
+      return this.$store.getters.taxForms
     }
   },
   watch: {
@@ -264,7 +279,9 @@ export default {
       deep: true
     },
     employees: function (val) {
+      let vm = this
       console.log('TaxForms.vue :: watch(employees) employees:', val)
+      vm.subscribe()
     },
     user: function (val) {
       let vm = this
@@ -273,18 +290,18 @@ export default {
     },
     teamId: function (val) {
       let vm = this
-      this.loadPayrolls()
-      if (vm.pusherSubscribed) {
-        this.unSubscribe()
-      }
-      this.subscribe()
+      alert('teamId = ' + vm.teamId)
+      vm.loadPayrolls()
+      vm.subscribe()
     }
   },
 
   mounted () {
     let vm = this
     vm.loadPayrolls()
+    vm.subscribe()
     this.initSelectedGroup()
+
     // let vm = this
     // if (vm.user && vm.user.oa_last_team_id) {
     //   this.$store.dispatch('FETCH_GROUPS').then(function () {
@@ -316,43 +333,59 @@ export default {
     // vm.selectedGroup = vm.groups[0]
   },
   created () {
-    let vm = this
-    if (vm.itemId) {
-      vm.subscribe()
-    }
+    // let vm = this
+    // if (vm.itemId) {
+    //   vm.subscribe()
+    // }
   },
   beforeDestroy () {
     this.unSubscribe()
   },
   methods: {
+    showTaxForm (employee) {
+      let vm = this
+      let employeeId = parseInt(employee.id)
+      for (var i = 0; i < vm.taxForms.length; i++) {
+        let taxForm = vm.taxForms[i]
+        console.log('i=' + i + ': taxForm.employee_id = ' + taxForm.employee_id)
+        if (taxForm.employee_id === employeeId) {
+          let url = constants.apiUrl + '/media/tax_forms/' + taxForm.id
+          window.open(url, '_blank')
+          break
+        }
+      }
+    },
+    hasTaxForm (employee) {
+      let vm = this
+      return vm.employeeIdsWithTaxForm && vm.employeeIdsWithTaxForm.indexOf(parseInt(employee.id)) >= 0
+    },
     updateProgressBar (value) {
       let vm = this
       let percentageValue = Math.floor(100 * value / vm.generatingProgressBar.max)
       let percentageStr = percentageValue + '%'
+      vm.generatingProgressBar.value = value
       vm.generatingProgressBar.style = {width: percentageStr}
       vm.generatingProgressBar.caption = percentageStr
-    },
-
-    updateProgress (data) {
-      let vm = this
-      let value = data.index * 2
-      if (data.item.status === 'processing') {
-        value -= 1
-      }
-      vm.updateProgressBar(value)
+      vm.generatingProgressBar.completed = value >= vm.generatingProgressBar.max
     },
 
     subscribe () {
       let vm = this
-      if (vm.itemId) {
+      if (vm.pusherSubscribed) {
+        this.unSubscribe()
+      }
+      console.log('subscribe :: teamId = ' + vm.teamId)
+      console.log('subscribe :: user = ', vm.user)
+      if (vm.teamId) {
         vm.pusher = new Pusher('646e36da78e4db3ea81a', {cluster: 'ap1'})
-        vm.pusher.subscribe('team_' + vm.itemId)
+        console.log('SUBSCRIBE TEAM_' + vm.teamId)
+        vm.pusher.subscribe('team_' + vm.teamId)
         vm.pusher.bind('new_job', data => {
           console.log('new_job :: data:', data)
         })
         vm.pusher.bind('tax_form_status_updated', data => {
-          alert('tax_form_status_updated')
-          vm.updateProgress(data)
+          console.log('pusher.bind(tax_form_status_updated) :: data:', data)
+          vm.updateProgress(data.statusInfo)
         })
         vm.pusherSubscribed = true
       }
@@ -437,22 +470,38 @@ export default {
     },
 
     initProgressBar (job, total) {
-      console.log('initProgressBar job: ', job)
-      console.log('initProgressBar total: ' + total)
-      let vm = this
-      vm.generatingTaxForms = job.status === 'pending' && total > 0
-      if (total > 0) {
-        vm.prepareProgressBar(total)
-      }
+      // console.log('initProgressBar job: ', job)
+      // console.log('initProgressBar total: ' + total)
+      // let vm = this
+      // vm.generatingTaxForms = job.status === 'pending' && total > 0
+      // if (total > 0) {
+      //   vm.prepareProgressBar(total)
+      // }
     },
 
     prepareProgressBar (total) {
+      //       let vm = this
+      // //      vm.generatingProgressBar.title = vm.$t('general.generating_')
+      //       vm.generatingProgressBar.value = 1
+      //       vm.generatingProgressBar.max = total * 2
+      //       vm.generatingProgressBar.caption = '0%'
+      //       vm.generatingProgressBar.style = {width: '0%'}
+    },
+
+    updateProgress (statusInfo) {
       let vm = this
-      vm.generatingProgressBar.title = vm.$t('general.generating_')
-      vm.generatingProgressBar.value = 1
-      vm.generatingProgressBar.max = total * 2
-      vm.generatingProgressBar.caption = '0%'
-      vm.generatingProgressBar.style = {width: '0%'}
+      // whenever status update, show progressbar
+      vm.generatingTaxForms = true
+      vm.generatingProgressBar.max = statusInfo.total * 2
+
+      console.log('updateProgress :: data: ', statusInfo)
+      let value = statusInfo.index * 2
+      if (statusInfo.taxForm.status === 'processing') {
+        value += 1
+      } else {
+        value += 2
+      }
+      vm.updateProgressBar(value)
     },
 
     generateTaxForms () {
@@ -598,7 +647,7 @@ export default {
   }
 
   .employee-document-column .btn-generate {
-    display: none;
+    /*display: none;*/
     margin-top: 0.1rem;
     height: 1.8rem;
   }
@@ -609,6 +658,10 @@ export default {
 
   .employee-content {
     width: 84px;
+  }
+
+  .employee-content img {
+    border: 5px rgba(0,0,0,.05) solid;
   }
 
   .employee-name {
@@ -643,5 +696,16 @@ export default {
 
   .tax-forms .employee-content {
     cursor: pointer;
+  }
+
+  .tax-forms .document-view-button {
+    cursor: pointer;
+  }
+
+  .tax-forms .document-action-button button {
+    font-size: 8px;
+    padding: 0 !important;
+    line-height: 1;
+    height: 1.2rem;
   }
 </style>

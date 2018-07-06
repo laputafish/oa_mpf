@@ -9,10 +9,13 @@ const state = {
 const getters = {
   employeeIdsWithTaxForm: (state) => {
     if (state.taxForms) {
-      return state.taxForms.map(taxForm => taxForm.employee_id)
+      return state.taxForms.filter(taxForm => taxForm.status === 'ready').map(taxForm => taxForm.employee_id)
     } else {
       return []
     }
+  },
+  taxForms: (state) => {
+    return state.taxForms
   }
 }
 
@@ -36,6 +39,7 @@ const actions = {
         }
       }
       Vue.axios.get(url, config).then(function (response) {
+        console.log('FETCH_TAX_FORMS :: response: ', response)
         commit('setTaxForms', response.data.result)
       })
     }

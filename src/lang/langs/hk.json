@@ -10,7 +10,8 @@
     "user_customed": "用者自訂",
     "chinese": "中文",
     "english": "英文",
-    "generating_": "處理中..."
+    "generating_": "處理中...",
+    "completed": "完成"
   },
   "messages": {
     "access_denied": "沒有相關權限!"
