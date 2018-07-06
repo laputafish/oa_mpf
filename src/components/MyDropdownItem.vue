@@ -54,6 +54,7 @@ export default {
             vm.$store.dispatch('REMOVE_COOKIE_TOKEN')
           ]
           Promise.all(promises).then(function (response) {
+            console.log('Menu > Logout')
             vm.$router.push('/login')
           })
           break

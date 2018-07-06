@@ -31,6 +31,7 @@ import VueAxios from 'vue-axios'
 import Moment from 'vue-moment'
 import VueCookie from 'vue-cookie'
 import VueCookies from 'vue-cookies'
+import longpress from 'vue-long-press-directive'
 
 // import customLocale from 'vue2-datatable-component/locale/custom'
 
@@ -71,7 +72,7 @@ Vue.use(VueMq, {
   }
 })
 Vue.use(Vue2TouchEvents, {
-  disableClick: false,
+  disableClick: true,
   touchClass: '',
   tapTolerance: 10,
   swipeTolerance: 30,
@@ -83,6 +84,8 @@ Vue.use(BootstrapVue)
 Vue.use(Moment)
 Vue.use(VueCookie)
 Vue.use(VueCookies)
+
+Vue.use(longpress, {duration: 1000})
 
 // Vue.use(datePicker)
 // Vue.directive('tooltip', VTooltip)

@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 
 // Modules
+import auth from './modules/auth/auth'
 import system from './modules/system/system'
 import meetingRooms from './modules/meetingRooms/meetingRooms'
 import meetingRoomBookings from './modules/meetingRoomBookings/meetingRoomBookings'
@@ -27,6 +28,7 @@ const debug = process.env.NODE_ENV !== 'production'
 
 export const store = new Vuex.Store({
   modules: {
+    auth,
     system,
     meetingRoomBookings,
     meetingRooms,

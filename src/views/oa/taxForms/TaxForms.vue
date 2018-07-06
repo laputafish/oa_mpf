@@ -97,6 +97,7 @@
           </div>
           <div class="flex-grow-1">
             <div class="employee-item mr-1 mb-1"
+                 @mouseover.stop="onMouseOverEmployee(employee,$event)"
                  :class="{'selected':selectedEmployeeIds.indexOf(employee.id)>=0, 'selecting':selectingEmployeeIds.indexOf(employee.id)>=0}"
                  v-for="employee in employees"
                  :key="employee.id">
@@ -106,6 +107,7 @@
                     <button type="button"
                             :class="{'btn-yellow':activeEmployeeId==employee.id,'btn-default':activeEmployeeId!=employee.id}"
                             class="btn btn-sm btn-default"
+                            v-long-press="setActiveEmployee"
                             @click="toggleEmployee(employee)"
                             style="margin-bottom: 0.5rem;">
                       <i class="fa"
@@ -113,8 +115,8 @@
                       ></i>
                     </button>
                     <button type="button"
+                            @mouseover.stop="onMouseOverExtendButton"
                             @click="toggleEmployeeRange(employee)"
-                            @mouseover.stop="onMouseOverEmployee(employee)"
                             class="btn btn-sm btn-default">
                       <i class="fa fa-circle"></i>
                     </button>
@@ -175,6 +177,7 @@ export default {
   },
   data () {
     return {
+      longPressing: false,
       pusherSubscribed: false,
       generatingTaxForms: false,
       showingTaxFormSettingsDialog: false,
@@ -290,13 +293,14 @@ export default {
     },
     teamId: function (val) {
       let vm = this
-      alert('teamId = ' + vm.teamId)
       vm.loadPayrolls()
       vm.subscribe()
     }
   },
 
   mounted () {
+    console.log('EVENT :: TaxForms.vue :: mounted')
+
     let vm = this
     vm.loadPayrolls()
     vm.subscribe()
@@ -333,6 +337,7 @@ export default {
     // vm.selectedGroup = vm.groups[0]
   },
   created () {
+    console.log('EVENT :: TaxForms.vue :: created')
     // let vm = this
     // if (vm.itemId) {
     //   vm.subscribe()
@@ -342,12 +347,20 @@ export default {
     this.unSubscribe()
   },
   methods: {
+    setActiveEmployee () {
+      let vm = this
+      vm.longPressing = true
+      vm.$store.dispatch('SET_HOVERING_EMPLOYEE_ID_ACTIVE').then(function () {
+        vm.$nextTick(function () {
+          console.log('longPressing = false')
+        })
+      })
+    },
     showTaxForm (employee) {
       let vm = this
       let employeeId = parseInt(employee.id)
       for (var i = 0; i < vm.taxForms.length; i++) {
         let taxForm = vm.taxForms[i]
-        console.log('i=' + i + ': taxForm.employee_id = ' + taxForm.employee_id)
         if (taxForm.employee_id === employeeId) {
           let url = constants.apiUrl + '/media/tax_forms/' + taxForm.id
           window.open(url, '_blank')
@@ -374,17 +387,13 @@ export default {
       if (vm.pusherSubscribed) {
         this.unSubscribe()
       }
-      console.log('subscribe :: teamId = ' + vm.teamId)
-      console.log('subscribe :: user = ', vm.user)
       if (vm.teamId) {
         vm.pusher = new Pusher('646e36da78e4db3ea81a', {cluster: 'ap1'})
-        console.log('SUBSCRIBE TEAM_' + vm.teamId)
         vm.pusher.subscribe('team_' + vm.teamId)
         vm.pusher.bind('new_job', data => {
           console.log('new_job :: data:', data)
         })
         vm.pusher.bind('tax_form_status_updated', data => {
-          console.log('pusher.bind(tax_form_status_updated) :: data:', data)
           vm.updateProgress(data.statusInfo)
         })
         vm.pusherSubscribed = true
@@ -442,7 +451,6 @@ export default {
     loadPayrolls () {
       let vm = this
       this.$store.dispatch('FETCH_PAYROLLS').then(function () {
-        console.log('loadPayrolls FETCH_PAYROLLS.then: vm.payrolls: ', vm.payrolls)
         if (vm.payrolls.length > 0) {
           let startedDate = vm.payrolls[0].startedDate
           let endedDate = vm.payrolls[vm.payrolls.length - 1].endedDate
@@ -524,9 +532,16 @@ export default {
     },
     onMouseOverBlank () {
       this.$store.commit('setHoveringEmployeeId', -1)
+      this.$store.commit('clearSelectingEmployeeIds')
     },
-    onMouseOverEmployee (employee) {
-      this.$store.commit('setHoveringEmployeeId', employee.id)
+    onMouseOverEmployee (employee, $event) {
+      let vm = this
+      vm.longPressing = false
+      vm.$store.commit('setHoveringEmployeeId', employee.id)
+      vm.$store.commit('clearSelectingEmployeeIds')
+    },
+    onMouseOverExtendButton () {
+      this.$store.commit('setSelectingEmployeeIds')
     },
     initSelectedGroup () {
       let vm = this
@@ -547,7 +562,10 @@ export default {
       return this.selectedEmployeeIds.indexOf(employee.id) >= 0
     },
     toggleEmployee (employee) {
-      this.$store.dispatch('TOGGLE_EMPLOYEE_SELECTION', employee)
+      let vm = this
+      if (!vm.longPressing) {
+        this.$store.dispatch('TOGGLE_EMPLOYEE_SELECTION', employee)
+      }
     },
     getAvatar (employee) {
       // let vm = this
@@ -579,7 +597,6 @@ export default {
     onYearlysInit () {
       let vm = this
       let yearlyBox = vm.$refs.yearlyBox
-      // let yearlyWrapper = vm.$refs.yearlyWrapper
       yearlyBox.$el.scrollLeft = window.innerWidth // yearlyWrapper.style.width
     }
   }
@@ -641,6 +658,11 @@ export default {
     background-color: #1E847F;
   }
 
+  .tax-forms .employee-item .btn-yellow,
+  .tax-forms .employee-item:hover .btn-yellow {
+    background-color: yellow;
+  }
+
   .employee-item:hover .selection-box-column,
   .employee-item.selected .selection-box-column {
     visibility: visible;
@@ -688,10 +710,6 @@ export default {
   .document-icon img {
     width: 48px;
     height: 48px;
-  }
-
-  .tax-forms .btn-yellow {
-    background-color: yellow;
   }
 
   .tax-forms .employee-content {

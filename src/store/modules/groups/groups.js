@@ -179,8 +179,23 @@ const mutations = {
     state.selectingEmployeeIds = []
   },
 
+  setHoveringEmployeeIdActive: (state) => {
+    console.log('groups.js :: setHoveringEmployeeIdToActive employee.id = ' + state.hoveringEmployeeId)
+    state.activeEmployeeId = state.hoveringEmployeeId
+    if (state.selectedEmployeeIds.indexOf(state.hoveringEmployeeId) === -1) {
+      state.selectedEmployeeIds.push(state.hoveringEmployeeId)
+    }
+  },
+
   setHoveringEmployeeId: (state, payload) => {
     state.hoveringEmployeeId = payload
+  },
+
+  clearSelectingEmployeeIds: state => {
+    state.selectingEmployeeIds = []
+  },
+
+  setSelectingEmployeeIds: () => {
     state.selectingEmployeeIds = []
     if (state.activeEmployeeId !== -1 && state.hoveringEmployeeId !== -1) {
       let employees = state.selectedGroup.employees
@@ -199,6 +214,9 @@ const mutations = {
 }
 
 const actions = {
+  async [types.SET_HOVERING_EMPLOYEE_ID_ACTIVE] ({commit}) {
+    commit('setHoveringEmployeeIdActive')
+  },
   async [types.TOGGLE_TO_EMPLOYEE] ({state, commit}, payload) {
     let targetEmployeeId = payload
     if (state.activeEmployeeId !== 0) {

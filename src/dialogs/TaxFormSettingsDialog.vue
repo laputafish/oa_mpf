@@ -17,7 +17,7 @@
 
         </yoov-radio-toggle>
       </div>
-      <h6>Field Mapping</h6>
+      <h6 class="field-mapping-title">Field Mapping</h6>
       <table class="table-striped table-striped col-sm-12">
         <tr v-for="item in inputParticulars"
             :key="item.id">
@@ -331,5 +331,12 @@ export default {
 
   .text-darkgray {
     color: darkgray;
+  }
+
+  .field-mapping-title {
+    text-align: center;
+    padding: 2px 0;
+    background-color: #1E847F;
+    color: white;
   }
 </style>

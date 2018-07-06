@@ -76,7 +76,7 @@ export default {
   },
   created () {
     let vm = this
-    console.log('Full.vue :: created')
+    console.log('EVENT :: Full.vue :: created')
     vm.$store.dispatch('checkToken', {
       callback: function (status) {
         if (!status) {
@@ -87,12 +87,12 @@ export default {
   },
   mounted () {
     let vm = this
-    console.log('Full.vue :: mounted')
-    if (!vm.user) {
-      console.log('Full.vue :: mounted : !vm.user => login')
-      vm.$router.push({name: 'Login'})
-      return
-    }
+    console.log('EVENT :: Full.vue :: mounted')
+    // if (!vm.user) {
+    //   console.log('Full.vue :: mounted : !vm.user => login')
+    //   vm.$router.push({name: 'Login'})
+    //   return
+    // }
     console.log('Full.vue mounted user: ', vm.user)
     vm.$store.dispatch('GET_EQUIPMENTS').then(function () {
       console.log('finished: get equipments')

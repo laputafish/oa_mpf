@@ -226,9 +226,9 @@ const mutations = {
 
   setUser (state, payload) {
     state.user = payload.user
-    if (typeof payload.callback === 'function') {
-      payload.callback(true, state.isSupervisor)
-    }
+    // if (typeof payload.callback === 'function') {
+    //   payload.callback(true, state.isSupervisor)
+    // }
   },
   setToken (state, token) {
     // localStorage.setItem('token', token)
@@ -316,7 +316,7 @@ const mutations = {
 const actions = {
   async checkToken ({ commit, getters, dispatch }, payload) {
     // let token = localStorage.getItem('token')
-    let token = getters.cookieToken
+    let token = localStorage.getItem('accessToken')
     console.log('checkToken token=getters.cookieToken   token=' + token)
     let result = false
     if (token) {
@@ -472,18 +472,31 @@ const actions = {
 
   async fetchUserByToken ({ getters, state, commit, dispatch }, callback) {
     console.log('system.js :: fetchUserByToken')
-    // let token = getters.token
-    let url = constants.apiUrl + '/user'
-    let config = getters.apiHeaderConfig
-    // Try to get user profile
-    await Vue.axios.get(url, config).then(function (response) {
-      console.log('system.js fetchUserByToken: response: ', response.data)
-      console.log('system.js fetchUserByToken ready to call SET_USER')
-      dispatch(types.SET_USER, {
-        user: response.data,
-        callback: callback
-      }).then(function () {
-        console.log('fetchUserByToken >> dispatch(SET_USER).then: user', getters.user)
+    return new Promise((resolve, reject) => {
+      // let token = getters.token
+      let url = constants.apiUrl + '/user'
+      let config = getters.apiHeaderConfig
+      // Try to get user profile
+      Vue.axios.get(url, config).then(function (response) {
+        console.log('system.js fetchUserByToken: response: ', response.data)
+        console.log('system.js fetchUserByToken ready to call SET_USER')
+        dispatch(types.SET_USER, {
+          user: response.data
+        }).then(function (response) {
+          console.log('fetchUserByToken > SET_USER => resolve(response): ', response)
+          resolve(response)
+        })
+      })
+    })
+  },
+
+  [types.SET_USER] ({commit, state}, payload) {
+    console.log('system.js SET_USER')
+    return new Promise((resolve, reject) => {
+      commit('setUser', payload)
+      resolve({
+        valid: true,
+        isSupervisor: state.isSupervisor
       })
     })
   },
@@ -552,6 +565,8 @@ const actions = {
       }
       let config = getters.apiHeaderConfig
       await Vue.axios.post(url, data, config).then(function (response) {
+        alert('loginOA :: token=' + response.data.access_token)
+
         if (response.data.status) {
           // status = true, supervisor or not
 
@@ -593,6 +608,7 @@ const actions = {
       }
       // Send credentials to API
       await Vue.axios.post(url, data).then(function (response) {
+        alert('login :: token=' + response.data.access_token)
         // let data = response.data
         let authorized = true
         // commit('setToken', data.access_token)
@@ -660,11 +676,6 @@ const actions = {
     } catch (e) {
       console.error('Error while logging out', e)
     }
-  },
-
-  [types.SET_USER] ({commit}, payload) {
-    console.log('actions :: commit(setUser)')
-    commit('setUser', payload)
   },
 
   async [types.GET_PUBLIC_FOLDERS] ({getters, commit}, payload) {
