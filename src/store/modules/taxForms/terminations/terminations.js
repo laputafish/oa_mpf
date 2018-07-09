@@ -1,6 +1,6 @@
-import Vue from 'vue'
-import * as constants from '@/store/constants'
-import * as types from './termination_types'
+// import Vue from 'vue'
+// import * as constants from '@/store/constants'
+// import * as types from './terminations_types'
 
 const state = {
   terminationForms: []

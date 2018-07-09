@@ -1,13 +1,21 @@
 <template>
-  <div class="btn-group btn-group-sm">
-    <button class="btn btn-default"
-            :class="{ '-nested-comp-open-btn': isDisplayRowVisible }"
-            @click="toggleNestedComp('DisplayRow')">
+  <div class="btn-group btn-group-sm btn-group-gap">
+    <button class="btn btn-primary">
+      <i class="fa fa-fw fa-edit"></i>
+    <!--<button class="btn btn-default"-->
+            <!--:class="{ '-nested-comp-open-btn': isDisplayRowVisible }"-->
+            <!--@click="toggleNestedComp('DisplayRow')">-->
       <!--<button class="btn btn-default" title="Display row"-->
       <!--:class="{ '-nested-comp-open-btn': isDisplayRowVisible }"-->
       <!--@click="toggleNestedComp('DisplayRow')">-->
-      <i class="fa fa-list-ul"></i>
+      <!--<i class="fa fa-list-ul"></i>-->
     </button>
+    <button class="btn btn-danger"
+            :class="{ '-nested-comp-open-btn': isDisplayRowVisible }"
+            @click="toggleNestedComp('DisplayRow')">
+      <i class="fa fa-fw fa-close"></i>
+    </button>
+
   </div>
 </template>
 <script>
@@ -17,14 +25,14 @@ export default {
     // $(this.$el).find('button[title]').tooltip()
   },
   computed: {
-    isDisplayRowVisible () {
-      if (this.nested.comp !== 'DisplayRow') return
-      return this.nested.visible
-    },
-    isFriendsTableVisible () {
-      if (this.nested.comp !== 'FriendsTable') return
-      return this.nested.visible
-    }
+    // isDisplayRowVisible () {
+    //   if (this.nested.comp !== 'DisplayRow') return
+    //   return this.nested.visible
+    // },
+    // isFriendsTableVisible () {
+    //   if (this.nested.comp !== 'FriendsTable') return
+    //   return this.nested.visible
+    // }
   },
   methods: {
     toggleNestedComp (comp) {

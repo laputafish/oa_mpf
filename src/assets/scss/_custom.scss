@@ -290,3 +290,12 @@ sidebar-fixed .main, .sidebar-fixed .app-footer {
 
 }
 
+.btn-group-gap button {
+  margin-right: 2px !important;
+  margin-bottom: 1px;
+  border-radius: 0.3rem !important;
+}
+.btn-group-gap button:last-child {
+  margin-right: 0px !important;
+  margin-bottom: 1px;
+}

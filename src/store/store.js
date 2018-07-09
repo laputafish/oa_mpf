@@ -20,6 +20,10 @@ import incomeParticulars from './modules/incomeParticulars/incomeParticulars'
 import payTypes from './modules_oa/payTypes/payTypes'
 import payrolls from './modules_oa/payrolls/payrolls'
 import taxForms from './modules/taxForms/taxForms'
+import employeeCommencements from './modules/taxForms/commencements/commencements'
+import employeeDepartures from './modules/taxForms/departures/departures'
+import employeeSalaries from './modules/taxForms/salaries/salaries'
+import employeeTerminations from './modules/taxForms/terminations/terminations'
 
 import Cookies from 'js-cookie'
 
@@ -43,7 +47,11 @@ export const store = new Vuex.Store({
     incomeParticulars,
     payTypes,
     payrolls,
-    taxForms
+    taxForms,
+    employeeCommencements,
+    employeeDepartures,
+    employeeSalaries,
+    employeeTerminations
   },
   plugins: [
     createPersistedState({

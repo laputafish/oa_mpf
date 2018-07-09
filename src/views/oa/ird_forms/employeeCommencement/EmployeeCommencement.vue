@@ -12,17 +12,20 @@
   </div>
 </template>
 <script>
-import mockData from './_mockData'
+// import mockData from './_mockData'
+import components from './comps'
+
 export default {
+  components,
   data () {
     let vm = this
     return {
       columns: (() => {
         const cols = [
-          {title: vm.$t('tax.form_date'), field: 'uid', sortable: true},
-          {title: vm.$t('tax.no_of_employee'), field: 'age'},
-          {title: vm.$t('tax.employees'), field: 'name', sortable: true},
-          {title: vm.$t('tax.operation'), field: ''}
+          {title: vm.$t('tax.form_date'), field: 'form_date', sortable: true},
+          {title: vm.$t('tax.no_of_employee'), field: 'employee_count', tdClass: 'text-center', thClass: 'text-center'},
+          {title: vm.$t('tax.employees'), field: 'id', tdComp: 'Employees', sortable: false},
+          {title: vm.$t('tax.operation'), tdComp: 'Opt'}
         ]
         return cols
       })(),
@@ -34,10 +37,17 @@ export default {
   watch: {
     query: {
       handler (query) {
-        mockData(query).then(({ rows, total }) => {
-          this.data = rows
-          this.total = total
+        let vm = this
+        console.log('handler :: EmployeeCommencement :: query: ', query)
+        vm.$store.dispatch('FETCH_EMPLOYEE_COMMENCEMENTS', query).then(function (response) {
+          console.log('FETCH_EMPLOYEE_COMMENCEMENTS.then :: response:', response)
+          vm.data = response.data
+          vm.total = response.total
         })
+        // mockData(query).then(({ rows, total }) => {
+        //   this.data = rows
+        //   this.total = total
+        // })
       },
       deep: true
     }
