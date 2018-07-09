@@ -10,6 +10,33 @@ export default {
       }
     },
     {
+      name: 'tax.notification_to_ird',
+      url: '/ird_forms',
+      icon: 'fa fa-file-text',
+      children: [
+        {
+          name: 'tax.employee_commencement',
+          url: '/employee_commencement',
+          icon: 'fa fa-file-text'
+        },
+        {
+          name: 'tax.employee_termination',
+          url: '/employee_termination',
+          icon: 'fa fa-file-text'
+        },
+        {
+          name: 'tax.employee_departure_from_hk',
+          url: '/employee_departure',
+          icon: 'fa fa-file-text'
+        },
+        {
+          name: 'tax.employee_salary',
+          url: '/employee_salary',
+          icon: 'fa fa-file-text'
+        }
+      ]
+    },
+    {
       name: 'tax.tax_forms',
       url: '/tax_forms',
       icon: 'fa fa-file-text',
@@ -20,24 +47,7 @@ export default {
       url: '/mpf_management',
       icon: 'fa fa-dollar',
       badge: {}
-    },
-    {
-      name: 'folder.personal_folder',
-      url: '/folders/personal',
-      icon: 'icon-folder',
-      badge: {}
-    },
-    {
-      name: 'folder.public_folder',
-      url: '/folders/public',
-      icon: 'icon-folder',
-      badge: {}
-    },
-    {
-      name: 'folder.shared_folder',
-      url: '/folders/shared',
-      icon: 'icon-folder',
-      badge: {}
     }
+
   ]
 }

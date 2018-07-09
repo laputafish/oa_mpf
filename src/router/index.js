@@ -91,6 +91,10 @@ import HeaderPage3 from '@/views/headerPages/HeaderPage3'
 import MpfManagement from '@/views/oa/mpfManagement/MpfManagement'
 import TaxForms from '@/views/oa/taxForms/TaxForms'
 import TeamSelection from '@/views/oa/teamSelection/TeamSelection'
+import EmployeeCommencement from '@/views/oa/ird_forms/employeeCommencement/EmployeeCommencement'
+import EmployeeTermination from '@/views/oa/ird_forms/employeeTermination/EmployeeTermination'
+import EmployeeDeparture from '@/views/oa/ird_forms/employeeDeparture/EmployeeDeparture'
+import EmployeeSalary from '@/views/oa/ird_forms/employeeSalary/EmployeeSalary'
 
 // import jQuery from 'jquery'
 // window.jQuery = jQuery
@@ -146,6 +150,26 @@ export default new VueRouter({
           path: 'mpf_management',
           name: 'mpf.mpf_management',
           component: MpfManagement
+        },
+        {
+          path: 'employee_commencement',
+          name: 'tax.employee_commencement',
+          component: EmployeeCommencement
+        },
+        {
+          path: 'employee_termination',
+          name: 'tax.employee_termination',
+          component: EmployeeTermination
+        },
+        {
+          path: 'employee_departure',
+          name: 'tax.employee_departure_from_hk',
+          component: EmployeeDeparture
+        },
+        {
+          path: 'employee_salary',
+          name: 'tax.employee_salary',
+          component: EmployeeSalary
         },
         {
           path: 'tax_forms',

@@ -57,6 +57,10 @@ export default {
   name: 'app-sidebar',
   data () {
     return {
+      options: {
+        height: '100%',
+        size: 0
+      },
       openedMenuName: ''
     }
   },

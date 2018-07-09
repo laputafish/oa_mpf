@@ -32,6 +32,7 @@ import Moment from 'vue-moment'
 import VueCookie from 'vue-cookie'
 import VueCookies from 'vue-cookies'
 import longpress from 'vue-long-press-directive'
+import VueSlimScroll from 'vue-slimscroll'
 
 // import customLocale from 'vue2-datatable-component/locale/custom'
 
@@ -86,6 +87,7 @@ Vue.use(VueCookie)
 Vue.use(VueCookies)
 
 Vue.use(longpress, {duration: 1000})
+Vue.use(VueSlimScroll)
 
 // Vue.use(datePicker)
 // Vue.directive('tooltip', VTooltip)

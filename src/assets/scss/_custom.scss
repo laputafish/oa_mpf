@@ -145,3 +145,148 @@ ul.dropdown-menu > li > a:hover {
 .bg-primary {
   background-color: #28ada7 !important;
 }
+
+.text-primary {
+  color: #28ada7 !important;
+}
+
+.modal-primary .modal-header {
+  background-color: #28ada7 !important;
+}
+
+.sidebar .nav .nav-item {
+  background-color: #142d4c !important;
+}
+
+
+.sidebar .nav .nav-item a,
+.sidebar .nav .nav-item .nav-link {
+  color: white !important;
+  font-size: 0.85rem;
+}
+//
+//.nav-item .nav-link.active {
+//  background-color: #295d9d!important;
+//}
+
+.sidebar .nav .nav-item .nav-link.active,
+.sidebar .nav .nav-item .navbar .dropdown-toggle.active,
+.navbar .sidebar .nav .nav-item .dropdown-toggle.active {
+  color: #fff !important;
+  background: #295d9d !important;
+}
+
+.sidebar .nav .nav-item .nav-link.active:hover,
+.sidebar .nav .nav-item .navbar .dropdown-toggle.active:hover,
+.navbar .sidebar .nav .nav-item .dropdown-toggle.active:hover {
+  color: #fff !important;
+  background: #698dba !important;
+}
+
+.sidebar .nav .nav-item .nav-link:hover,
+.sidebar .nav .nav-item .navbar .dropdown-toggle:hover,
+.navbar .sidebar .nav .nav-item .dropdown-toggle:hover {
+  color: #fff !important;
+  background: #295d9d !important;
+}
+
+.sidebar .nav .nav-item .nav-link.active i,
+.sidebar .nav .nav-item .navbar .active.dropdown-toggle i,
+.navbar .sidebar .nav .nav-item .active.dropdown-toggle i {
+  color: #28ada7;
+}
+
+//a {
+//  color: #28ada7 !important;
+//}
+
+.sidebar .nav .nav-item .nav-link {
+  color: white;
+}
+
+.sidebar {
+  font-size: 0.85rem;
+  width: 250px !important;
+}
+
+.app-body .sidebar {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 250px;
+  flex: 0 0 250px;
+}
+
+sidebar-fixed .main, .sidebar-fixed .app-footer {
+  margin-left: 250px !important;
+}
+
+
+.sidebar-fixed .main, .sidebar-fixed .app-footer {
+  margin-left: 250px;
+}
+
+@media (min-width: 992px) {
+  .sidebar-minimized .sidebar .nav {
+    width: 50px !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .sidebar-minimized.sidebar-fixed .sidebar {
+    width: 50px !important;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 0px;  /* remove scrollbar space */
+  background: transparent;  /* optional: just make scrollbar invisible */
+}
+
+.sidebar .sidebar-nav,
+.sidebar .nav {
+  width: 250px !important;
+  background-color: #142d4c !important
+}
+
+.app-header.navbar .navbar-brand {
+  display: inline-block;
+  width: 205px !important;
+}
+
+@media (max-width: 991px) {
+  .sidebar {
+    position: fixed;
+    width: 250px;
+    height: 100%;
+    margin-left: -250px; }
+  .sidebar .sidebar-nav,
+  .sidebar .nav {
+    width: 250px !important; }
+  .main, .app-footer {
+    margin-left: 0 !important; }
+  .aside-menu {
+    margin-right: -250px; }
+  .sidebar-mobile-show .sidebar {
+    width: 250px;
+    margin-left: 0; }
+  .sidebar-mobile-show .sidebar .sidebar-nav {
+    height: calc(100vh - 55px); }
+  .sidebar-mobile-show .main {
+    margin-right: -250px !important;
+    margin-left: 250px !important;
+  }
+  //.navbar .navbar-brand {
+  //  position: relative;
+  //  left: auto;
+  //  right: auto;
+  //}
+  //
+
+  .app-header.navbar .navbar-brand {
+    margin: 0 auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+  }
+
+}
+

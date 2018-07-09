@@ -29,7 +29,16 @@
   },
   "tax": {
     "tax_forms": "報稅表備忘",
-    "tax_form_settings": "報稅表備忘設定"
+    "tax_form_settings": "報稅表備忘設定",
+    "notification_to_ird": "員工申報管理",
+    "employee_commencement": "入職申報 (IR56E)",
+    "employee_termination": "離職申報 (IR56F)",
+    "employee_departure_from_hk": "離港申報 (IR56G)",
+    "employee_salary": "薪酬申報 (IR56B/IR56M)",
+    "form_date": "表格日期",
+    "no_of_employee": "員工數量",
+    "employees": "員工",
+    "operation": "操作"
   },
   "mpf": {
     "mpf_management": "MPF 管理"

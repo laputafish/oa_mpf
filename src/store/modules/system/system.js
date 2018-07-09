@@ -70,7 +70,7 @@ const getters = {
     }
   },
   oaToken (state) {
-    return state.user.oa_access_token
+    return state.user ? state.user.oa_access_token : ''
   },
   loggedIn (state) {
     console.log('store :: getters.loggedIn')
@@ -92,13 +92,15 @@ const getters = {
     return result
   },
   userFolders (state) {
-    console.log('system.js :: getters.userFolders: state.user.folder: ', state.user.folder)
-    let folder = state.user.folder
-    let result = [{
-      name: folder.name,
-      expanded: true,
-      children: folder.children ? transformFolders(folder.children) : []
-    }]
+    let result = []
+    if (state.user) {
+      let folder = state.user.folder
+      result = [{
+        name: folder.name,
+        expanded: true,
+        children: folder.children ? transformFolders(folder.children) : []
+      }]
+    }
     return result
   },
   publicFolder (state) {
@@ -123,12 +125,14 @@ const getters = {
     return result
   },
   userScanFolder (state) {
-    console.log('userScanFolder :: folders:', state.user.folders)
     let result = null
-    for (var i = 0; i < state.user.folders.length; i++) {
-      if (state.user.folders[i].name === 'scan') {
-        result = state.user.folders[i]
-        break
+    if (state.user && state.user.folders) {
+      console.log('userScanFolder :: folders:', state.user.folders)
+      for (var i = 0; i < state.user.folders.length; i++) {
+        if (state.user.folders[i].name === 'scan') {
+          result = state.user.folders[i]
+          break
+        }
       }
     }
     return result
