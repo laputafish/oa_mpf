@@ -11,7 +11,15 @@
     "chinese": "中文",
     "english": "英文",
     "generating_": "處理中...",
-    "completed": "完成"
+    "completed": "完成",
+    "status": "流程",
+    "pending": "準備中",
+    "generating": "產生表格",
+    "ready": "準備發送",
+    "completed": "完成",
+    "employees": "員工",
+    "name": "名稱",
+    "general": "no"
   },
   "messages": {
     "access_denied": "沒有相關權限!"
@@ -19,7 +27,10 @@
   "buttons": {
     "close": "關閉",
     "ok": "確定",
-    "cancel": "取消"
+    "cancel": "取消",
+    "add": "新增",
+    "export": "匯出",
+    "submit": "遞交"
   },
   "login": {
     "login": "登入",
@@ -38,7 +49,8 @@
     "form_date": "表格日期",
     "no_of_employee": "員工數量",
     "employees": "員工",
-    "operation": "操作"
+    "operation": "操作",
+    "joined_date": "入職時間"
   },
   "mpf": {
     "mpf_management": "MPF 管理"
@@ -57,6 +69,9 @@
   },
   "salary": {
     "basic_salary": "基本薪金"
+  },
+  "messages": {
+    "please_select_department_employee": "請選擇部門/人員"
   }
 
 }
