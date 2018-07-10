@@ -1,7 +1,9 @@
 <template>
   <div style="position:relative;">
     <div class="btn-group" style="position:absolute;top:0;right:60px;">
-      <button type="button" class="btn btn-primary">{{ $t('buttons.add') }}</button>
+      <button type="button"
+              @click="selectEmployees"
+              class="btn btn-primary">{{ $t('buttons.add') }}</button>
     </div>
     <datatable v-bind="$data"></datatable>
   </div>
@@ -39,6 +41,12 @@ export default {
       data: [],
       total: 0,
       query: {}
+    }
+  },
+  methods: {
+    selectEmployees () {
+      let vm = this
+      vm.$store.dispatch('SHOW_SELECT_EMPLOYEE_DIALOG')
     }
   }
 }

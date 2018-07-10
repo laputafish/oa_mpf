@@ -4,7 +4,8 @@
       <div slot="header">{{ $t($route.name) }}</div>
       <div style="position:relative;" v-if="mode==='list'">
         <div class="btn-group" style="position:absolute;top:0;right:60px;">
-          <button type="button" class="btn-width-80 btn btn-primary">{{ $t('buttons.export') }}</button>
+          <button type="button" class="btn-width-80 btn btn-primary">{{ $t('buttons.new') }}</button>
+          <button type="button" class="btn-width-80 btn btn-default">{{ $t('buttons.export') }}</button>
         </div>
         <datatable v-bind="$data"></datatable>
       </div>
@@ -14,7 +15,7 @@
     </b-card>
     <select-employee-dialog
       v-model="showingSelectEmployeeDialog"
-      @close="showingSelectEmployeeDialog=false"></select-employee-dialog>
+      @close="$store.commit('hideSelectEmployeeDialog')"></select-employee-dialog>
   </div>
 </template>
 <script>
@@ -33,7 +34,6 @@ export default {
   data () {
     let vm = this
     return {
-      showingSelectEmployeeDialog: false,
       selectedRecord: null,
       mode: 'list',
       columns: (() => {
@@ -57,6 +57,11 @@ export default {
       vm.selectedRecord = record
       vm.mode = 'record'
     })
+  },
+  computed: {
+    showingSelectEmployeeDialog () {
+      return this.$store.getters.showingSelectEmployeeDialog
+    }
   },
   beforeDestroy () {
     EventBus.$off('editRecord')
@@ -83,6 +88,10 @@ export default {
     onModeChangedHandler (mode) {
       this.mode = mode
     }
+  },
+  mounted () {
+    this.$store.dispatch('FETCH_EMPLOYEES')
+    this.$store.dispatch('FETCH_GROUPS')
   }
 }
 </script>

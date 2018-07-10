@@ -56,7 +56,7 @@ const getters = {
   },
   employees: state => {
     return state.selectedGroup === null
-      ? []
+      ? (state.employees ? state.employees : [])
       : state.selectedGroup.employees
   },
   isAllEmployeesSelected: (state) => {

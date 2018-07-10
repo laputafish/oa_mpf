@@ -3,10 +3,15 @@ import * as constants from '../../constants'
 import * as types from './taxForms_types'
 
 const state = {
+  showingSelectEmployeeDialog: false,
+  selectedFormEmployees: [],
   taxForms: []
 }
 
 const getters = {
+  showingSelectEmployeeDialog: (state) => {
+    return state.showingSelectEmployeeDialog
+  },
   employeeIdsWithTaxForm: (state) => {
     if (state.taxForms) {
       return state.taxForms.filter(taxForm => taxForm.status === 'ready').map(taxForm => taxForm.employee_id)
@@ -22,6 +27,12 @@ const getters = {
 const mutations = {
   setTaxForms: (state, payload) => {
     state.taxForms = payload
+  },
+  showSelectEmployeeDialog: (state) => {
+    state.showingSelectEmployeeDialog = true
+  },
+  hideSelectEmployeeDialog: (state) => {
+    state.showingSelectEmployeeDialog = false
   }
 }
 
@@ -62,6 +73,10 @@ const actions = {
         })
       }
     })
+  },
+
+  [types.SHOW_SELECT_EMPLOYEE_DIALOG] ({rootGetters, commit}, payload) {
+    commit('showSelectEmployeeDialog')
   }
 }
 

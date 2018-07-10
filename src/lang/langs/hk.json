@@ -17,9 +17,12 @@
     "generating": "產生表格",
     "ready": "準備發送",
     "completed": "完成",
+    "employee": "員工",
     "employees": "員工",
+    "group": "群組",
     "name": "名稱",
-    "general": "no"
+    "general": "no",
+    "selected": "已選擇"
   },
   "messages": {
     "access_denied": "沒有相關權限!"
@@ -29,6 +32,7 @@
     "ok": "確定",
     "cancel": "取消",
     "add": "新增",
+    "new": "新增",
     "export": "匯出",
     "submit": "遞交"
   },
