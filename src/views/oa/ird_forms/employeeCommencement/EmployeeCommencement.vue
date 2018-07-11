@@ -69,13 +69,7 @@ export default {
   watch: {
     query: {
       handler (query) {
-        let vm = this
-        console.log('handler :: EmployeeCommencement :: query: ', query)
-        vm.$store.dispatch('FETCH_EMPLOYEE_COMMENCEMENTS', query).then(function (response) {
-          console.log('FETCH_EMPLOYEE_COMMENCEMENTS.then :: response:', response)
-          vm.data = response.data
-          vm.total = response.total
-        })
+        this.onQueryChangedHandler(query)
         // mockData(query).then(({ rows, total }) => {
         //   this.data = rows
         //   this.total = total
@@ -85,13 +79,35 @@ export default {
     }
   },
   methods: {
+    onQueryChangedHandler (query) {
+      let vm = this
+      console.log('handler :: EmployeeCommencement :: query: ', query)
+      vm.$store.dispatch('FETCH_EMPLOYEE_COMMENCEMENTS', query).then(function (response) {
+        console.log('FETCH_EMPLOYEE_COMMENCEMENTS.then :: response:', response)
+        vm.data = response.data
+        vm.total = response.total
+      })
+    },
     onModeChangedHandler (mode) {
-      this.mode = mode
+      let vm = this
+      if (vm.mode !== mode) {
+        vm.mode = mode
+        if (vm.mode === 'list') {
+          vm.onQueryChangeHandler(vm.query)
+        }
+      }
     }
   },
   mounted () {
+    console.log('EmployeeCommencement :: mounted')
     this.$store.dispatch('FETCH_EMPLOYEES')
     this.$store.dispatch('FETCH_GROUPS')
   }
 }
 </script>
+
+<style>
+div[name=Datatable] > div[name=SimpleTable] > table > tbody > tr > td {
+  padding: 0.2rem;
+}
+</style>

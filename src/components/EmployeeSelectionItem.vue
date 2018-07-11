@@ -7,7 +7,7 @@
       </div>
       <span class="ml-1 mar-r mar-l text-nowrap">{{ employee.displayName }}</span>
     </div>
-    <span class="ml-1 flex-grow-1" style="margin-top:0.3rem;">
+    <span class="ml-1 flex-grow-1 align-self-center">
       <div v-for="group in employee.groups"
            :key="group.id"
            class="badge badge-primary"
@@ -54,5 +54,9 @@ export default {
 <style>
 .employee-selection-item {
   cursor: pointer;
+}
+.employee-selection-item:hover {
+  background-color: #28ada7;
+  color: white;
 }
 </style>

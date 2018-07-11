@@ -12,7 +12,7 @@
     "english": "英文",
     "generating_": "處理中...",
     "completed": "完成",
-    "status": "流程",
+    "status": "狀態",
     "pending": "準備中",
     "generating": "產生表格",
     "ready": "準備發送",
@@ -22,10 +22,10 @@
     "group": "群組",
     "name": "名稱",
     "general": "no",
-    "selected": "已選擇"
-  },
-  "messages": {
-    "access_denied": "沒有相關權限!"
+    "selected": "已選擇",
+    "search_in_name_order": "按員工姓名搜索",
+    "all_employees": "所有員工",
+    "no": "No."
   },
   "buttons": {
     "close": "關閉",
@@ -34,7 +34,8 @@
     "add": "新增",
     "new": "新增",
     "export": "匯出",
-    "submit": "遞交"
+    "submit": "遞交",
+    "add_all_employees": "添加所有員工"
   },
   "login": {
     "login": "登入",
@@ -75,7 +76,9 @@
     "basic_salary": "基本薪金"
   },
   "messages": {
-    "please_select_department_employee": "請選擇部門/人員"
+    "please_select_department_employee": "請選擇部門/人員",
+    "access_denied": "沒有相關權限!",
+    "are_you_sure": "是否確定"
   }
 
 }

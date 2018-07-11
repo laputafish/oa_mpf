@@ -36,6 +36,34 @@ const actions = {
         }
       })
     })
+  },
+  [types.SAVE_EMPLOYEE_COMMENCEMENT]: ({rootGetters, commit}, payload) => {
+    let form = payload
+    return new Promise((resolve, reject) => {
+      console.log('SAVE_EMPLOYEE_COMMENCEMENT :: payload: ', payload)
+      let url = constants.apiUrl + '/employee_commencements'
+      let data = form
+      let config = rootGetters.apiHeaderConfig
+      Vue.axios.post(url, data, config).then(function (response) {
+        if (response.data.status) {
+          resolve(response.data.result)
+        }
+      })
+    })
+  },
+  [types.UPDATE_EMPLOYEE_COMMENCEMENT]: ({rootGetters, commit}, payload) => {
+    let form = payload
+    return new Promise((resolve, reject) => {
+      console.log('SAVE_EMPLOYEE_COMMENCEMENT :: payload: ', payload)
+      let url = constants.apiUrl + '/employee_commencements/' + form.id
+      let data = form
+      let config = rootGetters.apiHeaderConfig
+      Vue.axios.put(url, data, config).then(function (response) {
+        if (response.data.status) {
+          resolve(response.data.result)
+        }
+      })
+    })
   }
 }
 
