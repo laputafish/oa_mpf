@@ -142,16 +142,25 @@ export default {
     showingDialog: {
       type: Boolean,
       default: false
+    },
+    defaultSelectedEmployeeIds: {
+      type: Array,
+      default: () => {
+        return []
+      }
     }
   },
   mounted () {
     let vm = this
     vm.showingModal = vm.showingDialog
+    vm.selectedEmployeeIds = vm.defaultSelectedEmployeeIds
   },
   watch: {
     showingDialog: function (value) {
-      let vm = this
-      vm.showingModal = vm.showingDialog
+      this.showingModal = value
+    },
+    defaultSelectedEmployeeIds: function (value) {
+      this.selectedEmployeeIds = value
     },
     selectedEmployeeIds: function (value) {
 
@@ -162,6 +171,7 @@ export default {
   },
   methods: {
     confirm () {
+      console.log('confirm')
       let vm = this
       let employees = []
       let i, j
@@ -185,6 +195,7 @@ export default {
           }
         }
       }
+      console.log('confirm > onEmployeesSelected')
       EventBus.$emit('onEmployeesSelected', employees)
       this.$emit('close')
     },

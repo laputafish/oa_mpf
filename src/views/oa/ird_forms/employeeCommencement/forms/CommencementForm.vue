@@ -5,28 +5,46 @@
         <div class="btn-group btn-group-gap pull-right">
           <button type="button" class="btn btn-width-80 btn-primary"
                   @click="saveRecord">{{ $t('buttons.submit') }}</button>
-          <button type="button" class="btn btn-width-80 btn-default"
+          <button type="button" class="btn btn-width-80 btn-outline-primary"
                   @click="cancel">{{ $t('buttons.cancel') }}</button>
         </div>
       </div>
     </div>
     <hr/>
     <div class="row">
-      <div class="col-sm-6">
+      <div class="col-sm-7">
         <div class="form-group row">
-          <label class="col-sm-4 col-form-label" for="formDate">{{ $t('tax.form_date') }}</label>
-          <div class="col-sm-8">
+          <label class="text-right col-sm-3 col-form-label" for="formNo">{{ $t('tax.form_no') }}</label>
+          <div class="col-sm-9">
+            <input v-model="form.form_no"
+                   class="form-control"
+                         id="formNo"
+                         type="text"/>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="text-right col-sm-3 col-form-label" for="formDate">{{ $t('tax.form_date') }}</label>
+          <div class="col-sm-9">
             <date-picker v-model="form.form_date"
                          id="formDate"
                          type="date" format="YYYY-MM-DD"></date-picker>
           </div>
         </div>
-      </div>
-      <div class="col-sm-6">
         <div class="form-group row">
-          <label class="col-sm-4 col-form-label" for="formDate">{{ $t('general.status') }}</label>
-          <div class="col-sm-8">
-            <input type="text" readonly class="form-control" id="status" :value="form.status">
+          <label class="text-right col-sm-3 col-form-label" for="formRemark">{{ $t('tax.form_date') }}</label>
+          <div class="col-sm-9">
+            <textarea v-model="form.remark"
+                      class="form-control"
+                      rows="5"
+                         id="formRemark"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-5">
+        <div class="form-group row">
+          <label class="text-right col-sm-4 col-form-label" for="formDate">{{ $t('general.status') }}</label>
+          <div class="col-sm-4">
+            <input type="text" readonly class="form-control" id="status" :value="$t('general.' + form.status)">
           </div>
         </div>
       </div>
@@ -42,6 +60,7 @@
 <script>
 import DatePicker from 'vue2-datepicker'
 import EmployeeTable from './EmployeeTable'
+import * as constants from '@/store/constants.json'
 
 export default {
   components: {
@@ -50,6 +69,7 @@ export default {
   },
   data () {
     return {
+      formType: 'commencements',
       form: {
         type: Object,
         default () {
@@ -89,21 +109,15 @@ export default {
   },
   methods: {
     setFormRecord (record) {
-      console.log('setFormRecord :: record: ', record)
       let vm = this
       if (record) {
         vm.form = JSON.parse(JSON.stringify(record))
-        console.log('setFormRecord :: record => form (before): ', vm.form)
-
         for (var i = 0; i < vm.form.employees.length; i++) {
           var formEmployee = vm.form.employees[i]
-          console.log('setFormRecord :: i=' + i + '.')
-          console.log('setFormRecord :: formEmployee:', formEmployee)
-          console.log('setFormRecord :: employees: ', vm.employees)
           let employee = vm.employees.find(employee => employee.id === formEmployee.employee_id.toString())
-          console.log('i=' + i + ': employee: ', employee)
           if (employee) {
-            vm.form.employees[i] = employee
+            vm.form.employees[i].info = employee
+            vm.form.employees[i].form_url = constants.apiUrl + '/media/forms/' + vm.formType + '/' + vm.form.id + '/' + employee.id
           }
         }
         console.log('setFormRecord :: record => form (after): ', vm.form)
@@ -139,31 +153,28 @@ export default {
       if (employees.length === 0) return
 
       let vm = this
-      let existedIds = vm.form.employees.map(employee => {
-        return employee.id
-      })
+      // let existedIds = vm.form.employees.map(employee => {
+      //   return employee.id
+      // })
+      vm.form.employees = []
       for (var i = 0; i < employees.length; i++) {
         let employee = employees[i]
-        if (existedIds.indexOf(employee.id) === -1) {
-          vm.form.employees.push(employee)
-        }
+        // if (existedIds.indexOf(employee.id) === -1) {
+        vm.form.employees.push(employee)
+        // }
       }
     },
     saveRecord () {
       let vm = this
       if (vm.form.id === 0) {
         // new
-        vm.$store.dispatch('SAVE_COMMENCEMENT_FORM', vm.form).then(function (response) {
-          vm.$store.dispatch('FETCH_EMPLOYEE_COMMENCEMENTS').then(function (response) {
-            vm.$emit('onModeChanged', 'list')
-          })
+        vm.$store.dispatch('SAVE_EMPLOYEE_COMMENCEMENT', vm.form).then(function (response) {
+          vm.$emit('onModeChanged', 'list')
         })
       } else {
         // update
-        vm.$store.dispatch('UPDATE_COMMENCEMENT_FORM', vm.form).then(function (response) {
-          vm.$store.dispatch('FETCH_EMPLOYEE_COMMENCEMENTS').then(function (response) {
-            vm.$emit('onModeChanged', 'list')
-          })
+        vm.$store.dispatch('UPDATE_EMPLOYEE_COMMENCEMENT', vm.form).then(function (response) {
+          vm.$emit('onModeChanged', 'list')
         })
       }
     },

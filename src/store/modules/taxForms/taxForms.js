@@ -4,13 +4,16 @@ import * as types from './taxForms_types'
 
 const state = {
   showingSelectEmployeeDialog: false,
-  selectedFormEmployees: [],
+  selectedFormEmployeeIds: [],
   taxForms: []
 }
 
 const getters = {
   showingSelectEmployeeDialog: (state) => {
     return state.showingSelectEmployeeDialog
+  },
+  selectedFormEmployeeIds: (state) => {
+    return state.selectedFormEmployeeIds
   },
   employeeIdsWithTaxForm: (state) => {
     if (state.taxForms) {
@@ -33,6 +36,9 @@ const mutations = {
   },
   hideSelectEmployeeDialog: (state) => {
     state.showingSelectEmployeeDialog = false
+  },
+  setSelectedFormEmployeeIds: (state, payload) => {
+    state.selectedFormEmployeeIds = payload
   }
 }
 
@@ -76,6 +82,8 @@ const actions = {
   },
 
   [types.SHOW_SELECT_EMPLOYEE_DIALOG] ({rootGetters, commit}, payload) {
+    let selectedEmployeeIds = payload
+    commit('setSelectedFormEmployeeIds', selectedEmployeeIds)
     commit('showSelectEmployeeDialog')
   }
 }

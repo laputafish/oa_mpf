@@ -11,10 +11,11 @@
       </div>
       <commencement-form v-else
                          :record="selectedRecord"
-      @onModeChanged="onModeChangedHandler"></commencement-form>
+                         @onModeChanged="onModeChangedHandler"></commencement-form>
     </b-card>
     <select-employee-dialog
       v-model="showingSelectEmployeeDialog"
+      :defaultSelectedEmployeeIds="selectedFormEmployeeIds"
       @close="$store.commit('hideSelectEmployeeDialog')"></select-employee-dialog>
   </div>
 </template>
@@ -61,6 +62,9 @@ export default {
   computed: {
     showingSelectEmployeeDialog () {
       return this.$store.getters.showingSelectEmployeeDialog
+    },
+    selectedFormEmployeeIds () {
+      return this.$store.getters.selectedFormEmployeeIds
     }
   },
   beforeDestroy () {
@@ -81,19 +85,22 @@ export default {
   methods: {
     onQueryChangedHandler (query) {
       let vm = this
-      console.log('handler :: EmployeeCommencement :: query: ', query)
+      console.log('onQueryChangedHandler :: query: ', query)
       vm.$store.dispatch('FETCH_EMPLOYEE_COMMENCEMENTS', query).then(function (response) {
-        console.log('FETCH_EMPLOYEE_COMMENCEMENTS.then :: response:', response)
+        console.log('onQueryChangedHandler after FETCH_EMPLOYEE_COMMENCEMENTS.then :: response:', response)
         vm.data = response.data
         vm.total = response.total
       })
     },
     onModeChangedHandler (mode) {
       let vm = this
+      console.log('onModeChangedHandler :: mode = ' + mode)
+      console.log('onModeChangedHandler :: vm.mode = ' + vm.mode)
       if (vm.mode !== mode) {
+        console.log('onModeChangedHandler :: different')
         vm.mode = mode
         if (vm.mode === 'list') {
-          vm.onQueryChangeHandler(vm.query)
+          vm.onQueryChangedHandler(vm.query)
         }
       }
     }

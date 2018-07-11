@@ -3,10 +3,21 @@
     <div class="pull-left mt-2">
       <span>{{ title }}</span>
     </div>
-    <div class="btn-group" style="position:absolute;top:0;right:60px;">
+    <div class="btn-group btn-group-gap" style="position:absolute;top:0;right:60px;">
+      <button type="button"
+              @click="startGeneration"
+              :disabled="status==='generating'"
+              class="btn btn-outline-success">
+        <i class="fa fa-bolt"></i>&nbsp;{{ $t('buttons.generate_ir56e') }}</button>
+      <button type="button"
+              :disabled="status!=='generating'"
+              @click="terminateGeneration"
+              class="btn btn-outline-danger">
+        <i class="fa fa-hand-stop-o"></i>&nbsp;{{ $t('buttons.terminate') }}</button>
       <button type="button"
               @click="selectEmployees"
-              class="btn btn-primary">{{ $t('buttons.add') }}</button>
+              class="btn btn-outline-primary">
+        <i class="fa fa-edit"></i>&nbsp;{{ $t('buttons.edit') }}</button>
     </div>
     <datatable v-bind="$data"></datatable>
   </div>
@@ -19,6 +30,10 @@ import components from './comps'
 export default {
   components,
   props: {
+    status: {
+      type: String,
+      default: 'disabled'
+    },
     employees: {
       type: Array,
       default () {
@@ -40,8 +55,10 @@ export default {
       columns: (() => {
         const cols = [
           {title: vm.$t('general.no'), field: 'recordNo', sortable: true, tdClass: 'text-center', thClass: 'text-center'},
-          {title: vm.$t('general.name'), field: 'displayName'},
-          {title: vm.$t('tax.joined_date'), tdComp: 'JoinedDate', thClass: 'text-center'},
+          {title: vm.$t('general.name'), tdComp: 'DisplayName', tdClass: 'text-left', thClass: 'text-left'},
+          {title: vm.$t('tax.joined_date'), tdComp: 'JoinedDate', thClass: 'text-enter', tdClass: 'text-center'},
+          {title: vm.$t('general.status'), field: 'status', tdComp: 'Status'},
+          {title: vm.$t('general.form'), tdComp: 'Form', tdClass: 'text-center', thClass: 'text-center'},
           {title: vm.$t('tax.operation'), tdComp: 'Opt'}
         ]
         return cols
@@ -53,14 +70,20 @@ export default {
   },
   created () {
     let vm = this
-    EventBus.$on('employeesSelected', vm.onEmployeesSelected)
+    EventBus.$on('onEmployeesSelected', vm.onEmployeesSelected)
     EventBus.$on('commencementEmployeeDeleted', vm.onCommencementEmployeeDeleted)
   },
   beforeDestroy () {
-    EventBus.$off('employeesSelected')
+    EventBus.$off('onEmployeesSelected')
     EventBus.$off('commencementEmployeeDeleted')
   },
   methods: {
+    startGeneration () {
+      alert('startGeneration')
+    },
+    terminateGeneration () {
+      alert('terminate')
+    },
     onCommencementEmployeeDeleted (employee) {
       let vm = this
       console.log('EmployeeTable :: onCommencementEmployeeDeleted')
@@ -80,7 +103,8 @@ export default {
     },
     selectEmployees () {
       let vm = this
-      vm.$store.dispatch('SHOW_SELECT_EMPLOYEE_DIALOG')
+      let selectedEmployeeIds = vm.employees.map(employee => employee.id)
+      vm.$store.dispatch('SHOW_SELECT_EMPLOYEE_DIALOG', selectedEmployeeIds)
     },
     updateData () {
       let vm = this
