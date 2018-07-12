@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import * as constants from '../../constants'
 import * as types from './taxForms_types'
+// import * as helpers from '@/helpers'
 
 const state = {
   showingSelectEmployeeDialog: false,
   selectedFormEmployeeIds: [],
-  taxForms: []
+  taxForms: [],
+  activeForm: null
 }
 
 const getters = {
@@ -24,6 +26,9 @@ const getters = {
   },
   taxForms: (state) => {
     return state.taxForms
+  },
+  activeForm: (state) => {
+    return state.activeForm
   }
 }
 
@@ -39,6 +44,10 @@ const mutations = {
   },
   setSelectedFormEmployeeIds: (state, payload) => {
     state.selectedFormEmployeeIds = payload
+  },
+  setActiveForm: (state, payload) => {
+    console.log('taxForms.js :: setActiveForm: payload: ', payload)
+    state.activeForm = payload
   }
 }
 
@@ -82,9 +91,87 @@ const actions = {
   },
 
   [types.SHOW_SELECT_EMPLOYEE_DIALOG] ({rootGetters, commit}, payload) {
+    console.log('taxForm :: SHOW_SELECT_EMPLOYEE_DIALOG :: payload: ', payload)
     let selectedEmployeeIds = payload
     commit('setSelectedFormEmployeeIds', selectedEmployeeIds)
     commit('showSelectEmployeeDialog')
+  },
+
+  // [types.SET_BLANK_ACTIVE_FORM] ({rootGetters, commit}, payload) {
+  //   let formType = payload
+  //   switch (formType) {
+  //     case 'commencement':
+  //       commit('setActiveForm', rootGetters.BLANK_COMMENCEMENT_FORM)
+  //       break
+  //     case 'termination':
+  //       commit('setActiveForm', rootGetters.BLANK_TERMINATION_FORM)
+  //       break
+  //     case 'departure':
+  //       commit('setActiveForm', rootGetters.BLANK_DEPARTURE_FORM)
+  //       break
+  //     case 'salary':
+  //       commit('setActiveForm', rootGetters.BLANK_SALARY_FORM)
+  //       break
+  //   }
+  // },
+
+  [types.SET_ACTIVE_FORM] ({rootGetters, commit}, payload) {
+    console.log('SET_ACTIVE_FORM')
+    let form = payload
+    let employees = rootGetters.employees
+    let employeeIds = employees.map(employee => employee.id)
+    for (var i = 0; i < form.employees.length; i++) {
+      let index = employeeIds.indexOf(form.employees[i].id)
+      form.employees[i].info = employees[index]
+    }
+    commit('setActiveForm', form)
+  },
+
+  [types.FETCH_ACTIVE_FORM] ({rootGetters, dispatch}, payload) {
+    console.log('FETCH_ACTIVE_FORM')
+    return new Promise((resolve, reject) => {
+      let formId = payload.id
+      let formType = payload.type
+
+      // if (formId === 0) {
+      //   dispatch('SET_BLANK_ACTIVE_FORM', formType)
+      // } else {
+      let formTypePath = ''
+      switch (formType) {
+        case 'commencement':
+          formTypePath = '/employee_commencements/'
+          break
+        case 'departure':
+          formTypePath = '/employee_departures/'
+          break
+        case 'termination':
+          formTypePath = '/employee_terminations/'
+          break
+        case 'salary':
+          formTypePath = '/employee_salaries/'
+          break
+      }
+
+      let url = constants.apiUrl + formTypePath + formId
+      let config = rootGetters.apiHeaderConfig
+
+      Vue.axios.get(url, config).then(function (response) {
+        if (response.data.status) {
+          console.log('FETCH_ACTIVE_FORM axios => SET_ACTIVE_FORM :: response:', response)
+          dispatch('SET_ACTIVE_FORM', response.data.result)
+        }
+      })
+
+      // }
+    })
+  },
+
+  [types.START_FORM_GENERATION] ({rootGetters, commit}, payload) {
+    let url = constants.apiUrl + '/'
+  },
+
+  [types.TERMINATE_FORM_GENERATION] ({rootGetters, commit}, payload) {
+
   }
 }
 

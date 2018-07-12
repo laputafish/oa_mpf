@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import * as constants from '@/store/constants'
 import * as types from './commencements_types'
+// import * as helpers from '@/helpers'
 
 const state = {
   commencementForms: []
@@ -10,6 +11,17 @@ const getters = {
   commencementForms: (state) => {
     return state.commencementForms
   }
+  // ,
+  // BLANK_COMMENCEMENT_FORM: () => {
+  //   return {
+  //     id: 0,
+  //     form_no: '',
+  //     form_date: helpers.getToday(),
+  //     status: 'pending',
+  //     subject: '',
+  //
+  //   }
+  // }
 }
 
 const mutations = {

@@ -4,13 +4,15 @@
       <div slot="header">{{ $t($route.name) }}</div>
       <div style="position:relative;" v-if="mode==='list'">
         <div class="btn-group" style="position:absolute;top:0;right:60px;">
-          <button type="button" class="btn-width-80 btn btn-primary">{{ $t('buttons.new') }}</button>
-          <button type="button" class="btn-width-80 btn btn-default">{{ $t('buttons.export') }}</button>
+          <button type="button"
+                  @click="newForm"
+                  class="btn-width-80 btn btn-primary">{{ $t('buttons.new') }}</button>
+          <!--<button type="button" class="btn-width-80 btn btn-default">{{ $t('buttons.export') }}</button>-->
         </div>
         <datatable v-bind="$data"></datatable>
       </div>
       <commencement-form v-else
-                         :record="selectedRecord"
+                         :formId="selectedRecord ? selectedRecord.id : 0"
                          @onModeChanged="onModeChangedHandler"></commencement-form>
     </b-card>
     <select-employee-dialog
@@ -36,20 +38,24 @@ export default {
     let vm = this
     return {
       selectedRecord: null,
-      mode: 'list',
+      mode: 'list', // ['list','record']
       columns: (() => {
         const cols = [
           {title: vm.$t('tax.form_date'), field: 'form_date', sortable: true},
-          {title: vm.$t('general.status'), field: 'status', tdComp: 'Status'},
+          {title: vm.$t('tax.form_no'), field: 'form_no', sortable: true},
           {title: vm.$t('tax.no_of_employee'), field: 'employee_count', tdClass: 'text-center', thClass: 'text-center'},
           {title: vm.$t('tax.employees'), field: 'id', tdComp: 'Employees', sortable: false},
+          {title: vm.$t('general.status'), field: 'status', tdComp: 'Status'},
           {title: vm.$t('tax.operation'), tdComp: 'Opt'}
         ]
         return cols
       })(),
       data: [],
       total: 0,
-      query: {}
+      query: {
+        sort: 'form_date',
+        order: 'desc'
+      }
     }
   },
   created () {
@@ -83,6 +89,9 @@ export default {
     }
   },
   methods: {
+    newForm () {
+      this.mode = 'record'
+    },
     onQueryChangedHandler (query) {
       let vm = this
       console.log('onQueryChangedHandler :: query: ', query)

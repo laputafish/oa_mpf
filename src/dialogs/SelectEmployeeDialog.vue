@@ -8,6 +8,9 @@
            @cancel="closeDialog"
            @ok="confirm">
     <div class="mb-1 d-flex flex-column">
+      <div>
+        default: {{ defaultSelectedEmployeeIds }}
+      </div>
       <div class="row form-group">
         <div class="col-sm-12 col-md-8">
           <div class="input-group">
@@ -153,14 +156,14 @@ export default {
   mounted () {
     let vm = this
     vm.showingModal = vm.showingDialog
-    vm.selectedEmployeeIds = vm.defaultSelectedEmployeeIds
+    vm.selectedEmployeeIds = JSON.parse(JSON.stringify(vm.defaultSelectedEmployeeIds))
   },
   watch: {
     showingDialog: function (value) {
       this.showingModal = value
     },
     defaultSelectedEmployeeIds: function (value) {
-      this.selectedEmployeeIds = value
+      this.selectedEmployeeIds = JSON.parse(JSON.stringify(value))
     },
     selectedEmployeeIds: function (value) {
 
@@ -195,7 +198,7 @@ export default {
           }
         }
       }
-      console.log('confirm > onEmployeesSelected')
+      console.log('confirm => $emit( onEmployeesSelected )')
       EventBus.$emit('onEmployeesSelected', employees)
       this.$emit('close')
     },
@@ -215,10 +218,14 @@ export default {
       this.allSelected = false
     },
     onEmployeeSelected (employee) {
+      console.log('SelectEmployeeDialog :: onEmployeeSelected')
       let vm = this
       if (!vm.allSelected) {
+        console.log('SelectEmployeeDialog :: not all selected')
         vm.selectedEmployeeIds.push(employee.id)
+        console.log('SelectEmployeeDialog :: pushed employee id')
         vm.$nextTick().then(() => {
+          console.log('SelectEmployeeDialog $nextTick => forceUpdate')
           vm.$forceUpdate()
         })
       }

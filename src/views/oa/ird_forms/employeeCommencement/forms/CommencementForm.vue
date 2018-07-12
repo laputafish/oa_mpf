@@ -11,7 +11,7 @@
       </div>
     </div>
     <hr/>
-    <div class="row">
+    <div class="row" v-if="form">
       <div class="col-sm-7">
         <div class="form-group row">
           <label class="text-right col-sm-3 col-form-label" for="formNo">{{ $t('tax.form_no') }}</label>
@@ -51,9 +51,10 @@
     </div>
     <employee-table
       :title="$t('general.employee')"
-      @onEmployeesAdded="onEmployeesAddedHandler"
+      @onEmployeesUpdated="onEmployeesUpdatedHandler"
       @onEmployeesRemoved="onEmployeesRemovedHandler"
-      :employees="form.employees"></employee-table>
+      @onCommand="onCommandHandler"
+      :employees="form ? form.employees : []"></employee-table>
   </div>
 </template>
 
@@ -74,41 +75,70 @@ export default {
         type: Object,
         default () {
           return {
-            form_date: null,
-            employees: []
+            'id': 0,
+            'form_no': '',
+            'form_date': '',
+            'subject': '',
+            'remark': '',
+            'status': 'pending',
+            'employees': []
           }
         }
       }
     }
   },
   props: {
-    record: {
-      type: Object,
-      default: function () {
-        return null
-      }
+    formId: {
+      type: Number,
+      default: 0
     }
   },
   computed: {
     employees () {
       return this.$store.getters.employees
+    },
+    activeForm () {
+      return this.$store.getters.activeForm
     }
   },
   mounted () {
-    console.log('CommencementForm mounted: record: ', this.record)
-    let vm = this
-    vm.setFormRecord(this.record)
+    this.refresh()
+    // console.log('CommencementForm mounted: record: ', this.record)
+    // let vm = this
+    // vm.setFormRecord(this.record)
   },
   watch: {
-    record: function (value) {
+    formId: function (value) {
+      console.log('CommencementForm :: watch(formId)')
+      this.refresh()
+    },
+    activeForm: function (value) {
+      console.log('CommencementForm :: watch(activeForm) value: ', value)
       let vm = this
-      alert('CommencementForm :: watch(record)')
-      console.log('CommencementForm watch: record: ', value)
       vm.setFormRecord(value)
+    },
+    form: function (value) {
+      console.log('CommencementForm :: watch(form)  value: ', value)
     }
+    // ,
+    // record: function (value) {
+    //   let vm = this
+    //   alert('CommencementForm :: watch(record)')
+    //   console.log('CommencementForm watch: record: ', value)
+    //   vm.setFormRecord(value)
+    // }
   },
   methods: {
+    refresh () {
+      console.log('CommencementForm :: refresh')
+      let vm = this
+      vm.$store.dispatch('FETCH_ACTIVE_FORM', {
+        id: vm.formId,
+        type: 'commencement'
+      })
+    },
     setFormRecord (record) {
+      console.log('CommencementForm :: setFormRecord :: record: ', record)
       let vm = this
       if (record) {
         vm.form = JSON.parse(JSON.stringify(record))
@@ -149,19 +179,48 @@ export default {
         vm.form.employees.splice(index, 1)
       }
     },
-    onEmployeesAddedHandler (employees) {
-      if (employees.length === 0) return
-
+    onCommandHandler (commandOptions) {
+      let command = commandOptions.command
       let vm = this
-      // let existedIds = vm.form.employees.map(employee => {
-      //   return employee.id
-      // })
+      // let options = commandOptions.options
+      switch (command) {
+        case 'generate':
+          vm.$store.dispatch('START_FORM_GENERATION', {
+            'form_id': vm.form.id
+          })
+          break
+        case 'terminate':
+          vm.$store.dispatch('TERMINATE_FORM_GENERATION', {
+            'form_id': vm.form.id
+          })
+          break
+      }
+    },
+    onEmployeesUpdatedHandler (employees) {
+      console.log('CommencementForm :: onEmployeesUpdatedHandler')
+      let vm = this
+      let existedIds = vm.form.employees.map(formEmployee => formEmployee.employee_id)
+      let updatedIds = employees.map(employee => employee.id)
+      let obsolateIds = existedIds.filter(id => (updatedIds.indexOf(id) === -1))
       vm.form.employees = []
       for (var i = 0; i < employees.length; i++) {
         let employee = employees[i]
-        // if (existedIds.indexOf(employee.id) === -1) {
-        vm.form.employees.push(employee)
-        // }
+        if (existedIds.indexOf(employee.id) === -1) {
+          vm.form.employees.push({
+            'form_id': vm.form.id,
+            'employee_id': employee.id,
+            'info': employee,
+            'status': 'pending',
+            'file': '',
+            'form_url': constants.apiUrl + '/media/forms/' + vm.formType + '/' + vm.form.id + '/' + employee.id
+          })
+        }
+      }
+      for (var j = 0; j < obsolateIds.length; j++) {
+        let index = vm.form.employees.findIndex(formEmployee => formEmployee.employee_id === obsolateIds[j])
+        if (index !== -1) {
+          vm.form.employees.splice(index, 1)
+        }
       }
     },
     saveRecord () {

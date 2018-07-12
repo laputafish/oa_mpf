@@ -6,7 +6,7 @@
     <div class="btn-group btn-group-gap" style="position:absolute;top:0;right:60px;">
       <button type="button"
               @click="startGeneration"
-              :disabled="status==='generating'"
+              :disabled="status==='generating'||employees.length===0"
               class="btn btn-outline-success">
         <i class="fa fa-bolt"></i>&nbsp;{{ $t('buttons.generate_ir56e') }}</button>
       <button type="button"
@@ -19,7 +19,7 @@
               class="btn btn-outline-primary">
         <i class="fa fa-edit"></i>&nbsp;{{ $t('buttons.edit') }}</button>
     </div>
-    <datatable v-bind="$data"></datatable>
+    <datatable v-bind="$data" sort-field="form_date" sort-desc="true"></datatable>
   </div>
 </template>
 
@@ -79,10 +79,14 @@ export default {
   },
   methods: {
     startGeneration () {
-      alert('startGeneration')
+      this.$emit('onCommand', {
+        command: 'generate'
+      })
     },
     terminateGeneration () {
-      alert('terminate')
+      this.$emit('onCommand', {
+        command: 'terminate'
+      })
     },
     onCommencementEmployeeDeleted (employee) {
       let vm = this
@@ -99,11 +103,14 @@ export default {
         })
     },
     onEmployeesSelected (employees) {
-      this.$emit('onEmployeesAdded', employees)
+      this.$emit('onEmployeesUpdated', employees)
     },
     selectEmployees () {
       let vm = this
-      let selectedEmployeeIds = vm.employees.map(employee => employee.id)
+      console.log('selectEmployees :: vm.employees: ', vm.employees)
+      let selectedEmployeeIds = vm.employees.map(formEmployee => formEmployee.employee_id)
+      console.log('selectEmployees :: selectedEmployeeIds: ', selectedEmployeeIds)
+
       vm.$store.dispatch('SHOW_SELECT_EMPLOYEE_DIALOG', selectedEmployeeIds)
     },
     updateData () {
