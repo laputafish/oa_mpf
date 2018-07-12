@@ -27,6 +27,7 @@ import {EventBus} from '@/event-bus'
 import components from './comps'
 import CommencementForm from './forms/CommencementForm'
 import SelectEmployeeDialog from '@/dialogs/SelectEmployeeDialog'
+import helpers from '@/helpers.js'
 
 export default {
   components: {
@@ -37,6 +38,9 @@ export default {
   data () {
     let vm = this
     return {
+      // Pusher
+      pusher: null,
+      pusherSubscribed: false,
       selectedRecord: null,
       mode: 'list', // ['list','record']
       columns: (() => {
@@ -71,10 +75,10 @@ export default {
     },
     selectedFormEmployeeIds () {
       return this.$store.getters.selectedFormEmployeeIds
+    },
+    teamId () {
+      return this.$store.getters.teamId
     }
-  },
-  beforeDestroy () {
-    EventBus.$off('editRecord')
   },
   watch: {
     query: {
@@ -86,9 +90,19 @@ export default {
         // })
       },
       deep: true
+    },
+    teamId: function (value) {
+      this.subscribe()
     }
   },
   methods: {
+    subscribe () {
+      let vm = this
+      helpers.subscribe(vm, vm.teamId, [
+        {channel: 'commencement_form_status_updated', handler: vm.onStatusUpdated},
+        {channel: 'commencement_form_employee_status_updated', handler: vm.onEmployeeStatusUpdated}
+      ])
+    },
     newForm () {
       this.mode = 'record'
     },
@@ -115,9 +129,14 @@ export default {
     }
   },
   mounted () {
-    console.log('EmployeeCommencement :: mounted')
-    this.$store.dispatch('FETCH_EMPLOYEES')
-    this.$store.dispatch('FETCH_GROUPS')
+    let vm = this
+    vm.subscribe()
+    vm.$store.dispatch('FETCH_EMPLOYEES')
+    vm.$store.dispatch('FETCH_GROUPS')
+  },
+  beforeDestroy () {
+    EventBus.$off('editRecord')
+    helpers.unSubscribe(this)
   }
 }
 </script>

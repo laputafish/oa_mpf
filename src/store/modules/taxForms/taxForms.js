@@ -167,11 +167,31 @@ const actions = {
   },
 
   [types.START_FORM_GENERATION] ({rootGetters, commit}, payload) {
-    let url = constants.apiUrl + '/'
+    let formId = payload.formId
+    let formType = payload.formType
+
+    let url = constants.apiUrl + '/tax_forms'
+    let config = rootGetters.apiHeaderConfig
+    let data = {
+      'command': 'generate',
+      'formId': formId,
+      'formType': formType
+    }
+    Vue.axios.post(url, data, config)
   },
 
   [types.TERMINATE_FORM_GENERATION] ({rootGetters, commit}, payload) {
+    let formId = payload.formId
+    let formType = payload.formType
 
+    let url = constants.apiUrl + '/tax_forms'
+    let config = rootGetters.apiHeaderConfig
+    let data = {
+      'command': 'terminate',
+      'formId': formId,
+      'formType': formType
+    }
+    Vue.axios.post(url, data, config)
   }
 }
 

@@ -186,12 +186,14 @@ export default {
       switch (command) {
         case 'generate':
           vm.$store.dispatch('START_FORM_GENERATION', {
-            'form_id': vm.form.id
+            'formId': vm.form.id,
+            'formType': vm.formType
           })
           break
         case 'terminate':
           vm.$store.dispatch('TERMINATE_FORM_GENERATION', {
-            'form_id': vm.form.id
+            'formId': vm.form.id,
+            'formType': vm.formType
           })
           break
       }

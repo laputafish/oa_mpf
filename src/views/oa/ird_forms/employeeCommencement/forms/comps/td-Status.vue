@@ -3,13 +3,6 @@
     <span :class="badgeClass" class="badge">
       {{ $t(caption) }}
     </span>
-    <!--<span v-for="(step,index) in steps" :key="index">-->
-      <!--<i class="fa fa-caret-right" v-if="index>0" style="margin-left:5px;"></i>-->
-      <!--<span class="badge"-->
-          <!--:class="{'badge-primary':row.status===step.value, 'badge-light':row.status!==step.value}">-->
-      <!--{{ $t(step.captionTag) }}-->
-      <!--</span>-->
-    <!--</span>-->
   </div>
 </template>
 
@@ -31,29 +24,24 @@ export default {
   computed: {
     caption () {
       let vm = this
-      switch (vm.row.status) {
-        case 'pending':
-          return 'general.pending'
-        case 'generating':
-          return 'general.under_generation'
-        case 'ready':
-          return 'general.form_ready'
-        case 'completed':
-          return 'general.completed'
-      }
+      return 'general.' + vm.row.status
     },
     badgeClass () {
       let vm = this
       switch (vm.row.status) {
         case 'pending':
           return 'badge-primary'
+        case 'ready_for_processing':
         case 'generating':
+        case 'processing':
+        case 'terminated':
           return 'badge-danger'
         case 'ready':
           return 'badge-primary'
         case 'completed':
           return 'badge-success'
       }
+      return 'badge-secondary'
     }
   }
 }

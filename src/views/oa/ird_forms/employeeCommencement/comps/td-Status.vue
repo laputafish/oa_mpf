@@ -31,29 +31,24 @@ export default {
   computed: {
     caption () {
       let vm = this
-      switch (vm.row.status) {
-        case 'pending':
-          return 'general.pending'
-        case 'generating':
-          return 'general.under_generation'
-        case 'ready':
-          return 'general.forms_ready'
-        case 'completed':
-          return 'general.completed'
-      }
+      return 'general.' + vm.row.status
     },
     badgeClass () {
       let vm = this
       switch (vm.row.status) {
         case 'pending':
           return 'badge-primary'
+        case 'ready_for_processing':
         case 'generating':
+        case 'processing':
+        case 'terminated':
           return 'badge-danger'
         case 'ready':
           return 'badge-primary'
         case 'completed':
           return 'badge-success'
       }
+      return 'badge-secondary'
     }
   }
 }

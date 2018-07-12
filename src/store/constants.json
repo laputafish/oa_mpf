@@ -5,5 +5,7 @@
   "oaApiHost": "https://hr.yoov.com",
   "oaApiUrl": "https://hr.yoov.com/api/v1",
   "CLIENT_ID": 2,
-  "CLIENT_SECRET": "XC9wlfaujJt7qC5sqtTzmYo52WjK5AEpa1D7RKLo"
+  "CLIENT_SECRET": "XC9wlfaujJt7qC5sqtTzmYo52WjK5AEpa1D7RKLo",
+  "PUSHER_APP_KEY": "646e36da78e4db3ea81a",
+  "PUSHER_CLUSTER": "ap1"
 }

@@ -177,8 +177,9 @@ export default {
   },
   data () {
     return {
-      longPressing: false,
       pusherSubscribed: false,
+
+      longPressing: false,
       generatingTaxForms: false,
       showingTaxFormSettingsDialog: false,
       selectedFiscalYear: '',
