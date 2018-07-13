@@ -313,3 +313,17 @@ sidebar-fixed .main, .sidebar-fixed .app-footer {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 
 }
+.form-control.disabled,
+.form-control:disabled {
+  cursor: not-allowed;
+}
+.mx-datepicker.disabled {
+  opacity: 1;
+}
+.mx-input:disabled, .mx-input.disabled {
+  background-color: #e9ecef;
+  opacity: 1;
+  color: #495057;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
+;
+}

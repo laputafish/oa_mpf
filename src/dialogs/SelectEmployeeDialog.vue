@@ -1,15 +1,16 @@
 <template>
-  <b-modal :title="$t('messages.please_select_department_employee')"
+  <b-modal
+    ref="selectEmployeeDialog"
+    :title="$t('messages.please_select_department_employee')"
            class="modal-primary"
            id="select-employee-dialog"
            size="lg"
            cancelClass="btn-outline-primary"
-           v-model="showingModal"
+           on-close-on-backdrop="false"
            @cancel="closeDialog"
            @ok="confirm">
     <div class="mb-1 d-flex flex-column">
       <div>
-        default: {{ defaultSelectedEmployeeIds }}
       </div>
       <div class="row form-group">
         <div class="col-sm-12 col-md-8">
@@ -155,24 +156,47 @@ export default {
   },
   mounted () {
     let vm = this
-    vm.showingModal = vm.showingDialog
+    //     vm.showingModal = vm.showingDialog
+    //     if (vm.showingModal) {
+    // //       alert('mounted :: showingModal')
+    //       vm.$refs.selectEmployeeDialog.show()
+    //     } else {
+    // //       alert('mounted :: not showingModal')
+    //       vm.$refs.selectEmployeeDialog.hide()
+    //     }
     vm.selectedEmployeeIds = JSON.parse(JSON.stringify(vm.defaultSelectedEmployeeIds))
   },
   watch: {
-    showingDialog: function (value) {
-      this.showingModal = value
-    },
+    //     showingDialog: function (value) {
+    //       let vm = this
+    //       if (this.showingModal) {
+    // //        alert('watch(showingModal) :: true')
+    //         vm.$refs.selectEmployeeDialog.show()
+    //       } else {
+    // //        alert('watch(showingModal) :: false')
+    //         vm.$refs.selectEmployeeDialog.hide()
+    //       }
+    //       // this.showingModal = value
+    //     },
     defaultSelectedEmployeeIds: function (value) {
       this.selectedEmployeeIds = JSON.parse(JSON.stringify(value))
     },
     selectedEmployeeIds: function (value) {
-
+      let vm = this
+      console.log('SelectEmployeeDialog :: watch(selectedEmployeeIds) => forceUpdate: ', value)
+      console.log('SelectEmployeeDialog :: watch(selectedEmployeeIds) => forceUpdate: ', vm.selectedEmployeeIds)
+      vm.$nextTick().then(() => {
+        vm.$forceUpdate()
+      })
     },
     selectedGroupIds: function (value) {
-
     }
   },
   methods: {
+    show () {
+      console.log('SelectEmployeeDialog :: show()')
+      this.$refs.selectEmployeeDialog.show()
+    },
     confirm () {
       console.log('confirm')
       let vm = this
@@ -203,7 +227,8 @@ export default {
       this.$emit('close')
     },
     closeDialog () {
-      this.$emit('close')
+      this.$refs.selectEmployeeDialog.hide()
+      // this.$emit('close')
     },
     onAllSelected () {
       let vm = this
@@ -268,9 +293,13 @@ export default {
     },
     selectedEmployees () {
       let vm = this
-      return this.employees.filter(employee => {
+      console.log('SelectEmployeeDialog :: employees.length = ' + vm.employees.length)
+      console.log('SelectEmployeeDialog :: selectedEmployeeIds: ', vm.selectedEmployeeIds)
+      let employees = this.employees.filter(employee => {
         return vm.selectedEmployeeIds.indexOf(employee.id) !== -1
       })
+      console.log('computed :: selectedEmployees: ', employees)
+      return employees
     },
 
     groups () {

@@ -1,21 +1,12 @@
 <template>
   <div style="position:relative;" class="employee-table">
-    <div class="pull-left mt-2">
-      <span>{{ title }}</span>
+    <div class="table-title">
+      <div class="mt-4">{{ title }}</div>
     </div>
     <div class="btn-group btn-group-gap" style="position:absolute;top:0;right:60px;">
       <button type="button"
-              @click="startGeneration"
-              :disabled="status==='generating'||employees.length===0"
-              class="btn btn-outline-success">
-        <i class="fa fa-bolt"></i>&nbsp;{{ $t('buttons.generate_ir56e') }}</button>
-      <button type="button"
-              :disabled="status!=='generating'"
-              @click="terminateGeneration"
-              class="btn btn-outline-danger">
-        <i class="fa fa-hand-stop-o"></i>&nbsp;{{ $t('buttons.terminate') }}</button>
-      <button type="button"
               @click="selectEmployees"
+              :disabled="status==='ready_for_processing'||status==='processing'"
               class="btn btn-outline-primary">
         <i class="fa fa-edit"></i>&nbsp;{{ $t('buttons.edit') }}</button>
     </div>
@@ -78,16 +69,6 @@ export default {
     EventBus.$off('commencementEmployeeDeleted')
   },
   methods: {
-    startGeneration () {
-      this.$emit('onCommand', {
-        command: 'generate'
-      })
-    },
-    terminateGeneration () {
-      this.$emit('onCommand', {
-        command: 'terminate'
-      })
-    },
     onCommencementEmployeeDeleted (employee) {
       let vm = this
       console.log('EmployeeTable :: onCommencementEmployeeDeleted')
@@ -107,11 +88,12 @@ export default {
     },
     selectEmployees () {
       let vm = this
-      console.log('selectEmployees :: vm.employees: ', vm.employees)
-      let selectedEmployeeIds = vm.employees.map(formEmployee => formEmployee.employee_id)
-      console.log('selectEmployees :: selectedEmployeeIds: ', selectedEmployeeIds)
+      console.log('EmployeeTable :: selectEmployees :: vm.employees: ', vm.employees)
+      let selectedEmployeeIds = vm.employees.map(formEmployee => formEmployee.employee_id.toString())
+      console.log('EmployeeTable :: selectEmployees :: selectedEmployeeIds: ', selectedEmployeeIds)
 
-      vm.$store.dispatch('SHOW_SELECT_EMPLOYEE_DIALOG', selectedEmployeeIds)
+      // vm.$store.dispatch('SET_SELECTED_FORM_EMPLOYEE_IDS', selectedEmployeeIds)
+      EventBus.$emit('showSelectEmployeeDialog', selectedEmployeeIds)
     },
     updateData () {
       let vm = this
@@ -144,4 +126,9 @@ export default {
 </script>
 
 <style>
+  .employee-table .table-title {
+    position: absolute;
+    top: 10px;
+    left: 0;
+  }
 </style>

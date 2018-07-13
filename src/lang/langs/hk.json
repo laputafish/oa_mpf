@@ -12,6 +12,7 @@
     "chinese": "中文",
     "english": "英文",
     "status": "狀態",
+    "form_status": "表格狀態",
 
     "generating_": "處理中...",
     "pending": "閒置中",
@@ -20,6 +21,7 @@
     "generating": "產生表格",
     "ready": "表格可用",
     "completed": "完成",
+    "terminated": "已終止",
 
     "group": "群組",
     "name": "名稱",

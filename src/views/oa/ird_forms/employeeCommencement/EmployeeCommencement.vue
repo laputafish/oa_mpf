@@ -11,11 +11,12 @@
         </div>
         <datatable v-bind="$data"></datatable>
       </div>
-      <commencement-form v-else
-                         :formId="selectedRecord ? selectedRecord.id : 0"
+      <commencement-form ref="currentForm" v-else
+                         :formId="selectedFormId"
                          @onModeChanged="onModeChangedHandler"></commencement-form>
     </b-card>
     <select-employee-dialog
+      ref="selectEmployeeDialog"
       v-model="showingSelectEmployeeDialog"
       :defaultSelectedEmployeeIds="selectedFormEmployeeIds"
       @close="$store.commit('hideSelectEmployeeDialog')"></select-employee-dialog>
@@ -41,7 +42,9 @@ export default {
       // Pusher
       pusher: null,
       pusherSubscribed: false,
-      selectedRecord: null,
+      selectedFormId: 0,
+      selectedFormEmployeeIds: [],
+      // selectedForm: null,
       mode: 'list', // ['list','record']
       columns: (() => {
         const cols = [
@@ -65,17 +68,30 @@ export default {
   created () {
     let vm = this
     EventBus.$on('editRecord', function (record) {
-      vm.selectedRecord = record
+      vm.selectedFormId = record.id
+      // vm.selectedForm = record
       vm.mode = 'record'
+    })
+    EventBus.$on('showSelectEmployeeDialog', function (selectedFormEmployeeIds) {
+      console.log('EventBus.on(showSelectEmployeeDialog)')
+      vm.selectedFormEmployeeIds = selectedFormEmployeeIds
+      vm.$refs.selectEmployeeDialog.show()
     })
   },
   computed: {
+    // selectedFormId () {
+    //   return
+    //   selectedForm ? selectedForm.id : 0
+    // },
+
     showingSelectEmployeeDialog () {
-      return this.$store.getters.showingSelectEmployeeDialog
+      let result = this.$store.getters.showingSelectEmployeeDialog
+      console.log('EmployeeCommencement.vaue result: ', result)
+      return result
     },
-    selectedFormEmployeeIds () {
-      return this.$store.getters.selectedFormEmployeeIds
-    },
+    // selectedFormEmployeeIds () {
+    //   return this.$store.getters.selectedFormEmployeeIds
+    // },
     teamId () {
       return this.$store.getters.teamId
     }
@@ -93,9 +109,31 @@ export default {
     },
     teamId: function (value) {
       this.subscribe()
+    },
+    showingSelectEmployeeDialog () {
     }
   },
   methods: {
+    updateFormStatus (formId, status) {
+      let vm = this
+      for (var i = 0; i < vm.data.length; i++) {
+        if (vm.data[i].id === formId) {
+          vm.data[i].status = status
+        }
+      }
+      console.log('updateFormStatus :: status = ' + status)
+      vm.$refs.currentForm.refresh()
+    },
+    onStatusUpdated (data) {
+      let statusInfo = data.statusInfo
+      let formId = statusInfo.formId.toString()
+      let status = statusInfo.status
+
+      this.updateFormStatus(formId, status)
+    },
+    onEmployeeStatusUpdated (data) {
+      console.log('onEmployeeStatusUpdated :: data: ', data)
+    },
     subscribe () {
       let vm = this
       helpers.subscribe(vm, vm.teamId, [

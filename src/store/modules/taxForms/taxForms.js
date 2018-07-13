@@ -38,6 +38,8 @@ const mutations = {
   },
   showSelectEmployeeDialog: (state) => {
     state.showingSelectEmployeeDialog = true
+    console.log('showSelectEmployeeDialog :: showingSelectEmployeeDialog = ' +
+      state.showingSelectEmployeeDialog)
   },
   hideSelectEmployeeDialog: (state) => {
     state.showingSelectEmployeeDialog = false
@@ -90,11 +92,15 @@ const actions = {
     })
   },
 
-  [types.SHOW_SELECT_EMPLOYEE_DIALOG] ({rootGetters, commit}, payload) {
-    console.log('taxForm :: SHOW_SELECT_EMPLOYEE_DIALOG :: payload: ', payload)
-    let selectedEmployeeIds = payload
-    commit('setSelectedFormEmployeeIds', selectedEmployeeIds)
-    commit('showSelectEmployeeDialog')
+  // [types.SHOW_SELECT_EMPLOYEE_DIALOG] ({rootGetters, commit}, payload) {
+  //   console.log('taxForm :: SHOW_SELECT_EMPLOYEE_DIALOG :: payload: ', payload)
+  //   let selectedEmployeeIds = payload
+  //   commit('setSelectedFormEmployeeIds', selectedEmployeeIds)
+  //   commit('showSelectEmployeeDialog')
+  // },
+
+  async [types.SET_SELECTED_FORM_EMPLOYEE_IDS] ({rootGetters, commit}, payload) {
+    await commit('setSelectedFormEmployeeIds', payload)
   },
 
   // [types.SET_BLANK_ACTIVE_FORM] ({rootGetters, commit}, payload) {

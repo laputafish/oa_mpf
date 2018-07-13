@@ -1,6 +1,7 @@
 <template>
   <div class="btn-group btn-group-sm btn-group-gap">
       <button type="button"
+              :disabled="row.status==='processing'||row.status==='ready_for_processing'"
               class="btn btn-danger"
               @click="deleteRecord">
       <i class="fa fa-fw fa-close"></i>

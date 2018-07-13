@@ -2,11 +2,32 @@
   <div style="position:relative;">
     <div class="row">
       <div class="col-sm-12">
-        <div class="btn-group btn-group-gap pull-right">
-          <button type="button" class="btn btn-width-80 btn-primary"
-                  @click="saveRecord">{{ $t('buttons.submit') }}</button>
-          <button type="button" class="btn btn-width-80 btn-outline-primary"
-                  @click="cancel">{{ $t('buttons.cancel') }}</button>
+        <div v-if="form && form.employees" class="btn-group btn-group-gap pull-right">
+          <button type="button"
+                  @click="startGeneration"
+                  :disabled="form.status==='ready_for_processing'||form.status==='generating'||form.employees.length===0"
+                  class="btn btn-outline-success">
+            <i class="fa fa-bolt"></i>
+            {{ $t('buttons.generate_ir56e') }}</button>
+          <button type="button"
+                  :disabled="form.status!=='generating' && form.status!=='ready_for_processing'"
+                  @click="terminateGeneration"
+                  class="btn btn-width-80 btn-outline-danger">
+            <i class="fa fa-hand-stop-o"></i>
+            {{ $t('buttons.terminate') }}</button>
+          <button type="button"
+                  :disabled="form.status==='generating'||form.status==='ready_for_processing'"
+                  class="btn btn-width-80 btn-outline-primary"
+                  @click="saveRecord">
+            <i class="fa fa-save"></i>
+            {{ $t('buttons.submit') }}</button>
+          <button type="button"
+                  class="btn btn-width-80 btn-outline-default"
+                  @click="cancel">
+            <i class="fa fa-close"></i>
+            {{ $t('buttons.cancel') }}</button>
+        </div>
+        <div v-else class="btn-group btn-group-gap pull-right" style="height:39px;">
         </div>
       </div>
     </div>
@@ -17,6 +38,7 @@
           <label class="text-right col-sm-3 col-form-label" for="formNo">{{ $t('tax.form_no') }}</label>
           <div class="col-sm-9">
             <input v-model="form.form_no"
+                   :disabled="form.status!=='pending'&&form.status!=='terminated'"
                    class="form-control"
                          id="formNo"
                          type="text"/>
@@ -26,6 +48,7 @@
           <label class="text-right col-sm-3 col-form-label" for="formDate">{{ $t('tax.form_date') }}</label>
           <div class="col-sm-9">
             <date-picker v-model="form.form_date"
+                         :disabled="form.status!=='pending'&&form.status!=='terminated'"
                          id="formDate"
                          type="date" format="YYYY-MM-DD"></date-picker>
           </div>
@@ -34,6 +57,7 @@
           <label class="text-right col-sm-3 col-form-label" for="formRemark">{{ $t('tax.form_date') }}</label>
           <div class="col-sm-9">
             <textarea v-model="form.remark"
+                      :disabled="form.status!=='pending'&&form.status!=='terminated'"
                       class="form-control"
                       rows="5"
                          id="formRemark"></textarea>
@@ -42,9 +66,9 @@
       </div>
       <div class="col-sm-5">
         <div class="form-group row">
-          <label class="text-right col-sm-4 col-form-label" for="formDate">{{ $t('general.status') }}</label>
+          <label class="text-right col-sm-4 col-form-label" for="formDate">{{ $t('general.form_status') }}</label>
           <div class="col-sm-4">
-            <input type="text" readonly class="form-control" id="status" :value="$t('general.' + form.status)">
+            <input type="text" v-if="form" readonly class="form-control" id="status" :value="$t('general.' + form.status)">
           </div>
         </div>
       </div>
@@ -54,6 +78,7 @@
       @onEmployeesUpdated="onEmployeesUpdatedHandler"
       @onEmployeesRemoved="onEmployeesRemovedHandler"
       @onCommand="onCommandHandler"
+      :status="form ? form.status : 'disabled'"
       :employees="form ? form.employees : []"></employee-table>
   </div>
 </template>
@@ -129,6 +154,16 @@ export default {
     // }
   },
   methods: {
+    startGeneration () {
+      this.onCommandHandler({
+        command: 'generate'
+      })
+    },
+    terminateGeneration () {
+      this.onCommandHandler({
+        command: 'terminate'
+      })
+    },
     refresh () {
       console.log('CommencementForm :: refresh')
       let vm = this
@@ -201,16 +236,21 @@ export default {
     onEmployeesUpdatedHandler (employees) {
       console.log('CommencementForm :: onEmployeesUpdatedHandler')
       let vm = this
-      let existedIds = vm.form.employees.map(formEmployee => formEmployee.employee_id)
+      let existedIds = vm.form.employees.map(formEmployee => formEmployee.employee_id.toString())
       let updatedIds = employees.map(employee => employee.id)
       let obsolateIds = existedIds.filter(id => (updatedIds.indexOf(id) === -1))
-      vm.form.employees = []
+
+      console.log('CommencementForm :: onEmployeeUpdateHandler :: existedIds: ', existedIds)
+      console.log('CommencementForm :: onEmployeeUpdateHandler :: updatedIds: ', updatedIds)
+      console.log('CommencementForm :: onEmployeeUpdateHandler :: obsolateIds: ', obsolateIds)
+
       for (var i = 0; i < employees.length; i++) {
         let employee = employees[i]
         if (existedIds.indexOf(employee.id) === -1) {
+          alert('not exists: employee.id = ' + employee.id)
           vm.form.employees.push({
             'form_id': vm.form.id,
-            'employee_id': employee.id,
+            'employee_id': employee.id.toString(),
             'info': employee,
             'status': 'pending',
             'file': '',
@@ -219,7 +259,7 @@ export default {
         }
       }
       for (var j = 0; j < obsolateIds.length; j++) {
-        let index = vm.form.employees.findIndex(formEmployee => formEmployee.employee_id === obsolateIds[j])
+        let index = vm.form.employees.findIndex(formEmployee => formEmployee.employee_id.toString() === obsolateIds[j])
         if (index !== -1) {
           vm.form.employees.splice(index, 1)
         }
