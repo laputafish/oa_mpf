@@ -65,7 +65,9 @@
     "employees": "員工",
     "operation": "操作",
     "joined_date": "入職時間",
-    "form_no": "表格編號"
+    "form_no": "表格編號",
+    "remark": "備註",
+    "submitted_on": "寄出日期"
   },
   "mpf": {
     "mpf_management": "MPF 管理"

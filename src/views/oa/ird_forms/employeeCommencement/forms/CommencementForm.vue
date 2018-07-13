@@ -5,7 +5,7 @@
         <div v-if="form && form.employees" class="btn-group btn-group-gap pull-right">
           <button type="button"
                   @click="startGeneration"
-                  :disabled="form.status==='ready_for_processing'||form.status==='generating'||form.employees.length===0"
+                  :disabled="whenDisabledInput||form.employees.length===0"
                   class="btn btn-outline-success">
             <i class="fa fa-bolt"></i>
             {{ $t('buttons.generate_ir56e') }}</button>
@@ -38,7 +38,7 @@
           <label class="text-right col-sm-3 col-form-label" for="formNo">{{ $t('tax.form_no') }}</label>
           <div class="col-sm-9">
             <input v-model="form.form_no"
-                   :disabled="form.status!=='pending'&&form.status!=='terminated'"
+                   :disabled="whenDisabledInput"
                    class="form-control"
                          id="formNo"
                          type="text"/>
@@ -48,16 +48,17 @@
           <label class="text-right col-sm-3 col-form-label" for="formDate">{{ $t('tax.form_date') }}</label>
           <div class="col-sm-9">
             <date-picker v-model="form.form_date"
-                         :disabled="form.status!=='pending'&&form.status!=='terminated'"
+                         :disabled="whenDisabledInput"
                          id="formDate"
-                         type="date" format="YYYY-MM-DD"></date-picker>
+                         type="date"
+                         format="YYYY-MM-DD"></date-picker>
           </div>
         </div>
         <div class="form-group row">
-          <label class="text-right col-sm-3 col-form-label" for="formRemark">{{ $t('tax.form_date') }}</label>
+          <label class="text-right col-sm-3 col-form-label" for="formRemark">{{ $t('tax.remark') }}</label>
           <div class="col-sm-9">
             <textarea v-model="form.remark"
-                      :disabled="form.status!=='pending'&&form.status!=='terminated'"
+                      :disabled="whenDisabledInput"
                       class="form-control"
                       rows="5"
                          id="formRemark"></textarea>
@@ -69,6 +70,16 @@
           <label class="text-right col-sm-4 col-form-label" for="formDate">{{ $t('general.form_status') }}</label>
           <div class="col-sm-4">
             <input type="text" v-if="form" readonly class="form-control" id="status" :value="$t('general.' + form.status)">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="text-right col-sm-4 col-form-label" for="submittedOn">{{ $t('tax.submitted_on') }}</label>
+          <div class="col-sm-4">
+            <date-picker v-model="form.submitted_on"
+                         :disabled="whenDisabledInput"
+                         id="submittedOn"
+                         type="date"
+                         format="YYYY-MM-DD"></date-picker>
           </div>
         </div>
       </div>
@@ -106,6 +117,7 @@ export default {
             'subject': '',
             'remark': '',
             'status': 'pending',
+            'submitted_on': '',
             'employees': []
           }
         }
@@ -124,6 +136,12 @@ export default {
     },
     activeForm () {
       return this.$store.getters.activeForm
+    },
+    whenDisabledInput () {
+      let vm = this
+      return vm.form.status === 'processing' ||
+        vm.form.status === 'ready_for_processing' ||
+        vm.form.status === 'completed'
     }
   },
   mounted () {
@@ -265,15 +283,28 @@ export default {
         }
       }
     },
+    grabYear (moment) {
+      let vm = this
+      if (moment) {
+        let m = vm.$moment(moment)
+        return m.format('YYYY-MM-DD')
+      } else {
+        return null
+      }
+    },
     saveRecord () {
       let vm = this
       if (vm.form.id === 0) {
         // new
+        vm.form.form_date = vm.grabYear(vm.form.form_date)
+        vm.form.submitted_on = vm.grabYear(vm.form.submitted_on)
         vm.$store.dispatch('SAVE_EMPLOYEE_COMMENCEMENT', vm.form).then(function (response) {
           vm.$emit('onModeChanged', 'list')
         })
       } else {
         // update
+        vm.form.form_date = vm.grabYear(vm.form.form_date)
+        vm.form.submitted_on = vm.grabYear(vm.form.submitted_on)
         vm.$store.dispatch('UPDATE_EMPLOYEE_COMMENCEMENT', vm.form).then(function (response) {
           vm.$emit('onModeChanged', 'list')
         })

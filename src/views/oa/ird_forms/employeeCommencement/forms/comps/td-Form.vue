@@ -1,11 +1,12 @@
 <template>
-  <div>
+  <div class="form-file-column">
     <a v-if="row.status==='ready'"
-      :href="formUrl" target="_blank">
+       :href="formUrl" target="_blank">
       <img :src="imgSrc" class="form-icon"/>
     </a>
     <img v-else
          :src="imgSrc" class="form-icon"/>
+    <i v-show="row.status==='processing'" class="fa fa-spinner fa-spin"></i>
   </div>
 </template>
 
@@ -71,8 +72,18 @@ export default {
 </script>
 
 <style>
-.form-icon {
-  width: 24px;
-  height: 24px;
-}
+  .form-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .form-file-column {
+    position: relative;
+  }
+
+  .form-file-column .fa-spinner {
+    margin: 0 auto;
+    font-size: 18px;
+    color: red;
+  }
 </style>

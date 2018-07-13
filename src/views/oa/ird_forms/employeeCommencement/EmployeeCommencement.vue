@@ -53,6 +53,7 @@ export default {
           {title: vm.$t('tax.no_of_employee'), field: 'employee_count', tdClass: 'text-center', thClass: 'text-center'},
           {title: vm.$t('tax.employees'), field: 'id', tdComp: 'Employees', sortable: false},
           {title: vm.$t('general.status'), field: 'status', tdComp: 'Status'},
+          {title: vm.$t('tax.submitted_on'), field: 'submitted_on', sortable: true},
           {title: vm.$t('tax.operation'), tdComp: 'Opt'}
         ]
         return cols

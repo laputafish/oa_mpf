@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span :class="badgeClass" class="badge">
+    <span :class="badgeClass" class="min-width-80 badge">
       {{ $t(caption) }}
     </span>
     <!--<span v-for="(step,index) in steps" :key="index">-->
@@ -37,7 +37,7 @@ export default {
       let vm = this
       switch (vm.row.status) {
         case 'pending':
-          return 'badge-primary'
+          return 'badge-secondary'
         case 'ready_for_processing':
         case 'generating':
         case 'processing':
