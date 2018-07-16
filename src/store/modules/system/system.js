@@ -755,6 +755,20 @@ const actions = {
         })
       }
     }
+  },
+
+  async [types.FETCH_TEAM_SETTINGS] ({rootGetters, state, commit}) {
+    console.log('active team: ', state.activeTeam)
+    // let url = constants.apiUrl + '/teams/' + state.activeTeamt/teams?include=currency'
+    // let config = rootGetters.oaApiHeaderConfig
+    // console.log('fetch teams: config: ', config)
+    // await Vue.axios.get(url, config).then(response => {
+    //   if (response.data.status) {
+    //     console.log('FETCH_TEAMS :: response.data.result : ', response.data.result)
+    //     commit('setTeams', response.data.result)
+    //     console.log('fetch teams :: teams: ', response.data.result)
+    //   }
+    // })
   }
 }
 

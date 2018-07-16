@@ -4,12 +4,16 @@ import * as types from './teams_types'
 
 const state = {
   teams: [],
-  showTeamSelection: false
+  showTeamSelection: false,
+  showTeamSettings: false
 }
 
 const getters = {
   teams: (state) => {
     return state.teams
+  },
+  showTeamSettings: (state) => {
+    return state.showTeamSettings
   },
   showTeamSelection: (state) => {
     return state.showTeamSelection
@@ -28,6 +32,14 @@ const mutations = {
 
   hideTeamSelection: (state) => {
     state.showTeamSelection = false
+  },
+
+  showTeamSettings: (state) => {
+    state.showTeamSettings = true
+  },
+
+  hideTeamSettings: (state) => {
+    state.showTeamSettings = false
   }
 }
 
@@ -44,12 +56,6 @@ const actions = {
       }
     })
   }
-
-  // ,
-  //
-  // async [types.SET_TEAMS] ({commit}, payload) {
-  //   await commit('setTeams', payload)
-  // }
 }
 
 export default {

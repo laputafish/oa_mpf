@@ -2,7 +2,7 @@
   <yoov-modal @close="$emit('close')" :modalSizeClass="'modal-size-lg'">
     <div slot="header" class="text-left header flex-grow-1" style="position:relative;">
       <!--<button class="btn btn-primary pull-right"-->
-              <!--@click="onCloseClicked">{{ $t('buttons.close') }}-->
+      <!--@click="onCloseClicked">{{ $t('buttons.close') }}-->
       <!--</button>-->
       <h3 class="dialog-title d-inline">{{ $t('team.team_selection') }}</h3>
     </div>
@@ -61,6 +61,7 @@ export default {
     }
   },
   mounted () {
+    alert('x')
     this.$store.dispatch('FETCH_TEAMS')
   }
 }

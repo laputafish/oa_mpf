@@ -42,6 +42,9 @@ export default {
         case 'teamSelection':
           vm.$store.commit('showTeamSelection')
           break
+        case 'teamSettings':
+          vm.$store.commit('showTeamSettings')
+          break
       }
     },
     processCommand (command) {
