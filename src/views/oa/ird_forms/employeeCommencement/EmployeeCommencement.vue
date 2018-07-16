@@ -117,23 +117,44 @@ export default {
   methods: {
     updateFormStatus (formId, status) {
       let vm = this
-      for (var i = 0; i < vm.data.length; i++) {
-        if (vm.data[i].id === formId) {
-          vm.data[i].status = status
+      if (vm.mode === 'record') {
+        console.log('updateFormStatus :: status = ' + status)
+        vm.$refs.currentForm.refresh()
+      } else {
+        for (var i = 0; i < vm.data.length; i++) {
+          if (vm.data[i].id === parseInt(formId)) {
+            vm.data[i].status = status
+          }
         }
       }
-      console.log('updateFormStatus :: status = ' + status)
-      vm.$refs.currentForm.refresh()
     },
+
+    updateFormEmployeeStatus (formId, employeeId, status) {
+      let vm = this
+      if (vm.mode === 'record') {
+        vm.$refs.currentForm.updateEmployeeStatus(employeeId, status)
+      }
+    },
+
     onStatusUpdated (data) {
       let statusInfo = data.statusInfo
       let formId = statusInfo.formId.toString()
       let status = statusInfo.status
 
+      console.log('Pusher :: received: form#' + formId + ' (status=' + status + ')')
       this.updateFormStatus(formId, status)
     },
     onEmployeeStatusUpdated (data) {
-      console.log('onEmployeeStatusUpdated :: data: ', data)
+      let statusInfo = data.statusInfo
+      let formId = statusInfo.formId.toString()
+      let employeeId = statusInfo.employeeId.toString()
+      let status = statusInfo.status
+      this.updateFormEmployeeStatus(formId, employeeId, status)
+      console.log('Pusher (formEmployee) :: form#' + formId + ' employee#' + employeeId + ' (status=' + status + ')')
+      // let formId = statusInfo.formId.toString()
+      // let status = statusInfo.status
+      //
+      // console.log('onEmployeeStatusUpdated :: data: ', data)
     },
     subscribe () {
       let vm = this

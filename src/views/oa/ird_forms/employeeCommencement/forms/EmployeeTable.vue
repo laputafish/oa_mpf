@@ -71,7 +71,7 @@ export default {
   methods: {
     onCommencementEmployeeDeleted (employee) {
       let vm = this
-      console.log('EmployeeTable :: onCommencementEmployeeDeleted')
+      // console.log('EmployeeTable :: onCommencementEmployeeDeleted')
       let options = {
         okText: vm.$t('buttons.ok'),
         cancelText: vm.$t('buttons.cancel')
@@ -88,9 +88,9 @@ export default {
     },
     selectEmployees () {
       let vm = this
-      console.log('EmployeeTable :: selectEmployees :: vm.employees: ', vm.employees)
+      // console.log('EmployeeTable :: selectEmployees :: vm.employees: ', vm.employees)
       let selectedEmployeeIds = vm.employees.map(formEmployee => formEmployee.employee_id.toString())
-      console.log('EmployeeTable :: selectEmployees :: selectedEmployeeIds: ', selectedEmployeeIds)
+      // console.log('EmployeeTable :: selectEmployees :: selectedEmployeeIds: ', selectedEmployeeIds)
 
       // vm.$store.dispatch('SET_SELECTED_FORM_EMPLOYEE_IDS', selectedEmployeeIds)
       EventBus.$emit('showSelectEmployeeDialog', selectedEmployeeIds)
@@ -107,18 +107,18 @@ export default {
   watch: {
     employees: {
       handler: function (value) {
-        let vm = this
-        console.log('watch(employees) handler :: value: ', value)
-        console.log('watch(employees) handler :: vm.employees: ', vm.employees)
+        // let vm = this
+        // console.log('watch(employees) handler :: value: ', value)
+        // console.log('watch(employees) handler :: vm.employees: ', vm.employees)
         this.updateData()
-        console.log('watch(employees)')
+        // console.log('watch(employees)')
       },
       deep: true
     },
     query: {
       handler (query) {
         this.updateData()
-        console.log('watch(query)')
+        // console.log('watch(query)')
       }
     }
   }

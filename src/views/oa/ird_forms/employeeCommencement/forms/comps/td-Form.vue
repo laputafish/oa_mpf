@@ -6,7 +6,6 @@
     </a>
     <img v-else
          :src="imgSrc" class="form-icon"/>
-    <i v-show="row.status==='processing'" class="fa fa-spinner fa-spin"></i>
   </div>
 </template>
 

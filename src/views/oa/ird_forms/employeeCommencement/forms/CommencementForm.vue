@@ -2,7 +2,17 @@
   <div style="position:relative;">
     <div class="row">
       <div class="col-sm-12">
-        <div v-if="form && form.employees" class="btn-group btn-group-gap pull-right">
+        <h3 class="pull-left">
+          #{{ form.id }}
+        </h3>
+        <div v-if="form.employees" class="btn-group btn-group-gap pull-right">
+          <h4 class="d-inline pt-1 text-danger">
+            <span v-show="form.status==='processing'">
+              <i class="fa fa-spinner fa-spin"></i>
+              {{ $t('general.processing') }}
+            </span>
+          </h4>
+          &nbsp;&nbsp;
           <button type="button"
                   @click="startGeneration"
                   :disabled="whenDisabledInput||form.employees.length===0"
@@ -32,7 +42,7 @@
       </div>
     </div>
     <hr/>
-    <div class="row" v-if="form">
+    <div class="row">
       <div class="col-sm-7">
         <div class="form-group row">
           <label class="text-right col-sm-3 col-form-label" for="formNo">{{ $t('tax.form_no') }}</label>
@@ -69,7 +79,7 @@
         <div class="form-group row">
           <label class="text-right col-sm-4 col-form-label" for="formDate">{{ $t('general.form_status') }}</label>
           <div class="col-sm-4">
-            <input type="text" v-if="form" readonly class="form-control" id="status" :value="$t('general.' + form.status)">
+            <input type="text" v-if="form" readonly class="form-control" id="status" :value="form.status ? $t('general.' + form.status) : ''">
           </div>
         </div>
         <div class="form-group row">
@@ -109,17 +119,15 @@ export default {
       formType: 'commencements',
       form: {
         type: Object,
-        default () {
-          return {
-            'id': 0,
-            'form_no': '',
-            'form_date': '',
-            'subject': '',
-            'remark': '',
-            'status': 'pending',
-            'submitted_on': '',
-            'employees': []
-          }
+        default: {
+          'id': 0,
+          'form_no': '',
+          'form_date': '',
+          'subject': '',
+          'remark': '',
+          'status': 'pending',
+          'submitted_on': '',
+          'employees': []
         }
       }
     }
@@ -152,16 +160,16 @@ export default {
   },
   watch: {
     formId: function (value) {
-      console.log('CommencementForm :: watch(formId)')
+      // console.log('CommencementForm :: watch(formId)')
       this.refresh()
     },
     activeForm: function (value) {
-      console.log('CommencementForm :: watch(activeForm) value: ', value)
+      // console.log('CommencementForm :: watch(activeForm) value: ', value)
       let vm = this
       vm.setFormRecord(value)
     },
     form: function (value) {
-      console.log('CommencementForm :: watch(form)  value: ', value)
+      // console.log('CommencementForm :: watch(form)  value: ', value)
     }
     // ,
     // record: function (value) {
@@ -183,15 +191,25 @@ export default {
       })
     },
     refresh () {
-      console.log('CommencementForm :: refresh')
+      // console.log('CommencementForm :: refresh')
       let vm = this
       vm.$store.dispatch('FETCH_ACTIVE_FORM', {
         id: vm.formId,
         type: 'commencement'
       })
     },
+    updateEmployeeStatus (employeeId, status) {
+      let vm = this
+      for (var i = 0; i < vm.form.employees.length; i++) {
+        if (vm.form.employees[i].employee_id === parseInt(employeeId)) {
+          vm.form.employees[i].status = status
+          break
+        }
+      }
+      // console.log('updateEmployeeStatus :: vm.form.employee', vm.form.employees)
+    },
     setFormRecord (record) {
-      console.log('CommencementForm :: setFormRecord :: record: ', record)
+      // console.log('CommencementForm :: setFormRecord :: record: ', record)
       let vm = this
       if (record) {
         vm.form = JSON.parse(JSON.stringify(record))
@@ -203,12 +221,12 @@ export default {
             vm.form.employees[i].form_url = constants.apiUrl + '/media/forms/' + vm.formType + '/' + vm.form.id + '/' + employee.id
           }
         }
-        console.log('setFormRecord :: record => form (after): ', vm.form)
+        // console.log('setFormRecord :: record => form (after): ', vm.form)
       }
     },
 
     onEmployeesRemovedHandler (employees) {
-      console.log('CommencementForm :: onEmployeesRemovedHandler')
+      // console.log('CommencementForm :: onEmployeesRemovedHandler')
 
       if (employees.length === 0) return
 
@@ -252,15 +270,15 @@ export default {
       }
     },
     onEmployeesUpdatedHandler (employees) {
-      console.log('CommencementForm :: onEmployeesUpdatedHandler')
+      // console.log('CommencementForm :: onEmployeesUpdatedHandler')
       let vm = this
       let existedIds = vm.form.employees.map(formEmployee => formEmployee.employee_id.toString())
       let updatedIds = employees.map(employee => employee.id)
       let obsolateIds = existedIds.filter(id => (updatedIds.indexOf(id) === -1))
 
-      console.log('CommencementForm :: onEmployeeUpdateHandler :: existedIds: ', existedIds)
-      console.log('CommencementForm :: onEmployeeUpdateHandler :: updatedIds: ', updatedIds)
-      console.log('CommencementForm :: onEmployeeUpdateHandler :: obsolateIds: ', obsolateIds)
+      // console.log('CommencementForm :: onEmployeeUpdateHandler :: existedIds: ', existedIds)
+      // console.log('CommencementForm :: onEmployeeUpdateHandler :: updatedIds: ', updatedIds)
+      // console.log('CommencementForm :: onEmployeeUpdateHandler :: obsolateIds: ', obsolateIds)
 
       for (var i = 0; i < employees.length; i++) {
         let employee = employees[i]

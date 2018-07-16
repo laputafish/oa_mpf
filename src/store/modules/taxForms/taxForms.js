@@ -38,8 +38,8 @@ const mutations = {
   },
   showSelectEmployeeDialog: (state) => {
     state.showingSelectEmployeeDialog = true
-    console.log('showSelectEmployeeDialog :: showingSelectEmployeeDialog = ' +
-      state.showingSelectEmployeeDialog)
+    // console.log('showSelectEmployeeDialog :: showingSelectEmployeeDialog = ' +
+    //   state.showingSelectEmployeeDialog)
   },
   hideSelectEmployeeDialog: (state) => {
     state.showingSelectEmployeeDialog = false
@@ -48,7 +48,7 @@ const mutations = {
     state.selectedFormEmployeeIds = payload
   },
   setActiveForm: (state, payload) => {
-    console.log('taxForms.js :: setActiveForm: payload: ', payload)
+    // console.log('taxForms.js :: setActiveForm: payload: ', payload)
     state.activeForm = payload
   }
 }
@@ -67,7 +67,7 @@ const actions = {
         }
       }
       Vue.axios.get(url, config).then(function (response) {
-        console.log('FETCH_TAX_FORMS :: response: ', response)
+        // console.log('FETCH_TAX_FORMS :: response: ', response)
         commit('setTaxForms', response.data.result)
       })
     }
@@ -75,7 +75,7 @@ const actions = {
 
   [types.GENERATE_SELECTED_TAX_FORMS] ({rootGetters, commit}, payload) {
     return new Promise((resolve, reject) => {
-      console.log('rootGetters.teamId: ', rootGetters.teamId)
+      // console.log('rootGetters.teamId: ', rootGetters.teamId)
       if (rootGetters.teamId) {
         let url = constants.apiUrl + '/tax_forms'
         let data = {
@@ -122,7 +122,7 @@ const actions = {
   // },
 
   [types.SET_ACTIVE_FORM] ({rootGetters, commit}, payload) {
-    console.log('SET_ACTIVE_FORM')
+    // console.log('SET_ACTIVE_FORM')
     let form = payload
     let employees = rootGetters.employees
     let employeeIds = employees.map(employee => employee.id)
@@ -134,7 +134,7 @@ const actions = {
   },
 
   [types.FETCH_ACTIVE_FORM] ({rootGetters, dispatch}, payload) {
-    console.log('FETCH_ACTIVE_FORM')
+    // console.log('FETCH_ACTIVE_FORM')
     return new Promise((resolve, reject) => {
       let formId = payload.id
       let formType = payload.type
@@ -163,7 +163,7 @@ const actions = {
 
       Vue.axios.get(url, config).then(function (response) {
         if (response.data.status) {
-          console.log('FETCH_ACTIVE_FORM axios => SET_ACTIVE_FORM :: response:', response)
+          // console.log('FETCH_ACTIVE_FORM axios => SET_ACTIVE_FORM :: response:', response)
           dispatch('SET_ACTIVE_FORM', response.data.result)
         }
       })
