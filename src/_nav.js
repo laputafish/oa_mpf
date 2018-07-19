@@ -12,6 +12,11 @@ export default {
     {
       name: 'tax.notification_to_ird',
       url: '/ird_forms',
+      icon: 'fa fa-file-text'
+    },
+    {
+      name: 'tax.notification_to_ird',
+      url: '/ird_forms_xxx',
       icon: 'fa fa-file-text',
       children: [
         {

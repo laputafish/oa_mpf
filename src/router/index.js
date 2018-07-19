@@ -91,10 +91,11 @@ import HeaderPage3 from '@/views/headerPages/HeaderPage3'
 import MpfManagement from '@/views/oa/mpfManagement/MpfManagement'
 import TaxForms from '@/views/oa/taxForms/TaxForms'
 import TeamSelection from '@/views/oa/teamSelection/TeamSelection'
-import EmployeeCommencement from '@/views/oa/ird_forms/employeeCommencement/EmployeeCommencement'
-import EmployeeTermination from '@/views/oa/ird_forms/employeeTermination/EmployeeTermination'
-import EmployeeDeparture from '@/views/oa/ird_forms/employeeDeparture/EmployeeDeparture'
-import EmployeeSalary from '@/views/oa/ird_forms/employeeSalary/EmployeeSalary'
+import EmployeeCommencement from '@/views/oa/irdForms/employeeCommencement/EmployeeCommencement'
+import EmployeeTermination from '@/views/oa/irdForms/employeeTermination/EmployeeTermination'
+import EmployeeDeparture from '@/views/oa/irdForms/employeeDeparture/EmployeeDeparture'
+import EmployeeSalary from '@/views/oa/irdForms/employeeSalary/EmployeeSalary'
+import IrdForms from '@/views/oa/irdForms/IrdForms'
 
 // import jQuery from 'jquery'
 // window.jQuery = jQuery
@@ -150,6 +151,11 @@ export default new VueRouter({
           path: 'mpf_management',
           name: 'mpf.mpf_management',
           component: MpfManagement
+        },
+        {
+          path: 'ird_forms',
+          name: 'tax.staff_declaration_management',
+          component: IrdForms
         },
         {
           path: 'employee_commencement',

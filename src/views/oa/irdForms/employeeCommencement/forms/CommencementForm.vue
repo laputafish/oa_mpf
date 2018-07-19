@@ -50,8 +50,8 @@
             <input v-model="form.form_no"
                    :disabled="whenDisabledInput"
                    class="form-control"
-                         id="formNo"
-                         type="text"/>
+                   id="formNo"
+                   type="text"/>
           </div>
         </div>
         <div class="form-group row">
@@ -71,7 +71,7 @@
                       :disabled="whenDisabledInput"
                       class="form-control"
                       rows="5"
-                         id="formRemark"></textarea>
+                      id="formRemark"></textarea>
           </div>
         </div>
       </div>

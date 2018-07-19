@@ -137,6 +137,24 @@ const actions = {
     // console.log('FETCH_ACTIVE_FORM')
     return new Promise((resolve, reject) => {
       let formId = payload.id
+      let url = constants.apiUrl + '/forms/' + formId
+      let config = rootGetters.apiHeaderConfig
+
+      Vue.axios.get(url, config).then(function (response) {
+        if (response.data.status) {
+          dispatch('SET_ACTIVE_FORM', response.data.result)
+          resolve(response.data.result)
+        }
+      })
+
+      // }
+    })
+  },
+
+  [types.FETCH_ACTIVE_FORMX] ({rootGetters, dispatch}, payload) {
+    // console.log('FETCH_ACTIVE_FORM')
+    return new Promise((resolve, reject) => {
+      let formId = payload.id
       let formType = payload.type
 
       // if (formId === 0) {

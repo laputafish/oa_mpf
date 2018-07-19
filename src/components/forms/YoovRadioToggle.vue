@@ -1,13 +1,14 @@
 <template>
   <div class="yoov-radio-toggle">
     <button type="button"
-            class="btn"
+            class="btn btn-width-80"
+            v-for="(option) in options"
+            :key="option[optionValueField]"
             :class="{'btn-primary':value===option[optionValueField],'btn-default':value!==option[optionValueField]}"
-            @click="selectOption(option[optionValueField])"
-      v-for="option in options"
-      :key="option[optionValueField]">
+            @click="selectOption(option[optionValueField])">
       {{ $t(option[optionTitleTag]) }}
     </button>
+    value = {{ value }}
   </div>
 </template>
 
@@ -16,9 +17,7 @@ export default {
   props: {
     options: {
       type: Array,
-      default: () => {
-        return []
-      }
+      required: true
     },
     optionTitleTag: {
       type: String,
@@ -29,12 +28,17 @@ export default {
       default: 'value'
     },
     value: {
-      type: String
+      type: [String, Number]
     }
   },
+  created () {
+    console.log('YoovRadioToggle.created: options: ', this.options)
+  },
   watch: {
-    'value': function (val) {
-
+    'value': {
+      handler: function (val) {
+      },
+      deep: true
     }
   },
   methods: {

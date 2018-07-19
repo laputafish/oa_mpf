@@ -24,6 +24,7 @@ import employeeCommencements from './modules/taxForms/commencements/commencement
 import employeeDepartures from './modules/taxForms/departures/departures'
 import employeeSalaries from './modules/taxForms/salaries/salaries'
 import employeeTerminations from './modules/taxForms/terminations/terminations'
+import irdForms from './modules/irdForms/irdForms'
 
 import Cookies from 'js-cookie'
 
@@ -51,7 +52,8 @@ export const store = new Vuex.Store({
     employeeCommencements,
     employeeDepartures,
     employeeSalaries,
-    employeeTerminations
+    employeeTerminations,
+    irdForms
   },
   plugins: [
     createPersistedState({
