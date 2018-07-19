@@ -25,6 +25,7 @@ import employeeDepartures from './modules/taxForms/departures/departures'
 import employeeSalaries from './modules/taxForms/salaries/salaries'
 import employeeTerminations from './modules/taxForms/terminations/terminations'
 import irdForms from './modules/irdForms/irdForms'
+import formRecord from './modules/irdForms/formRecord'
 
 import Cookies from 'js-cookie'
 
@@ -53,7 +54,8 @@ export const store = new Vuex.Store({
     employeeDepartures,
     employeeSalaries,
     employeeTerminations,
-    irdForms
+    irdForms,
+    formRecord
   },
   plugins: [
     createPersistedState({

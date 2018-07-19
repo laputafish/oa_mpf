@@ -58,7 +58,7 @@ export default {
       return 'name not specified' // his.$route.name
     },
     routeList () {
-      console.log('Full :: routeList: ', this.$route.matched)
+      console.log('Full :: computed(routeList) (required by breadcrumb): ', this.$route.matched)
       return this.$route.matched
     },
     user () {
@@ -75,19 +75,19 @@ export default {
     }
   },
   created () {
-    let vm = this
-    console.log('EVENT :: Full.vue :: created')
-    vm.$store.dispatch('checkToken', {
-      callback: function (status) {
-        if (!status) {
-          vm.$router.push({name: 'Login'})
-        }
-      }
-    })
+    // let vm = this
+    console.log('Full.vue :: created')
+    // vm.$store.dispatch('checkToken', {
+    //   callback: function (status) {
+    //     if (!status) {
+    //       vm.$router.push({name: 'Login'})
+    //     }
+    //   }
+    // })
   },
   mounted () {
     let vm = this
-    console.log('EVENT :: Full.vue :: mounted')
+    console.log('Full.vue :: mounted')
     // if (!vm.user) {
     //   console.log('Full.vue :: mounted : !vm.user => login')
     //   vm.$router.push({name: 'Login'})

@@ -217,6 +217,7 @@ const actions = {
     }
     Vue.axios.post(url, data, config)
   }
+
 }
 
 export default {

@@ -1,14 +1,13 @@
 <template>
   <div class="yoov-radio-toggle">
     <button type="button"
-            class="btn btn-width-80"
+            class="btn btn-min-width-80"
             v-for="(option) in options"
             :key="option[optionValueField]"
             :class="{'btn-primary':value===option[optionValueField],'btn-default':value!==option[optionValueField]}"
             @click="selectOption(option[optionValueField])">
-      {{ $t(option[optionTitleTag]) }}
+      {{ optionTitleTag != '' ? $t(option[optionTitleTag]) : option[optionTitle] }}
     </button>
-    value = {{ value }}
   </div>
 </template>
 
@@ -20,6 +19,10 @@ export default {
       required: true
     },
     optionTitleTag: {
+      type: String,
+      default: ''
+    },
+    optionTitle: {
       type: String,
       default: ''
     },
@@ -55,12 +58,12 @@ export default {
     margin-right: 1px;
   }
   .yoov-radio-toggle button:first-child {
-    border-top-left-radius: 0.5rem !important;
-    border-bottom-left-radius: 0.5rem !important;
+    border-top-left-radius: 0.4rem !important;
+    border-bottom-left-radius: 0.4rem !important;
   }
   .yoov-radio-toggle button:last-child {
-    border-top-right-radius: 0.5rem !important;
-    border-bottom-right-radius: 0.5rem !important;
+    border-top-right-radius: 0.4rem !important;
+    border-bottom-right-radius: 0.4rem !important;
   }
 
 </style>

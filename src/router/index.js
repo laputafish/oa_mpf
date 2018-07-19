@@ -1,6 +1,7 @@
 // import {app} from '@/main'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import { store } from '@/store/store'
 
 // import Cookie from 'cookie'
 // import Cookies from 'js-cookie'
@@ -115,6 +116,26 @@ Vue.use(VueRouter)
 //   return true
 // }
 //
+const ifAuthenticated = (to, from, next) => {
+  if (store.getters.isAuthenticated) {
+    store.dispatch('checkToken', {
+      callback: function (status) {
+        if (status) {
+          next()
+        } else {
+          next('/login')
+        }
+      }
+    })
+    //
+    // alert('isAuthenticated is true')
+    // next()
+    // return
+  } else {
+    next('/login')
+  }
+}
+
 export default new VueRouter({
   mode: 'history',
   linkActiveClass: 'open active',
@@ -155,7 +176,8 @@ export default new VueRouter({
         {
           path: 'ird_forms',
           name: 'tax.staff_declaration_management',
-          component: IrdForms
+          component: IrdForms,
+          beforeEnter: ifAuthenticated
         },
         {
           path: 'employee_commencement',

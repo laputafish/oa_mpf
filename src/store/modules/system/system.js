@@ -6,6 +6,7 @@ import Cookie from 'cookie'
 import Cookies from 'js-cookie'
 import * as types from './system_types'
 import data from '../data.json'
+import moment from 'moment'
 
 const state = {
   ...data,
@@ -26,7 +27,8 @@ const state = {
 
   isSupervisor: false,
   activeMenu: '',
-  publicFolder: null
+  publicFolder: null,
+  availableFiscalStartYears: []
 }
 
 const transformFolders = folders => {
@@ -42,6 +44,9 @@ const transformFolders = folders => {
 }
 
 const getters = {
+  availableFiscalStartYears: (state) => {
+    return state.availableFiscalStartYears
+  },
   cookieToken (state) {
     const cookieStr = process.browser ? document.cookie : this.app.context.req.headers.cookie
     const cookies = Cookie.parse(cookieStr || '') || {}
@@ -77,7 +82,7 @@ const getters = {
     return Boolean(state.user && state.token)
   },
   user (state) {
-    console.log('store :: getters.user')
+    console.log('store :: getters.user: ', state.user)
     return state.user
   },
   teamId (state) {
@@ -222,6 +227,13 @@ function moveCategory (category, afterParent, beforeParent) {
   afterParent.children.push(category)
 }
 
+function getFiscalYearOfDate (theDate) {
+  let d = moment(theDate)
+  let year = d.get('year')
+  let cutoffDate = moment(year + '-04-01')
+  return d < cutoffDate ? (year - 1) : year
+}
+
 const mutations = {
 
   setLang (state, payload) {
@@ -314,6 +326,27 @@ const mutations = {
 
   removeCookieToken () {
     Cookies.remove('ccmsToken')
+  },
+
+  setAvailableFiscalStartYears (state, payload) {
+    console.log('setAvailableFiscalStartYears: payload:', payload)
+    let startedDate = payload.startedDate
+    let endedDate = payload.endedDate
+    let startFiscalYearStartYear = getFiscalYearOfDate(startedDate)
+    let endFiscalYearStartYear = getFiscalYearOfDate(endedDate) - 1
+    state.availableFiscalStartYears = []
+    for (var year = startFiscalYearStartYear; year <= endFiscalYearStartYear; year++) {
+      let year1Str = year.toString()
+      let year2Str = (year + 1).toString()
+      state.availableFiscalStartYears.push({
+        title: (
+          year1Str.substr(year1Str.length - 2) + '/' +
+          year2Str.substr(year2Str.length - 2)
+        ),
+        value: year
+      })
+    }
+    console.log('setAvaialbleFiscalStartYears :: state.availableFiscalYears: ', state.availableFiscalYears)
   }
 }
 
@@ -769,6 +802,42 @@ const actions = {
     //     console.log('fetch teams :: teams: ', response.data.result)
     //   }
     // })
+  },
+
+  async [types.FETCH_AVAILABLE_FISCAL_YEARS] ({rootGetters, getters, state, commit}) {
+    let teamId = getters.teamId
+    if (teamId) {
+      let url = constants.oaApiUrl + '/admin/payrolls'
+      let config = rootGetters.oaApiHeaderConfig
+      config = {
+        ...config,
+        params: {
+          teamId: teamId
+        }
+      }
+      await Vue.axios.get(url, config).then(response => {
+        if (response.data.status) {
+          let payrolls = response.data.result
+          let startedDate = null
+          let endedDate = null
+          console.log('FETCH_AVAILABLE_FISCAL_YEARS  payrolls.length = ' + payrolls.length)
+          for (var i = 0; i < payrolls.length; i++) {
+            let payroll = payrolls[i]
+            console.log('#' + i + ': start:' + payroll.startedDate + '    end:' + payroll.endedDate)
+            if (startedDate === null || payroll.startedDate < startedDate) {
+              startedDate = payroll.startedDate
+            }
+            if (endedDate === null || payroll.endedDate > endedDate) {
+              endedDate = payroll.endedDate
+            }
+          }
+          commit('setAvailableFiscalStartYears', {
+            startedDate: startedDate,
+            endedDate: endedDate
+          })
+        }
+      })
+    }
   }
 }
 

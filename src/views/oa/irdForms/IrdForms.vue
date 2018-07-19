@@ -16,7 +16,7 @@
           <div class="btn-group" style="position:absolute;top:0;right:60px;">
             <button type="button"
                     @click="newForm"
-                    class="btn-width-80 btn btn-primary">{{ $t('buttons.new') }}}}</button>
+                    class="btn-width-80 btn btn-primary">{{ $t('buttons.new') }}</button>
             <!--<button type="button" class="btn-width-80 btn btn-default">{{ $t('buttons.export') }}</button>-->
           </div>
         </div>
@@ -130,8 +130,8 @@ export default {
     teamId: function (value) {
       this.subscribe()
     },
-    selectedIrFormTypeId: function (value) {
-      this.onQueryChangedHandler()
+    selectedIrdFormTypeId: function (value) {
+      this.$set(this.query, 'filter', 'ird_form_type_id:' + value)
     },
     showingSelectEmployeeDialog () {
     },
@@ -231,6 +231,7 @@ export default {
     vm.$store.dispatch('FETCH_EMPLOYEES')
     vm.$store.dispatch('FETCH_GROUPS')
     vm.$store.dispatch('FETCH_IRD_FORM_TYPES')
+    vm.$store.dispatch('FETCH_AVAILABLE_FISCAL_YEARS')
   },
   beforeDestroy () {
     EventBus.$off('editRecord')

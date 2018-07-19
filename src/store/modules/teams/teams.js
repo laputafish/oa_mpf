@@ -5,7 +5,8 @@ import * as types from './teams_types'
 const state = {
   teams: [],
   showTeamSelection: false,
-  showTeamSettings: false
+  showTeamSettings: false,
+  teamInfo: null
 }
 
 const getters = {
@@ -55,7 +56,21 @@ const actions = {
         console.log('fetch teams :: teams: ', response.data.result)
       }
     })
+  },
+
+  async [types.FETCH_TEAM_INFO] ({rootGetters, state, commit}) {
+    let url = constants.oaApiUrl + '/t/teams?include=currency'
+    let config = rootGetters.oaApiHeaderConfig
+    console.log('fetch teams: config: ', config)
+    await Vue.axios.get(url, config).then(response => {
+      if (response.data.status) {
+        console.log('FETCH_TEAMS :: response.data.result : ', response.data.result)
+        commit('setTeams', response.data.result)
+        console.log('fetch teams :: teams: ', response.data.result)
+      }
+    })
   }
+
 }
 
 export default {

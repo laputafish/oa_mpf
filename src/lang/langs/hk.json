@@ -1,6 +1,7 @@
 {
   "lang": "hk",
   "general": {
+    "new": "新增",
     "all_staff": "所有員工",
     "warning": "警告",
     "employee": "員工",
@@ -62,7 +63,7 @@
     "employee_salary": "薪酬申報 (IR56B/IR56M)",
     "commencement": "入職",
     "termination": "離職",
-    "departure": "離職",
+    "departure": "離港",
     "salary": "薪酬",
     "form_date": "表格日期",
     "no_of_employee": "員工人數",
@@ -74,7 +75,11 @@
     "submitted_on": "寄出日期",
     "staff_declaration_management": "員工申報管理",
     "form_type": "表格類型",
-    "form_template": "表格模板"
+    "form_template": "表格模板",
+    "hand_writing": "手寫版",
+    "fiscal_years": "財政年度",
+    "signature": "簽署人",
+    "designation": "職位"
   },
   "mpf": {
     "mpf_management": "MPF 管理"

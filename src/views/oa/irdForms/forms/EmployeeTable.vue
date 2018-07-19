@@ -1,7 +1,7 @@
 <template>
   <div style="position:relative;" class="employee-table">
     <div class="table-title">
-      <div class="mt-4">{{ title }}</div>
+      <div class="mt-2">{{ title }}</div>
     </div>
     <div class="btn-group btn-group-gap" style="position:absolute;top:0;right:60px;">
       <button type="button"
@@ -128,7 +128,6 @@ export default {
 <style>
   .employee-table .table-title {
     position: absolute;
-    top: 10px;
     left: 0;
   }
 </style>
