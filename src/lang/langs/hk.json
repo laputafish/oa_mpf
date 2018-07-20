@@ -2,6 +2,7 @@
   "lang": "hk",
   "general": {
     "new": "新增",
+    "all": "所有",
     "all_staff": "所有員工",
     "warning": "警告",
     "employee": "員工",
@@ -32,10 +33,12 @@
     "all_employees": "所有員工",
     "no": "No.",
     "form": "表格",
-    "form_ready": "表格可用"
+    "form_ready": "表格可用",
+    "language": "語言"
   },
   "buttons": {
     "close": "關閉",
+    "settings": "設定",
     "ok": "確定",
     "cancel": "取消",
     "add": "新增",
@@ -79,7 +82,20 @@
     "hand_writing": "手寫版",
     "fiscal_years": "財政年度",
     "signature": "簽署人",
-    "designation": "職位"
+    "designation": "職位",
+
+    "salary_wages": "薪金/工資",
+    "leave_pay": "假期工資",
+    "directors_fee": "董事袍金",
+    "commission_fees": "佣金/費用",
+    "bonus": "花紅",
+    "back_pay_": "補發薪金, 代通知金, 退休或終止服務的獎賞或酬金",
+    "certain_payments_": "從退休計劃支付的若干款項",
+    "salaries_tax_": "僱主代付的薪俸稅",
+    "education_benefits": "教育費福利",
+    "gain_realized_": "在股份認購計劃中賺取的收益",
+    "any_other_rewards_": "任何其他報酬, 津貼或額外賞賜",
+    "pensions": "退休金"
   },
   "mpf": {
     "mpf_management": "MPF 管理"

@@ -5,12 +5,17 @@ import * as types from './taxForms_types'
 
 const state = {
   showingSelectEmployeeDialog: false,
+  showTaxFormSettings: false,
+
   selectedFormEmployeeIds: [],
   taxForms: [],
   activeForm: null
 }
 
 const getters = {
+  showTaxFormSettings: (state) => {
+    return state.showTaxFormSettings
+  },
   showingSelectEmployeeDialog: (state) => {
     return state.showingSelectEmployeeDialog
   },
@@ -40,6 +45,12 @@ const mutations = {
     state.showingSelectEmployeeDialog = true
     // console.log('showSelectEmployeeDialog :: showingSelectEmployeeDialog = ' +
     //   state.showingSelectEmployeeDialog)
+  },
+  showTaxFormSettingsDialog: (state) => {
+    state.showTaxFormSettings = true
+  },
+  hideTaxFormSettings: (state) => {
+    state.showTaxFormSettings = false
   },
   hideSelectEmployeeDialog: (state) => {
     state.showingSelectEmployeeDialog = false
@@ -146,8 +157,6 @@ const actions = {
           resolve(response.data.result)
         }
       })
-
-      // }
     })
   },
 
@@ -194,7 +203,7 @@ const actions = {
     let formId = payload.formId
     let formType = payload.formType
 
-    let url = constants.apiUrl + '/tax_forms'
+    let url = constants.apiUrl + '/forms'
     let config = rootGetters.apiHeaderConfig
     let data = {
       'command': 'generate',
@@ -208,7 +217,7 @@ const actions = {
     let formId = payload.formId
     let formType = payload.formType
 
-    let url = constants.apiUrl + '/tax_forms'
+    let url = constants.apiUrl + '/forms'
     let config = rootGetters.apiHeaderConfig
     let data = {
       'command': 'terminate',
@@ -216,6 +225,10 @@ const actions = {
       'formType': formType
     }
     Vue.axios.post(url, data, config)
+  },
+
+  [types.SHOW_TAX_FORM_SETTINGS_DIALOG] ({commit}) {
+    commit('showTaxFormSettingsDialog')
   }
 
 }

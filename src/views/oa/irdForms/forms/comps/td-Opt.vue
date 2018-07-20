@@ -39,7 +39,7 @@ export default {
     },
     deleteRecord () {
       let vm = this
-      EventBus.$emit('commencementEmployeeDeleted', vm.row)
+      EventBus.$emit('onEmployeeDeleted', vm.row)
     },
     toggleNestedComp (comp) {
       const { nested } = this

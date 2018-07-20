@@ -41,15 +41,16 @@ export default {
   data () {
     let vm = this
     return {
+      tableEmployees: [],
       selectedRecord: null,
       mode: 'list',
       columns: (() => {
         const cols = [
-          {title: vm.$t('general.no'), field: 'recordNo', sortable: true, tdClass: 'text-center', thClass: 'text-center'},
-          {title: vm.$t('general.name'), tdComp: 'DisplayName', tdClass: 'text-left', thClass: 'text-left'},
-          {title: vm.$t('tax.joined_date'), tdComp: 'JoinedDate', thClass: 'text-enter', tdClass: 'text-center'},
-          {title: vm.$t('general.status'), field: 'status', tdComp: 'Status'},
-          {title: vm.$t('general.form'), tdComp: 'Form', tdClass: 'text-center', thClass: 'text-center'},
+          {title: vm.$t('general.no'), field: 'recordNo', tdClass: 'text-center', thClass: 'text-center'},
+          {title: vm.$t('general.name'), field: 'name', sortable: true, tdClass: 'text-left', thClass: 'text-left'},
+          {title: vm.$t('tax.joined_date'), field: 'joinedDate', tdComp: 'JoinedDate', sortable: true, thClass: 'text-center', tdClass: 'text-center'},
+          {title: vm.$t('general.status'), field: 'status', sortable: true, tdComp: 'Status'},
+          {title: vm.$t('general.form'), field: 'form', tdComp: 'Form', tdClass: 'text-center', thClass: 'text-center'},
           {title: vm.$t('tax.operation'), tdComp: 'Opt'}
         ]
         return cols
@@ -62,16 +63,16 @@ export default {
   created () {
     let vm = this
     EventBus.$on('onEmployeesSelected', vm.onEmployeesSelected)
-    EventBus.$on('commencementEmployeeDeleted', vm.onCommencementEmployeeDeleted)
+    EventBus.$on('onEmployeeDeleted', vm.onEmployeeDeleted)
   },
   beforeDestroy () {
     EventBus.$off('onEmployeesSelected')
-    EventBus.$off('commencementEmployeeDeleted')
+    EventBus.$off('onEmployeeDeleted')
   },
   methods: {
-    onCommencementEmployeeDeleted (employee) {
+    onEmployeeDeleted (employee) {
       let vm = this
-      // console.log('EmployeeTable :: onCommencementEmployeeDeleted')
+      // console.log('EmployeeTable :: onEmployeeDeleted')
       let options = {
         okText: vm.$t('buttons.ok'),
         cancelText: vm.$t('buttons.cancel')
@@ -88,20 +89,62 @@ export default {
     },
     selectEmployees () {
       let vm = this
-      // console.log('EmployeeTable :: selectEmployees :: vm.employees: ', vm.employees)
       let selectedEmployeeIds = vm.employees.map(formEmployee => formEmployee.employee_id.toString())
-      // console.log('EmployeeTable :: selectEmployees :: selectedEmployeeIds: ', selectedEmployeeIds)
-
-      // vm.$store.dispatch('SET_SELECTED_FORM_EMPLOYEE_IDS', selectedEmployeeIds)
       EventBus.$emit('showSelectEmployeeDialog', selectedEmployeeIds)
     },
-    updateData () {
+    updateData (query) {
       let vm = this
-      vm.data = vm.employees
-      for (var i = 0; i < vm.data.length; i++) {
-        vm.data[i].recordNo = i + 1
+      if (typeof query === 'undefined') {
+        query = vm.query
       }
-      vm.total = vm.employees.length
+      console.log('updateData: query: ', query)
+      let lastIndex = query.offset + query.limit - 1
+      if (lastIndex >= vm.tableEmployees.length) {
+        lastIndex = vm.tableEmployees.length - 1
+      }
+
+      // Sort
+      if (query.sort !== '') {
+        // let needSwap = query.order === 'asc' ? -1 : 1
+        // let noSwap = -(needSwap)
+        console.log('sort begins: tableEmployees: ', vm.tableEmployees)
+        vm.tableEmployees = vm.tableEmployees.sort(function (employee1, employee2) {
+          console.log('sort :: compare:: employee1: ', employee1)
+          console.log('sort :: compare:: employee2: ', employee2)
+          console.log('sort :: compare:: employee1[query.sort] = ' + employee1[query.sort])
+          console.log('sort :: compare:: employee2[query.sort] = ' + employee2[query.sort])
+          console.log('sort :: compare:: ' +
+            employee1[query.sort] +
+            ' < ' + employee2[query.sort] +
+            ': ' + (employee1[query.sort] < employee2[query.sort] ? 'true' : 'false')
+          )
+
+          if (query.order === 'asc') {
+            return employee1[query.sort] < employee2[query.sort] ? -1 : 1
+          } else {
+            return employee1[query.sort] < employee2[query.sort] ? 1 : -1
+          }
+        })
+        console.log('sort ends: tableEmployees: ', vm.tableEmployees)
+      }
+
+      let data = []
+      for (var i = query.offset; i <= lastIndex; i++) {
+        vm.tableEmployees[i].recordNo = query.offset + i + 1
+        if (query.sort !== '') {
+          console.log('#' + i + ': ' + vm.tableEmployees[i][query.sort])
+        }
+        data.push(vm.tableEmployees[i])
+      }
+      vm.data = data
+      vm.total = vm.tableEmployees.length
+    },
+    loadTableEmployees (value) {
+      this.tableEmployees = []
+      for (var i = 0; i < value.length; i++) {
+        this.tableEmployees.push(value[i])
+      }
+      console.log('loadTableEmployees: result: ', this.tableEmployees)
     }
   },
   watch: {
@@ -110,16 +153,19 @@ export default {
         // let vm = this
         // console.log('watch(employees) handler :: value: ', value)
         // console.log('watch(employees) handler :: vm.employees: ', vm.employees)
+        console.log('watch(employees) >> force reload')
+        this.loadTableEmployees(value)
         this.updateData()
         // console.log('watch(employees)')
-      },
-      deep: true
+      }
     },
     query: {
       handler (query) {
-        this.updateData()
+        console.log('watch(query)')
+        this.updateData(query)
         // console.log('watch(query)')
-      }
+      },
+      deep: true
     }
   }
 }

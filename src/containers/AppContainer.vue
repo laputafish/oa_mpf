@@ -13,17 +13,23 @@
     <team-settings-dialog
       v-show="showTeamSettings"
       @close="closeTeamSettingDialog"></team-settings-dialog>
+    <tax-form-settings-dialog
+      @close="closeTaxFormSettingsDialog"
+      v-show="showTaxFormSettings">
+    </tax-form-settings-dialog>
   </div>
 </template>
 
 <script>
 import TeamSelectionDialog from '@/dialogs/TeamSelectionDialog'
 import TeamSettingsDialog from '@/dialogs/TeamSettingsDialog'
+import TaxFormSettingsDialog from '@/dialogs/TaxFormSettingsDialog'
 
 export default {
   components: {
     'team-selection-dialog': TeamSelectionDialog,
-    'team-settings-dialog': TeamSettingsDialog
+    'team-settings-dialog': TeamSettingsDialog,
+    'tax-form-settings-dialog': TaxFormSettingsDialog
   },
   name: 'appContainer',
   computed: {
@@ -32,16 +38,23 @@ export default {
     },
     showTeamSettings () {
       let shown = this.$store.getters.showTeamSettings
-      alert('shown: ' + shown)
       return shown
+    },
+    showTaxFormSettings () {
+      return this.$store.getters.showTaxFormSettings
     },
     teams () {
       return this.$store.getters.teams
     }
   },
+  mounted () {
+  },
   watch: {
     showTeamSettings: function (val) {
       alert('watch(showTeamSettings)')
+    },
+    showTaxFormSettings: function (val) {
+      alert('watch(showTaxFormSettings)')
     }
     // showTeamSelection: function (val) {
     //   alert('watch(showTeamSelection)')

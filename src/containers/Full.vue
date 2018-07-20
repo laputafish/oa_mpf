@@ -19,6 +19,10 @@
       :teams="teams"
       @onTeamSelected="onTeamSelectedHandler"
       @close="closeTeamSelectionDialog"></team-selection-dialog>
+    <tax-form-settings-dialog
+      @close="closeTaxFormSettingsDialog"
+      v-show="showTaxFormSettings">
+    </tax-form-settings-dialog>
   </div>
 </template>
 
@@ -31,6 +35,7 @@ import {
   AppFooter as appFooter} from '../components/index.js'
 import Breadcrumb from '../components/Breadcrumb.vue'
 import TeamSelectionDialog from '@/dialogs/TeamSelectionDialog'
+import TaxFormSettingsDialog from '@/dialogs/TaxFormSettingsDialog'
 
 export default {
   name: 'full',
@@ -40,7 +45,8 @@ export default {
     appAside,
     appFooter,
     breadcrumb: Breadcrumb,
-    teamSelectionDialog: TeamSelectionDialog
+    teamSelectionDialog: TeamSelectionDialog,
+    'tax-form-settings-dialog': TaxFormSettingsDialog
   },
   data () {
     return {
@@ -68,6 +74,9 @@ export default {
     showTeamSelection () {
       console.log('Full.vue :: computed(showTeamSelection)')
       return this.$store.getters.showTeamSelection
+    },
+    showTaxFormSettings () {
+      return this.$store.getters.showTaxFormSettings
     },
     teams () {
       console.log('Full.vue :: computed(teams)')
@@ -127,6 +136,9 @@ export default {
       vm.$store.dispatch('SET_TEAM', team).then(function () {
         vm.loadGroupsAndEmployees()
       })
+    },
+    closeTaxFormSettingsDialog () {
+      this.$store.commit('hideTaxFormSettings')
     },
     closeTeamSelectionDialog () {
       this.$store.commit('hideTeamSelection')

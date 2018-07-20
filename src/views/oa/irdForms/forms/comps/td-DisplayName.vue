@@ -1,6 +1,6 @@
 <template>
   <div>
-    {{ row.info.displayName }}
+    {{ row.name }}
   </div>
 </template>
 

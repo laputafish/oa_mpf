@@ -14,12 +14,20 @@ export default {
   },
   props: ['row', 'nested'],
   watch: {
+    row: function (value) {
+      this.updateJoinedDate()
+    }
+  },
+  methods: {
+    updateJoinedDate () {
+      let vm = this
+      let m = vm.$moment(vm.row.joinedDate)
+      console.log(m.toString())
+      vm.joinedDate = m.format('Y-MM-DD')
+    }
   },
   mounted () {
-    let vm = this
-    let m = vm.$moment(vm.row.joinedDate)
-    console.log(m.toString())
-    vm.joinedDate = m.format('Y-MM-DD')
+    this.updateJoinedDate()
     // $(this.$el).find('button[title]').tooltip()
   }
 }

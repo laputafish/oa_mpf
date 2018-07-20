@@ -8,7 +8,7 @@
     </div>
     <div slot="body" class="container">
       <div class="form-group row">
-        <label for="language" class="col-sm-2 col-form-label">Language</label>
+        <label for="language" class="col-sm-2 col-form-label">{{ $t('general.language') }}</label>
         <yoov-radio-toggle
           class="col-sm-10"
           :options="languageOptions"
@@ -21,7 +21,7 @@
       <table class="table-striped table-striped col-sm-12">
         <tr v-for="item in inputParticulars"
             :key="item.id">
-          <td class="particular-label" v-tooltip="item.name">{{ item.name }}</td>
+          <td class="particular-label" v-tooltip="$t('tax.'+item.name_tag)">{{ $t('tax.' + item.name_tag) }}</td>
           <td>
             <input v-if="item.is_default"
                    type="text"
@@ -170,6 +170,7 @@ export default {
             is_default: item.is_default,
             description_tag: item.description_tag,
             name: item.name,
+            name_tag: item.name_tag,
             pay_type_ids: item.pay_type_ids,
             pay_types: vm.payTypes
               ? vm.payTypes.filter(payType => {
@@ -203,17 +204,21 @@ export default {
           pay_type_ids: particular.pay_types.map(payType => payType.id)
         })
       }
-      vm.$emit('submit', {
-        data: {
-          incomeParticulars: particulars,
-          teamId: vm.teamId
-        },
-        callback: function (response) {
-          if (response.status) {
-            vm.$emit('close')
-          } else {
 
-          }
+      // save
+      let data = {
+        incomeParticulars: particulars,
+        teamId: vm.teamId
+      }
+      vm.$store.dispatch('UPDATE_INCOME_PARTICULARS', data).then(function (response) {
+        console.log('UPDATE_INCOME: response: ', response)
+        if (response.status) {
+          vm.$emit('close')
+        } else {
+          vm.$dialog.alert({
+            title: 'Warning',
+            message: response.message
+          })
         }
       })
     },
@@ -312,8 +317,15 @@ export default {
     max-width: 160px;
     width: 160px;
     overflow-x: hidden;
+    padding: 0 10px;
     white-space: nowrap;
     text-overflow: ellipsis;
+  }
+
+  #tax-form-settings-dialog .particular-label:hover {
+    background-color: rgba(30, 132, 127, .2);
+    border-radius: 0.4rem;
+    padding: 0 10px;
   }
 
   .modal-wrapper {

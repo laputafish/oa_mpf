@@ -1,7 +1,16 @@
 <template>
-  <div class="animated fadeIn mx-3">
+  <div class="animated fadeIn mx-3" id="ird-forms">
     <b-card>
-      <div slot="header">{{ $t($route.name) }}</div>
+      <div slot="header" >
+        <div class="btn-group btn-group-gap">
+          <button type="button"
+                  @click="showSettings"
+                  class="pull-right btn btn-outline-primary">
+            <i class="fa fa-gear"></i>&nbsp;{{ $t('buttons.settings') }}
+          </button>
+        </div>
+        {{ $t($route.name) }}
+      </div>
       <div style="position:relative;" v-if="mode==='list'">
         <div>
           <div class="text-center">
@@ -22,10 +31,10 @@
         </div>
         <datatable v-bind="$data"></datatable>
       </div>
-      <commencement-form ref="currentForm" v-else
+      <ird-form-record ref="currentForm" v-else
                          :formId="selectedFormId"
                          :defaultIrdFormTypeId="selectedIrdFormTypeId"
-                         @onModeChanged="onModeChangedHandler"></commencement-form>
+                         @onModeChanged="onModeChangedHandler"></ird-form-record>
     </b-card>
     <select-employee-dialog
       ref="selectEmployeeDialog"
@@ -38,7 +47,7 @@
 // import mockData from './_mockData'
 import {EventBus} from '@/event-bus'
 import components from './comps'
-import CommencementForm from './forms/CommencementForm'
+import IrdFormRecord from './forms/IrdFormRecord'
 import SelectEmployeeDialog from '@/dialogs/SelectEmployeeDialog'
 import helpers from '@/helpers.js'
 import YoovRadioToggle from '@/components/forms/YoovRadioToggle'
@@ -46,7 +55,7 @@ import YoovRadioToggle from '@/components/forms/YoovRadioToggle'
 export default {
   components: {
     ...components,
-    'commencement-form': CommencementForm,
+    'ird-form-record': IrdFormRecord,
     'select-employee-dialog': SelectEmployeeDialog,
     'yoov-radio-toggle': YoovRadioToggle
   },
@@ -54,6 +63,7 @@ export default {
     let vm = this
     return {
       irdFormTypeFilters: [],
+      showingTaxFormSettingsDialog: false,
       selectedIrdFormTypeId: 0,
       // Pusher
       pusher: null,
@@ -66,6 +76,7 @@ export default {
         const cols = [
           {title: vm.$t('tax.form_date'), field: 'form_date', sortable: true},
           {title: vm.$t('tax.form_no'), field: 'form_no', sortable: true},
+          {title: vm.$t('tax.form_type'), field: 'form_type'},
           {title: vm.$t('tax.no_of_employee'), field: 'employee_count', tdClass: 'text-center', thClass: 'text-center'},
           {title: vm.$t('tax.employees'), field: 'id', tdComp: 'Employees', sortable: false},
           {title: vm.$t('general.status'), field: 'status', tdComp: 'Status'},
@@ -137,7 +148,12 @@ export default {
     },
     irdFormTypes: function (value) {
       let vm = this
-      vm.irdFormTypeFilters = []
+      vm.irdFormTypeFilters = [
+        {
+          titleTag: 'general.all',
+          value: 0
+        }
+      ]
       for (var i = 0; i < value.length; i++) {
         let irdFormType = value[i]
         let irdFormTypeFilter = {
@@ -153,6 +169,9 @@ export default {
     }
   },
   methods: {
+    showSettings () {
+      this.$store.dispatch('SHOW_TAX_FORM_SETTINGS_DIALOG')
+    },
     updateFormStatus (formId, status) {
       let vm = this
       if (vm.mode === 'record') {
@@ -241,6 +260,16 @@ export default {
 </script>
 
 <style>
+  #ird-forms .card-header > div {
+    position: relative;
+  }
+
+  #ird-forms .card-header div div.btn-group {
+    position: absolute;
+    top: -1px;
+    right: -5px;
+  }
+
   div[name=Datatable] > div[name=SimpleTable] > table > tbody > tr > td {
     padding: 0.2rem;
   }
