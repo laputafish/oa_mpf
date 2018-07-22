@@ -154,6 +154,10 @@ export default {
 </script>
 
 <style>
+  .app {
+    z-index: 0;
+    background-color:white;
+  }
   .app.mobile .container-fluid {
     padding: 0 5px;
   }

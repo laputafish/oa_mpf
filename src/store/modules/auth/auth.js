@@ -10,7 +10,10 @@ const state = {
 }
 
 const getters = {
-  isAuthenticated: state => !!state.token,
+  isAuthenticated: state => {
+    // alert('state.token = ' + state.token)
+    return !!state.token
+  },
   authStatus: state => state.status
 }
 
@@ -43,8 +46,8 @@ const actions = {
           const token = response.data.token
           localStorage.setItem('accessToken', token)
           commit('setToken', token)
-          dispatch('fetchUserByToken').then(function (user) {
-            console.log('AUTH_REQUEST_OA > fetchUserByToken > user: ', user)
+          dispatch('FETCH_USER_BY_TOKEN').then(function (user) {
+            console.log('AUTH_REQUEST_OA > FETCH_USER_BY_TOKEN > user: ', user)
             resolve(user)
           })
         } else {

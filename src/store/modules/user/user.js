@@ -41,7 +41,7 @@ const actions = {
   //   })
   // }
 
-  async [types.FETCH_SELF] ({rootGetters, state, commit, dispatch}) {
+  async [types.FETCH_SELF] ({rootDispatch, rootGetters, state, commit, dispatch}) {
     let url = constants.oaApiUrl + '/t/users/self'
     let headerConfig = rootGetters.oaApiHeaderConfig
     await Vue.axios.get(url, headerConfig).then(response => {

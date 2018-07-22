@@ -53,7 +53,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       let url = constants.apiUrl + '/forms'
       let config = {
-        ...rootGetters.apiHeaderConfig,
+        // ...rootGetters.apiHeaderConfig,
         params: {
           ...query,
           page: page

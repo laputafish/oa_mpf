@@ -95,7 +95,8 @@
     "education_benefits": "教育費福利",
     "gain_realized_": "在股份認購計劃中賺取的收益",
     "any_other_rewards_": "任何其他報酬, 津貼或額外賞賜",
-    "pensions": "退休金"
+    "pensions": "退休金",
+    "salary_tax_records": "薪俸稅記錄"
   },
   "mpf": {
     "mpf_management": "MPF 管理"

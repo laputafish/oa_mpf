@@ -300,12 +300,12 @@ const actions = {
     if (rootGetters.user && rootGetters.user.oa_last_team_id) {
       let url = constants.oaApiUrl + '/admin/groups'
       console.log('FETCH_GROUPS: url=' + url)
-      let config = rootGetters.oaApiHeaderConfig
-      console.log('FETCH_GORUPS: config: ', config)
-      config['params'] = {
-        teamId: rootGetters.user.oa_last_team_id
+      let config = {
+        params: {
+          teamId: rootGetters.user.oa_last_team_id
+        }
       }
-      await Vue.axios.get(url, config).then(response => {
+      Vue.axios.get(url, config).then(response => {
         console.log('url = ' + url + ' :: response:', response)
         if (response.data.status) {
           console.log('FETCH_GROUPS :: response.data.result : ', response.data.result)
@@ -319,14 +319,56 @@ const actions = {
     }
   },
 
-  async [types.FETCH_EMPLOYEES] ({rootGetters, state, commit, dispatch, getters}) {
-    let url = constants.oaApiUrl + '/user/employees'
-    let config = rootGetters.oaApiHeaderConfig
-    config['params'] = {
-      state: 'active',
-      include: 'groups,workingGroups,permissions',
-      teamId: rootGetters.user.oa_last_team_id
+  async XXX_FETCH_GROUPS ({rootGetters, state, commit, dispatch, getters}) {
+    let vm = this
+    console.log('groups.js :: FETCH_GROUPS : rootGetters.user: ', rootGetters.user)
+    console.log('groups.js :: FETCH_GROUPS : rootGetters.user.oa_last_item_id = ' + rootGetters.user.oa_last_team_id)
+
+    if (rootGetters.user && rootGetters.user.oa_last_team_id) {
+      vm.dispatch('refreshOAToken', {}, {root: true}).then(function () {
+        alert('oa_access_token = ' + rootGetters.user.oa_access_token)
+        let url = constants.oaApiUrl + '/admin/groups'
+        console.log('FETCH_GROUPS: url=' + url)
+        let config = rootGetters.oaApiHeaderConfig
+        console.log('FETCH_GORUPS: config: ', config)
+        config['params'] = {
+          teamId: rootGetters.user.oa_last_team_id
+        }
+        Vue.axios.get(url, config).then(response => {
+          console.log('url = ' + url + ' :: response:', response)
+          if (response.data.status) {
+            console.log('FETCH_GROUPS :: response.data.result : ', response.data.result)
+            commit('setGroups', response.data.result)
+          } else {
+            console.log('fetch groups fails')
+          }
+        })
+      }).catch(function (error) {
+        console.log('REFRESH_OA_TOKEN: error: ', error)
+        alert('REFRESH_OA_TOKEN fails.')
+      })
+    } else {
+      commit('setGroups', [])
     }
+  },
+
+  async [types.FETCH_EMPLOYEES] ({rootGetters, state, commit, dispatch, getters}) {
+    console.log('typeS.FETCH_EMPLOYEES')
+    let url = constants.oaApiUrl + '/user/employees'
+    // let config = rootGetters.oaApiHeaderConfig
+    // config['params'] = {
+    //   state: 'active',
+    //   include: 'groups,workingGroups,permissions',
+    //   teamId: rootGetters.user.oa_last_team_id
+    // }
+    let config = {
+      'params': {
+        state: 'active',
+        include: 'groups,workingGroups,permissions',
+        teamId: rootGetters.user.oa_last_team_id
+      }
+    }
+    console.log('types.FETCH_EMPLOYEES :: before axios.get')
     await Vue.axios.get(url, config).then(response => {
       if (response.data.status) {
         commit('setEmployees', response.data.result)

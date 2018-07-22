@@ -97,6 +97,7 @@ import EmployeeTermination from '@/views/oa/irdForms/employeeTermination/Employe
 import EmployeeDeparture from '@/views/oa/irdForms/employeeDeparture/EmployeeDeparture'
 import EmployeeSalary from '@/views/oa/irdForms/employeeSalary/EmployeeSalary'
 import IrdForms from '@/views/oa/irdForms/IrdForms'
+import MyIrdForms from '@/views/oa/myIrdForms/MyIrdForms'
 
 // import jQuery from 'jquery'
 // window.jQuery = jQuery
@@ -118,7 +119,7 @@ Vue.use(VueRouter)
 //
 const ifAuthenticated = (to, from, next) => {
   if (store.getters.isAuthenticated) {
-    store.dispatch('checkToken', {
+    store.dispatch('CHECK_TOKEN', {
       callback: function (status) {
         if (status) {
           next()
@@ -171,7 +172,26 @@ export default new VueRouter({
         {
           path: 'mpf_management',
           name: 'mpf.mpf_management',
-          component: MpfManagement
+          component: MpfManagement,
+          beforeEnter: ifAuthenticated
+        },
+        {
+          path: 'ird_forms',
+          name: 'tax.staff_declaration_management',
+          component: IrdForms,
+          beforeEnter: ifAuthenticated
+        },
+        {
+          path: 'ird_forms',
+          name: 'tax.staff_declaration_management',
+          component: IrdForms,
+          beforeEnter: ifAuthenticated
+        },
+        {
+          path: 'my_ird_forms',
+          name: 'tax.salary_tax_records',
+          component: MyIrdForms,
+          beforeEnter: ifAuthenticated
         },
         {
           path: 'ird_forms',
@@ -202,7 +222,8 @@ export default new VueRouter({
         {
           path: 'tax_forms',
           name: 'tax.tax_forms',
-          component: TaxForms
+          component: TaxForms,
+          beforeEnter: ifAuthenticated
         },
         {
           path: '/app',

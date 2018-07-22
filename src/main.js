@@ -9,6 +9,8 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import $ from 'jquery'
 import Vue from 'vue'
+import * as constants from '@/store/constants'
+
 // import VueRouter from 'vue-router'
 
 import VueMq from 'vue-mq'
@@ -46,6 +48,8 @@ import 'bootstrap'
 import BootstrapVue from 'bootstrap-vue/dist/bootstrap-vue.esm'
 // import {Carousel} from 'bootstrap-vue/es/components'
 import App from './App'
+// import Spinner from './Spinner'
+
 // import router from './router'
 import router from './router'
 import VTooltip from 'v-tooltip'
@@ -110,6 +114,76 @@ Vue.mixin({
 })
 Vue.use(vSelect)
 
+Vue.axios.interceptors.request.use(function (config) {
+  console.log('axios :: interceptors :: url = ' + config.url)
+  // alert(JSON.stringify(config))
+  // console.log('axios.interceptors: config: ', JSON.stringify(config))
+  // console.log('axios :: store.getters.apiHeaderConfig: ',
+  //   store.getters.apiHeaderConfig)
+  // console.log('axios :: constants: ', constants)
+  // console.log('axios :: config.url = ' + config.url)
+
+  let promiseConfig = null
+  if (config.url.indexOf(constants.apiUrl) === 0) {
+    console.log('axios :: is app api')
+    // using app api
+    if (config.url.indexOf('oa_token') >= 0) {
+      console.log('axios :: store.getters: ', store.getters)
+    }
+    config.headers = store.getters.apiHeaderConfig.headers
+    // console.log('axios :: using apiUrl')
+    promiseConfig = Promise.resolve(config)
+  } else if (config.url.indexOf(constants.oaApiUrl) === 0) {
+    console.log('axios :: is oa api')
+    // using oa api
+
+    promiseConfig = new Promise((resolve, reject) => {
+      console.log('axios (url=' + config.url + ') : ready to refreshOAToken')
+      store.dispatch('refreshOAToken').then(function (response) {
+        console.log('axios :: refreshOAToken : response: ', response)
+
+        let headerConfig = {
+          'Authorization': response.oaTokenType + ' ' + response.oaAccessToken,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json, text/plain, */*'
+        }
+        // .getters.oaApiHeaderConfig
+        // if (headerConfig === null) {
+        //   console.log('axios (oa): url = ' + config.url + ': headerConfig is null')
+        //   reject(config)
+        // } else {
+        console.log('axios (oa): url = ' + config.url + ': headerConfig ok')
+        config.headers = headerConfig
+        console.log('axios :: config.headers: ', config.headers)
+        resolve(config)
+        // }
+      }, function (error) {
+        alert('refreshOAToken error')
+        console.log('axios :: error: ', error)
+        reject(error)
+      })
+    })
+
+    // if (config.url.indexOf('employees') >= 0) {
+    //   promiseConfig = store.dispatch('refreshOAToken').then(function () {
+    //     config.headers = store.getters.oaApiHeaderConfig.headers
+    //     promiseConfig = Promise.resolve(config)
+    //     Promise.resolve(config)
+    //   })
+    // } else {
+    //   let headerConfig = store.getters.oaApiHeaderConfig
+    //   if (headerConfig === null) {
+    //     promiseConfig = Promise.reject(config)
+    //   } else {
+    //     config.headers = headerConfig.headers
+    //     promiseConfig = Promise.resolve(config)
+    //   }
+    // }
+    // console.log('axios :: using oaApiUrl')
+  }
+  return promiseConfig
+})
+
 Vue.filter('formatSize', function (size) {
   if (size > 1024 * 1024 * 1024 * 1024) {
     return (size / 1024 / 1024 / 1024 / 1024).toFixed(2) + ' TB'
@@ -166,6 +240,16 @@ Vue.filter('formatSize', function (size) {
 //   alert('token = ' + token)
 //   return true
 // }
+
+// export const spinner = new Vue({
+//   el: '#spinner',
+//   components: {
+//     Spinner
+//   },
+//   mounted () {
+//     alert('x')
+//   }
+// })
 
 export const app = new Vue({
   el: '#app',

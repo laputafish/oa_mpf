@@ -347,11 +347,18 @@ const mutations = {
       })
     }
     console.log('setAvaialbleFiscalStartYears :: state.availableFiscalYears: ', state.availableFiscalYears)
+  },
+
+  setOAToken: (state, payload) => {
+    console.log('system.js :: setOAToken: payload: ', payload)
+    state.user.oa_token_type = payload.oaTokenType
+    state.user.oa_access_token = payload.oaCccessToken
+    state.user.oa_expires_in = payload.oaExpiresIn
   }
 }
 
 const actions = {
-  async checkToken ({ commit, getters, dispatch }, payload) {
+  async [types.CHECK_TOKEN] ({commit, getters, dispatch}, payload) {
     // let token = localStorage.getItem('token')
     let token = localStorage.getItem('accessToken')
     console.log('checkToken token=getters.cookieToken   token=' + token)
@@ -360,10 +367,10 @@ const actions = {
       console.log('store :: checkToken dispatch(SET_TOKEN)')
       await dispatch(types.SET_TOKEN, token).then(function () {
         console.log('store :; checkToken dispatch(SET_TOKEN).then: token: ' + getters.token)
-        console.log('store :; checkToken dispatch(SET_TOKEN).then: fetchUserByToken.')
+        console.log('store :; checkToken dispatch(SET_TOKEN).then: FETCH_USER_BY_TOKEN.')
 
-        dispatch('fetchUserByToken').then(function () {
-          console.log('store :: fetchUserByToken :: user:', getters.user)
+        dispatch('FETCH_USER_BY_TOKEN').then(function () {
+          console.log('store :: FETCH_USER_BY_TOKEN :: user:', getters.user)
           if (getters.user) {
             console.log('store :: checkToken :: getters.user')
             result = true
@@ -378,6 +385,9 @@ const actions = {
               payload.callback(result)
             }
           }
+        }).catch(function (error) {
+          console.log('error: ', error)
+          payload.callback(result)
         })
       })
     } else {
@@ -406,7 +416,7 @@ const actions = {
     await dispatch('fetch')
   },
 
-  async updateOAAuth ({ commit }, oaAuth) {
+  async updateOAAuth ({commit}, oaAuth) {
     commit('setOAAuth', oaAuth)
     if (process.browser) {
       if (oaAuth) {
@@ -432,7 +442,7 @@ const actions = {
   },
 
   // Update token
-  async updateToken ({ commit }, token) {
+  async updateToken ({commit}, token) {
     commit('setToken', token)
     if (process.browser) {
       // ...Browser
@@ -465,7 +475,7 @@ const actions = {
   },
 
   // Fetch Token
-  async fetchToken ({ getters, dispatch }) {
+  async fetchToken ({getters, dispatch}) {
     console.log('store :: fetchToken')
     let token
     // Try to extract token from cookies
@@ -483,7 +493,7 @@ const actions = {
   },
 
   // Reset
-  async reset ({ dispatch, commit }) {
+  async reset ({dispatch, commit}) {
     alert('reset')
     commit('setUser', null)
     await dispatch('updateToken', null)
@@ -507,22 +517,24 @@ const actions = {
     commit('setActiveTeam', payload)
   },
 
-  async fetchUserByToken ({ getters, state, commit, dispatch }, callback) {
-    console.log('system.js :: fetchUserByToken')
+  async [types.FETCH_USER_BY_TOKEN] ({getters, state, commit, dispatch}, callback) {
+    console.log('system.js :: FETCH_USER_BY_TOKEN')
     return new Promise((resolve, reject) => {
       // let token = getters.token
       let url = constants.apiUrl + '/user'
       let config = getters.apiHeaderConfig
       // Try to get user profile
       Vue.axios.get(url, config).then(function (response) {
-        console.log('system.js fetchUserByToken: response: ', response.data)
-        console.log('system.js fetchUserByToken ready to call SET_USER')
+        console.log('system.js FETCH_USER_BY_TOKEN: response: ', response.data)
+        console.log('system.js FETCH_USER_BY_TOKEN ready to call SET_USER')
         dispatch(types.SET_USER, {
           user: response.data
         }).then(function (response) {
-          console.log('fetchUserByToken > SET_USER => resolve(response): ', response)
+          console.log('FETCH_USER_BY_TOKEN > SET_USER => resolve(response): ', response)
           resolve(response)
         })
+      }, function (error) {
+        reject(error)
       })
     })
   },
@@ -538,7 +550,7 @@ const actions = {
     })
   },
 
-  async fetch ({ getters, state, commit, dispatch }) {
+  async fetch ({getters, state, commit, dispatch}) {
     console.log('fetch')
     let url = constants.apiUrl + '/user'
     // Fetch and update latest token
@@ -571,7 +583,7 @@ const actions = {
   //         console.log('connectOA :: post :: response.data.oaAuth: ', response.data.result)
   //         commit('setOAAuth', {...response.data.oaAuth, email: credentials.email})
   //         commit('setToken', response.data.token)
-  //         dispatch('fetchUserByToken', callback)
+  //         dispatch('FETCH_USER_BY_TOKEN', callback)
   //       } else {
   //         commit('showModal', {
   //           title: app.$t('general.warning'),
@@ -602,7 +614,7 @@ const actions = {
       }
       let config = getters.apiHeaderConfig
       await Vue.axios.post(url, data, config).then(function (response) {
-        alert('loginOA :: token=' + response.data.access_token)
+        // alert('loginOA :: token=' + response.data.access_token)
 
         if (response.data.status) {
           // status = true, supervisor or not
@@ -613,7 +625,7 @@ const actions = {
           console.log('loginOA :: before commit(setCookieToken) : token : ', response.data.token)
           commit('setCookieToken', response.data.token)
           commit('setToken', response.data.token)
-          dispatch('fetchUserByToken', callback)
+          dispatch('FETCH_USER_BY_TOKEN', callback)
         } else {
           commit('showModal', {
             title: app.$t('general.warning'),
@@ -632,7 +644,7 @@ const actions = {
     }
   },
 
-  async login ({ commit, dispatch, getters }, { credentials, callback }) {
+  async login ({commit, dispatch, getters}, {credentials, callback}) {
     console.log('store :: login starts :: credentials: ', credentials)
     try {
       let url = constants.url + '/oauth/token'
@@ -645,16 +657,16 @@ const actions = {
       }
       // Send credentials to API
       await Vue.axios.post(url, data).then(function (response) {
-        alert('login :: token=' + response.data.access_token)
+        // alert('login :: token=' + response.data.access_token)
         // let data = response.data
         let authorized = true
         // commit('setToken', data.access_token)
         // dispatch('updateToken', data.access_token)
-        console.log('store :: login >> dispatch(fetchUserByToken)')
+        console.log('store :: login >> dispatch(FETCH_USER_BY_TOKEN)')
         dispatch('loginOA', {credentials, authorized, callback})
 
-        // dispatch('fetchUserByToken', callback).then(function () {
-        //   console.log('store :; login :: commit >> fetchUserByToken :: user:', getters.user)
+        // dispatch('FETCH_USER_BY_TOKEN', callback).then(function () {
+        //   console.log('store :; login :: commit >> FETCH_USER_BY_TOKEN :: user:', getters.user)
         // })
       }, function (error) {
         console.log('login :: error: ', error)
@@ -690,9 +702,9 @@ const actions = {
   //       console.log('store :: login >> commit(setToken)')
   //       commit('setToken', data.access_token)
   //       // dispatch('updateToken', data.access_token)
-  //       console.log('store :: login >> dispatch(fetchUserByToken)')
-  //       dispatch('fetchUserByToken', callback).then(function () {
-  //         console.log('store :; login :: commit >> fetchUserByToken :: user:', getters.user)
+  //       console.log('store :: login >> dispatch(FETCH_USER_BY_TOKEN)')
+  //       dispatch('FETCH_USER_BY_TOKEN', callback).then(function () {
+  //         console.log('store :; login :: commit >> FETCH_USER_BY_TOKEN :: user:', getters.user)
   //       })
   //     }, function (error) {
   //       dispatch('loginOA', {credentials, callback})
@@ -707,7 +719,7 @@ const actions = {
   // },
 
   // Logout
-  async logout ({ dispatch, state }) {
+  async logout ({dispatch, state}) {
     try {
       await dispatch('reset')
     } catch (e) {
@@ -838,6 +850,25 @@ const actions = {
         }
       })
     }
+  },
+
+  refreshOAToken ({rootGetters, commit}) {
+    return new Promise((resolve, reject) => {
+      console.log('refreshOAToken')
+      let url = constants.apiUrl + '/oa_token'
+      let config = rootGetters.apiHeaderConfig
+      let data = {
+        command: 'refresh'
+      }
+      Vue.axios.post(url, data, config).then(function (response) {
+        if (response.data.status) {
+          commit('setOAToken', response.data.result)
+          resolve(response.data.result)
+        } else {
+          reject(response.data.result)
+        }
+      })
+    })
   }
 }
 

@@ -9,6 +9,11 @@
 </head>
 
 <body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
+  <div id="loading-message" style="position:fixed;height:100%;width:100%;padding-top:30%;">
+    <div style="text-align:center;font-family:arial; font-size:72px;">
+      <i class="fa fa-spinner fa-spin"></i>
+    </div>
+  </div>
   <div id="app"></div>
   <!--<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script> -->
 <!--  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script> -->
@@ -18,4 +23,17 @@
   <!-- built files will be auto injected -->
   <!--<script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>-->
 </body>
+<style>
+  #loading-message {
+    font-family: 'Arial';
+    color: #1E847F;
+  }
+</style>
+<script>
+$(document).ready(function() {
+  setTimeout( function() {
+    $('#loading-message').remove();
+  }, 3000);
+})
+</script>
 </html>

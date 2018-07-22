@@ -464,9 +464,9 @@ export default {
     },
     showTaxFormSettingsDialog () {
       let vm = this
-      vm.$store.dispatch('FETCH_INCOME_PARTICULARS').then(function () {
-        vm.showingTaxFormSettingsDialog = true
-      })
+      // vm.$store.dispatch('FETCH_INCOME_PARTICULARS').then(function () {
+      vm.showingTaxFormSettingsDialog = true
+      // })
     },
     saveTaxFormSettings (params) {
       let vm = this
