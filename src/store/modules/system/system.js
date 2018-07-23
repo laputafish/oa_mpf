@@ -816,16 +816,18 @@ const actions = {
     // })
   },
 
-  async [types.FETCH_AVAILABLE_FISCAL_YEARS] ({rootGetters, getters, state, commit}) {
+  async [types.FETCH_AVAILABLE_FISCAL_YEARS] ({rootGetters, getters, state, commit}, payload) {
+    let vm = this
     let teamId = getters.teamId
     if (teamId) {
       let url = constants.oaApiUrl + '/admin/payrolls'
-      let config = rootGetters.oaApiHeaderConfig
-      config = {
-        ...config,
+      let config = {
         params: {
           teamId: teamId
         }
+      }
+      if (payload['oaAuth']) {
+        config['headers'] = vm.oaAuth2Headers(payload['oaAuth'])
       }
       await Vue.axios.get(url, config).then(response => {
         if (response.data.status) {

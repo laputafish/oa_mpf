@@ -115,7 +115,7 @@ Vue.mixin({
 Vue.use(vSelect)
 
 Vue.axios.interceptors.request.use(function (config) {
-  console.log('axios :: interceptors :: url = ' + config.url)
+  console.log('axios :: interceptors :: url = ' + config.url + ' headers: ', config.headers)
   // alert(JSON.stringify(config))
   // console.log('axios.interceptors: config: ', JSON.stringify(config))
   // console.log('axios :: store.getters.apiHeaderConfig: ',
@@ -137,33 +137,37 @@ Vue.axios.interceptors.request.use(function (config) {
     console.log('axios :: is oa api')
     // using oa api
 
-    promiseConfig = new Promise((resolve, reject) => {
-      console.log('axios (url=' + config.url + ') : ready to refreshOAToken')
-      store.dispatch('refreshOAToken').then(function (response) {
-        console.log('axios :: refreshOAToken : response: ', response)
+    // Check if oaAuth header applied
+    if (config.headers['Authorization']) {
+      promiseConfig = Promise.resolve(config)
+    } else {
+      promiseConfig = new Promise((resolve, reject) => {
+        console.log('axios (url=' + config.url + ') : ready to refreshOAToken')
+        store.dispatch('refreshOAToken').then(function (response) {
+          console.log('axios :: refreshOAToken : response: ', response)
 
-        let headerConfig = {
-          'Authorization': response.oaTokenType + ' ' + response.oaAccessToken,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json, text/plain, */*'
-        }
-        // .getters.oaApiHeaderConfig
-        // if (headerConfig === null) {
-        //   console.log('axios (oa): url = ' + config.url + ': headerConfig is null')
-        //   reject(config)
-        // } else {
-        console.log('axios (oa): url = ' + config.url + ': headerConfig ok')
-        config.headers = headerConfig
-        console.log('axios :: config.headers: ', config.headers)
-        resolve(config)
-        // }
-      }, function (error) {
-        alert('refreshOAToken error')
-        console.log('axios :: error: ', error)
-        reject(error)
+          let headerConfig = {
+            'Authorization': response.oaTokenType + ' ' + response.oaAccessToken,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json, text/plain, */*'
+          }
+          // .getters.oaApiHeaderConfig
+          // if (headerConfig === null) {
+          //   console.log('axios (oa): url = ' + config.url + ': headerConfig is null')
+          //   reject(config)
+          // } else {
+          console.log('axios (oa): url = ' + config.url + ': headerConfig ok')
+          config.headers = headerConfig
+          console.log('axios :: config.headers: ', config.headers)
+          resolve(config)
+          // }
+        }, function (error) {
+          alert('refreshOAToken error')
+          console.log('axios :: error: ', error)
+          reject(error)
+        })
       })
-    })
-
+    }
     // if (config.url.indexOf('employees') >= 0) {
     //   promiseConfig = store.dispatch('refreshOAToken').then(function () {
     //     config.headers = store.getters.oaApiHeaderConfig.headers

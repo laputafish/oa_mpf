@@ -116,7 +116,8 @@ export default {
           vm.$store.dispatch('FETCH_GROUPS')
         ]
         Promise.all(promises).then(function () {
-          vm.$router.push({name: 'tax.tax_forms'})
+          vm.$router.push({name: 'tax.notification_to_ird'})
+          // vm.$router.push({name: 'tax.tax_forms'})
         })
       })
     },
@@ -127,65 +128,52 @@ export default {
     login () {
       let vm = this
       // console.log('Login => vm.$store.dispatch(login)')
-      vm.$store.dispatch(
-        'AUTH_REQUEST',
-        {credentials: vm.credentials}
-      ).then(function (response) {
-        let valid = response.valid
-        let isSupervisor = response.isSupervisor
-
-        // console.log('Login :: callback: status: ', status)
-        // console.log('Login :: callback: token: ' + vm.$store.getters.token)
-        // console.log('Login :: $cookie.get(teamId): ' + vm.$cookie.get('teamId'))
-        if (valid) {
-          if (isSupervisor) {
-            vm.$router.push({name: 'SuperDashboard'})
-          } else {
-            console.log('login :: if not isSupervisor   user: ', vm.$store.getters.user)
-            let teamId = vm.$store.getters.user.oa_last_team_id
-            if (teamId) {
-              vm.$store.dispatch('FETCH_TEAMS').then(function () {
-                let selectedTeam = null
-                console.log('after dispatch(FETCH_TEAMS) :: teamId = ' + teamId)
-                console.log('after dispatch(FETCH_TEAMS) :: teams: ', vm.teams)
-                console.log('belong team check : team id = ' + teamId)
-                var loopTeam = null
-                for (var i = 0; i < vm.teams.length; i++) {
-                  loopTeam = vm.teams[i]
-                  console.log('loopo team id = ' + loopTeam.id)
-                  if (loopTeam.id === teamId) {
-                    selectedTeam = loopTeam
-                    vm.$store.dispatch('SET_ACTIVE_TEAM', loopTeam)
-                    break
-                  }
-                }
-                if (selectedTeam === null) {
-                  vm.showingTeamSelectionDialog = true
-                } else {
-                  vm.$router.push({name: 'tax.tax_forms'})
-                }
-              })
+      vm.$store.dispatch('AUTH_REQUEST', {credentials: vm.credentials})
+        .then(function (response) {
+          let valid = response.valid
+          let isSupervisor = response.isSupervisor
+          console.log('Login.vue :: Login :: AUTH_REQUEST :: response:', response)
+          // console.log('Login :: callback: status: ', status)
+          // console.log('Login :: callback: token: ' + vm.$store.getters.token)
+          // console.log('Login :: $cookie.get(teamId): ' + vm.$cookie.get('teamId'))
+          if (valid) {
+            if (isSupervisor) {
+              vm.$router.push({name: 'SuperDashboard'})
             } else {
-              vm.$store.dispatch('FETCH_TEAMS').then(function () {
-                vm.showingTeamSelectionDialog = true
-              })
+              console.log('login :: if not isSupervisor   user: ', vm.$store.getters.user)
+              let teamId = vm.$store.getters.user.oa_last_team_id
+              if (teamId) {
+                vm.$store.dispatch('FETCH_TEAMS').then(function () {
+                  let selectedTeam = null
+                  console.log('after dispatch(FETCH_TEAMS) :: teamId = ' + teamId)
+                  console.log('after dispatch(FETCH_TEAMS) :: teams: ', vm.teams)
+                  console.log('belong team check : team id = ' + teamId)
+                  var loopTeam = null
+                  for (var i = 0; i < vm.teams.length; i++) {
+                    loopTeam = vm.teams[i]
+                    console.log('loopo team id = ' + loopTeam.id)
+                    if (loopTeam.id === teamId) {
+                      selectedTeam = loopTeam
+                      vm.$store.dispatch('SET_ACTIVE_TEAM', loopTeam)
+                      break
+                    }
+                  }
+                  if (selectedTeam === null) {
+                    vm.showingTeamSelectionDialog = true
+                  } else {
+                    vm.$router.push({name: 'tax.tax_forms'})
+                  }
+                })
+              } else {
+                vm.$store.dispatch('FETCH_TEAMS').then(function () {
+                  vm.showingTeamSelectionDialog = true
+                })
+              }
             }
+          } else {
+            vm.$dialog.alert('Access Denied!')
           }
-        } else {
-          vm.$dialog.alert('Access Denied!')
-        }
-      })
-      // console.log('after dispatch(login)')
-      // let url = constants.apiUrl + '/auth'
-      // axios.post(url, vm.credentials).then(function (response) {
-      //   let data = response.data
-      //   if (data.status === 'ok') {
-      //     vm.$store.dispatch('SET_USER', data.user)
-      //     vm.$router.push({name: 'Meetings'})
-      //   } else {
-      //     vm.$dialog.alert('Access Denied!')
-      //   }
-      // })
+        })
     }
   }
 }

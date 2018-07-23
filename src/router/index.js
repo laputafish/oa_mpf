@@ -90,7 +90,7 @@ import HeaderPage3 from '@/views/headerPages/HeaderPage3'
 
 // OA
 import MpfManagement from '@/views/oa/mpfManagement/MpfManagement'
-import TaxForms from '@/views/oa/taxForms/TaxForms'
+// import TaxForms from '@/views/oa/taxForms/TaxForms'
 import TeamSelection from '@/views/oa/teamSelection/TeamSelection'
 import EmployeeCommencement from '@/views/oa/irdForms/employeeCommencement/EmployeeCommencement'
 import EmployeeTermination from '@/views/oa/irdForms/employeeTermination/EmployeeTermination'
@@ -144,7 +144,7 @@ export default new VueRouter({
   routes: [
     {
       path: '/',
-      redirect: '/tax_forms',
+      redirect: '/ird_forms',
       // beforeEnter: (to, from, next) => {
       //   alert('beforeEach')
       //   console.log('app: ', app)
@@ -219,12 +219,12 @@ export default new VueRouter({
           name: 'tax.employee_salary',
           component: EmployeeSalary
         },
-        {
-          path: 'tax_forms',
-          name: 'tax.tax_forms',
-          component: TaxForms,
-          beforeEnter: ifAuthenticated
-        },
+        // {
+        //   path: 'tax_forms',
+        //   name: 'tax.tax_forms',
+        //   component: TaxForms,
+        //   beforeEnter: ifAuthenticated
+        // },
         {
           path: '/app',
           redirect: '/app/products',

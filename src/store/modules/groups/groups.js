@@ -352,21 +352,18 @@ const actions = {
     }
   },
 
-  async [types.FETCH_EMPLOYEES] ({rootGetters, state, commit, dispatch, getters}) {
-    console.log('typeS.FETCH_EMPLOYEES')
+  async [types.FETCH_EMPLOYEES] ({rootGetters, state, commit, dispatch, getters}, payload) {
+    let vm = this
     let url = constants.oaApiUrl + '/user/employees'
-    // let config = rootGetters.oaApiHeaderConfig
-    // config['params'] = {
-    //   state: 'active',
-    //   include: 'groups,workingGroups,permissions',
-    //   teamId: rootGetters.user.oa_last_team_id
-    // }
     let config = {
       'params': {
         state: 'active',
         include: 'groups,workingGroups,permissions',
         teamId: rootGetters.user.oa_last_team_id
       }
+    }
+    if (payload['oaAuth']) {
+      config['headers'] = vm.oaAuth2Headers(payload['oaAuth'])
     }
     console.log('types.FETCH_EMPLOYEES :: before axios.get')
     await Vue.axios.get(url, config).then(response => {

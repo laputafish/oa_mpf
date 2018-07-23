@@ -124,9 +124,12 @@ export default {
   methods: {
     loadGroupsAndEmployees () {
       let vm = this
-      vm.$store.dispatch('FETCH_SELF').then(function () {
-        vm.$store.dispatch('FETCH_EMPLOYEES').then(function () {
-          vm.$store.dispatch('FETCH_GROUPS')
+      vm.$store.dispatch('refreshOAToken').then(function (oaAuth) {
+        let payload = {oaAuth: oaAuth}
+        vm.$store.dispatch('FETCH_SELF', payload).then(function () {
+          vm.$store.dispatch('FETCH_EMPLOYEES', payload).then(function () {
+            vm.$store.dispatch('FETCH_GROUPS', payload)
+          })
         })
       })
     },

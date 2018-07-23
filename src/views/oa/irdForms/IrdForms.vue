@@ -247,10 +247,13 @@ export default {
   mounted () {
     let vm = this
     vm.subscribe()
-    vm.$store.dispatch('FETCH_EMPLOYEES')
-    vm.$store.dispatch('FETCH_GROUPS')
-    vm.$store.dispatch('FETCH_IRD_FORM_TYPES')
-    vm.$store.dispatch('FETCH_AVAILABLE_FISCAL_YEARS')
+    vm.$store.dispatch('refreshOAToken').then(function (oaAuth) {
+      let payload = {oaAuth: oaAuth}
+      // vm.$store.dispatch('FETCH_EMPLOYEES', payload)
+      // vm.$store.dispatch('FETCH_GROUPS', payload)
+      vm.$store.dispatch('FETCH_IRD_FORM_TYPES', payload)
+      vm.$store.dispatch('FETCH_AVAILABLE_FISCAL_YEARS', payload) // via /payrolls
+    })
   },
   beforeDestroy () {
     EventBus.$off('editRecord')

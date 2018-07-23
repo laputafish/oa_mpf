@@ -41,12 +41,15 @@ const actions = {
   //   })
   // }
 
-  async [types.FETCH_SELF] ({rootDispatch, rootGetters, state, commit, dispatch}) {
+  async [types.FETCH_SELF] ({rootDispatch, rootGetters, state, commit, dispatch}, payload) {
+    let vm = this
     let url = constants.oaApiUrl + '/t/users/self'
-    let headerConfig = rootGetters.oaApiHeaderConfig
-    await Vue.axios.get(url, headerConfig).then(response => {
+    let config = {}
+    if (payload['oaAuth']) {
+      config['headers'] = vm.oaAuth2Headers(payload['oaAuth'])
+    }
+    await Vue.axios.get(url, config).then(response => {
       if (response.data.status) {
-      //        dispatch('UPDATE_DB_USER', response.data.result)
         commit('setProfile', response.data.result)
       }
     })

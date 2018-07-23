@@ -31,6 +31,16 @@ import Cookies from 'js-cookie'
 
 Vue.use(Vuex)
 const debug = process.env.NODE_ENV !== 'production'
+const storePlugins = store => {
+  store.oaAuth2Headers = function (oaAuth) {
+    console.log('storePlugins :: oaAuth2Header: ', oaAuth)
+    return {
+      'Authorization': oaAuth.oaTokenType + ' ' + oaAuth.oaAccessToken,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json, text/plain, */*'
+    }
+  }
+}
 
 export const store = new Vuex.Store({
   modules: {
@@ -65,7 +75,8 @@ export const store = new Vuex.Store({
         setItem: (key, value) => Cookies.set(key, value, { expires: 3, secure: true }),
         removeItem: key => Cookies.remove(key)
       }
-    })
+    }),
+    storePlugins
   ],
   strict: debug
 })

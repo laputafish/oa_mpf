@@ -46,9 +46,9 @@ const actions = {
           const token = response.data.token
           localStorage.setItem('accessToken', token)
           commit('setToken', token)
-          dispatch('FETCH_USER_BY_TOKEN').then(function (user) {
-            console.log('AUTH_REQUEST_OA > FETCH_USER_BY_TOKEN > user: ', user)
-            resolve(user)
+          dispatch('FETCH_USER_BY_TOKEN').then(function (result) {
+            console.log('AUTH_REQUEST_OA > FETCH_USER_BY_TOKEN > resolve(result): ', result)
+            resolve(result)
           })
         } else {
           commit('showModal', {
@@ -60,10 +60,9 @@ const actions = {
             'isSupervisor': false
           })
         }
+      }, function (error) {
+        reject(error)
       })
-        .catch(error => {
-          console.log('login :: error: ', error)
-        })
     })
   },
 
@@ -79,19 +78,23 @@ const actions = {
         client_id: constants.CLIENT_ID,
         client_secret: constants.CLIENT_SECRET
       }
-      Vue.axios.post(url, data).then(response => {
+      Vue.axios.post(url, data).then(function (response) {
         let authorized = true
         dispatch(types.AUTH_REQUEST_OA, {credentials, authorized}).then(
           function (response) {
-            console.log('AUTH_REQUEST > AUTH_REQUEST_OA')
+            console.log('AUTH_REQUEST > AUTH_REQUEST_OA (authorized=true)')
+            resolve(response)
+          }
+        )
+      }, function (errpr) {
+        let authorized = false
+        dispatch(types.AUTH_REQUEST_OA, {credentials, authorized}).then(
+          function (response) {
+            console.log('AUTH_REQUEST > AUTH_REQUEST_OA (authorized=false)')
             resolve(response)
           }
         )
       })
-        .catch(() => {
-          let authorized = false
-          return dispatch(types.AUTH_REQUEST_OA, {credentials, authorized})
-        })
     })
   },
 
