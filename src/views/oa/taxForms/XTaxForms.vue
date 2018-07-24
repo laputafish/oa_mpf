@@ -471,7 +471,7 @@ export default {
     saveTaxFormSettings (params) {
       let vm = this
       let callback = params.callback
-      vm.$store.dispatch('UPDATE_INCOME_PARTICULARS', params.data).then(function (response) {
+      vm.$store.dispatch('UPDATE_TAX_FORM_SETTINGS', params.data).then(function (response) {
         if (typeof callback === 'function') {
           callback(response)
         }

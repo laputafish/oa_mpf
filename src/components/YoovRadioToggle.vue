@@ -57,4 +57,7 @@ export default {
   .yoov-radio-toggle button:last-child {
     margin-right: 0;
   }
+  button[disabled=disabled]:hover {
+    cursor: pointer;
+  }
 </style>

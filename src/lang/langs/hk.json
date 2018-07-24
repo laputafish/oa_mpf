@@ -1,6 +1,7 @@
 {
   "lang": "hk",
   "general": {
+    "basic": "基本設定",
     "new": "新增",
     "all": "所有",
     "all_staff": "所有員工",
@@ -31,10 +32,13 @@
     "selected": "已選擇",
     "search_in_name_order": "按員工姓名搜索",
     "all_employees": "所有員工",
-    "no": "No.",
+    "number": "No.",
     "form": "表格",
     "form_ready": "表格可用",
-    "language": "語言"
+    "language": "語言",
+
+    "yes": "是",
+    "no": "否"
   },
   "buttons": {
     "close": "關閉",
@@ -47,6 +51,7 @@
     "submit": "遞交",
     "edit": "編輯",
     "generate_ir56e": "創建IR56E表格",
+    "generate_forms": "建立表格",
     "terminate": "終止",
     "add_all_employees": "添加所有員工"
   },
@@ -58,7 +63,7 @@
   },
   "tax": {
     "tax_forms": "報稅表備忘",
-    "tax_form_settings": "報稅表備忘設定",
+    "tax_form_settings": "稅務表格設定",
     "notification_to_ird": "員工申報管理",
     "employee_commencement": "入職申報 (IR56E)",
     "employee_termination": "離職申報 (IR56F)",
@@ -68,6 +73,7 @@
     "termination": "離職",
     "departure": "離港",
     "salary": "薪酬",
+    "salary_form": "薪酬表格",
     "form_date": "表格日期",
     "no_of_employee": "員工人數",
     "employees": "員工",
@@ -96,7 +102,9 @@
     "gain_realized_": "在股份認購計劃中賺取的收益",
     "any_other_rewards_": "任何其他報酬, 津貼或額外賞賜",
     "pensions": "退休金",
-    "salary_tax_records": "薪俸稅記錄"
+    "salary_tax_records": "薪俸稅記錄",
+
+    "published": "已發佈"
   },
   "mpf": {
     "mpf_management": "MPF 管理"

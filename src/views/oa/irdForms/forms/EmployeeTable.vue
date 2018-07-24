@@ -46,7 +46,7 @@ export default {
       mode: 'list',
       columns: (() => {
         const cols = [
-          {title: vm.$t('general.no'), field: 'recordNo', tdClass: 'text-center', thClass: 'text-center'},
+          {title: vm.$t('general.number'), field: 'recordNo', tdClass: 'text-center', thClass: 'text-center'},
           {title: vm.$t('general.name'), field: 'name', sortable: true, tdClass: 'text-left', thClass: 'text-left'},
           {title: vm.$t('tax.joined_date'), field: 'joinedDate', tdComp: 'JoinedDate', sortable: true, thClass: 'text-center', tdClass: 'text-center'},
           {title: vm.$t('general.status'), field: 'status', sortable: true, tdComp: 'Status'},

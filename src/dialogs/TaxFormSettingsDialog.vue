@@ -7,85 +7,89 @@
       <h3 class="dialog-title d-inline">{{ $t('tax.tax_form_settings') }}</h3>
     </div>
     <div slot="body" class="container">
-      <div class="form-group row">
-        <label for="language" class="col-sm-2 col-form-label">{{ $t('general.language') }}</label>
-        <yoov-radio-toggle
-          class="col-sm-10"
-          :options="languageOptions"
-          optionTitleTag="titleTag"
-          v-model="settings.language">
+      <table>
+        <tr>
+          <td style="width:80px; border-right: 1px solid lightgray;padding-right:10px;vertical-align:top;">
+            <div>
+              <div v-for="button in optionGroupButtons"
+                   :key="button.value"
+                   @click="activeOptionGroup=button.value"
+                :class="{'bg-primary':activeOptionGroup===button.value, 'bg-default':activeOptionGroup!==button.value}"
+                class="rounded-0 form-control option-group-button">
+                {{ $t(button.captionTag) }}
+              </div>
+            </div>
+          </td>
+          <td style="vertical-align:top;">
+            <table v-if="activeOptionGroup==='basic'" class="table-striped table-striped">
+              <tr>
+                <td class="particular-label">
+                  {{ $t('general.language') }}
+                </td>
+                <td>
+                  <yoov-radio-toggle
+                    :options="languageOptions"
+                    optionTitleTag="titleTag"
+                    v-model="settings.language">
 
-        </yoov-radio-toggle>
-      </div>
-      <h6 class="field-mapping-title">Field Mapping</h6>
-      <table class="table-striped table-striped col-sm-12">
-        <tr v-for="item in inputParticulars"
-            :key="item.id">
-          <td class="particular-label" v-tooltip="$t('tax.'+item.name_tag)">{{ $t('tax.' + item.name_tag) }}</td>
-          <td>
-            <input v-if="item.is_default"
-                   type="text"
-                   readonly
-                   class="form-control-plaintext bg-lightgray text-darkgray px-2 border"
-                   :value="$t(item.description_tag)">
-            <v-select v-else
-                      multiple
-                      label="code"
-                      v-model="item.pay_types"
-                      :options="payTypes">
-              <template slot="option"
-                        slot-scope="option">
-                <span>[{{ option.code }}]&nbsp;{{ option.name }}</span>
-              </template>
-            </v-select>
+                  </yoov-radio-toggle>
+                </td>
+              </tr>
+            </table>
+            <table v-if="activeOptionGroup==='salary'" class="table-striped table-striped">
+              <tr v-for="item in settings.inputParticulars"
+                  :key="item.id">
+                <td class="particular-label" v-tooltip="$t('tax.'+item.name_tag)">{{ $t('tax.' + item.name_tag) }}</td>
+                <td>
+                  <input v-if="item.is_default"
+                         type="text"
+                         readonly
+                         class="form-control-plaintext bg-lightgray text-darkgray px-2 border"
+                         :value="$t(item.description_tag)">
+                  <v-select v-else
+                            multiple
+                            label="code"
+                            v-model="item.pay_types"
+                            :options="payTypes">
+                    <template slot="option"
+                              slot-scope="option">
+                      <span>[{{ option.code }}]&nbsp;{{ option.name }}</span>
+                    </template>
+                  </v-select>
+                </td>
+              </tr>
+              <!--<tr>-->
+              <!--<td>Leave Pay</td>-->
+              <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
+              <!--</tr>-->
+              <!--<tr>-->
+              <!--<td>Director's Fee</td>-->
+              <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
+              <!--</tr>-->
+              <!--<tr>-->
+              <!--<td>Commission/Fees</td>-->
+              <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
+              <!--</tr>-->
+              <!--<tr>-->
+              <!--<td>Bonus</td>-->
+              <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
+              <!--</tr>-->
+              <!--<tr>-->
+              <!--<td>Back Pay</td>-->
+              <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
+              <!--</tr>-->
+              <!--<tr>-->
+              <!--<td>Certain PayCommission/Fees</td>-->
+              <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
+              <!--</tr>-->
+              <!--<tr>-->
+              <!--<td>Commission/Fees</td>-->
+              <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
+              <!--</tr>-->
+            </table>
           </td>
         </tr>
-        <!--<tr>-->
-        <!--<td>Leave Pay</td>-->
-        <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
-        <!--</tr>-->
-        <!--<tr>-->
-        <!--<td>Director's Fee</td>-->
-        <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
-        <!--</tr>-->
-        <!--<tr>-->
-        <!--<td>Commission/Fees</td>-->
-        <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
-        <!--</tr>-->
-        <!--<tr>-->
-        <!--<td>Bonus</td>-->
-        <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
-        <!--</tr>-->
-        <!--<tr>-->
-        <!--<td>Back Pay</td>-->
-        <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
-        <!--</tr>-->
-        <!--<tr>-->
-        <!--<td>Certain PayCommission/Fees</td>-->
-        <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
-        <!--</tr>-->
-        <!--<tr>-->
-        <!--<td>Commission/Fees</td>-->
-        <!--<td><v-select multiple v-model="salary_paytypes" :options="paytypes"></v-select></td>-->
-        <!--</tr>-->
-
       </table>
-      <div class="form-group row">
-        <div class="col">
-
-        </div>
-        <div class="col">
-
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-
-        </div>
-        <div class="col">
-
-        </div>
-      </div>
     </div>
     <div slot="footer">
       <button class="btn btn-primary"
@@ -129,25 +133,30 @@ export default {
       //   {label: 'PayType6', value: 'paytype6'},
       //   {label: 'PayType7', value: 'paytype7'}
       // ],
-      inputParticulars: [],
+      optionGroupButtons: [
+        {captionTag: 'general.basic', value: 'basic'},
+        {captionTag: 'tax.salary_form', value: 'salary'}
+      ],
+      activeOptionGroup: 'basic',
       settings: {
-        language: 'user_customed'
+        language: 'en-us',
+        inputParticulars: []
       },
       languageOptions: [
-        {
-          id: 0,
-          titleTag: 'general.user_customed',
-          value: 'user_customed'
-        },
+        // {
+        //   id: 0,
+        //   titleTag: 'general.user_customed',
+        //   value: 'user_customed'
+        // },
         {
           id: 1,
           titleTag: 'general.chinese',
-          value: 'chinese'
+          value: 'zh-hk'
         },
         {
           id: 2,
           titleTag: 'general.english',
-          value: 'english'
+          value: 'en-us'
         }
       ]
     }
@@ -158,11 +167,14 @@ export default {
     'v-select': vSelect
   },
   methods: {
-    setInputParticulars () {
+    setInputParticulars (incomeParticulars) {
       let vm = this
+      if (typeof incomeParticulars === 'undefined') {
+        incomeParticulars = vm.$store.getters.incomeParticulars
+      }
       let userParticulars = []
       if (vm.payTypes) {
-        let data = this.$store.getters.incomeParticulars
+        let data = incomeParticulars
         for (var i = 0; i < data.length; i++) {
           var item = data[i]
           userParticulars.push({
@@ -181,23 +193,22 @@ export default {
         }
         console.log('computed(incomeParticulars) :: userParticulars: ', userParticulars)
       }
-      vm.inputParticulars = userParticulars
+      vm.settings.inputParticulars = userParticulars
     },
-    onSelectPayType (item, payTypes) {
-      let vm = this
-      vm.$store.dispatch('UPDATE_INCOME_PARTICULAR_PAYTYPES', {
-        id: item.id,
-        payTypes: payTypes
-      })
-    },
+    // onSelectPayType (item, payTypes) {
+    //   let vm = this
+    //   vm.$store.dispatch('UPDATE_INCOME_PARTICULAR_PAYTYPES', {
+    //     id: item.id,
+    //     payTypes: payTypes
+    //   })
+    // },
     onOkClicked () {
       let vm = this
       let particulars = []
 
       let particular
-      for (var i = 0; i < vm.inputParticulars.length; i++) {
-        particular = vm.inputParticulars[i]
-        console.log('i=' + i + ': particular: ', particular)
+      for (var i = 0; i < vm.settings.inputParticulars.length; i++) {
+        particular = vm.settings.inputParticulars[i]
         particulars.push({
           id: particular.id,
           name: particular.name,
@@ -207,10 +218,12 @@ export default {
 
       // save
       let data = {
+        lang: vm.settings.language,
         incomeParticulars: particulars,
         teamId: vm.teamId
       }
-      vm.$store.dispatch('UPDATE_INCOME_PARTICULARS', data).then(function (response) {
+      console.log('onOkClicked >> UPDATE_TAX_FORM_SETTINGS  data:', data)
+      vm.$store.dispatch('UPDATE_TAX_FORM_SETTINGS', data).then(function (response) {
         console.log('UPDATE_INCOME: response: ', response)
         if (response.status) {
           vm.$emit('close')
@@ -224,11 +237,11 @@ export default {
     },
     loadData () {
       let vm = this
-      // alert('loadData')
-      // vm.inputParticulars = []
       vm.$store.dispatch('FETCH_PAY_TYPES').then(function (payTypes) {
         console.log('loadData after FETCH_PAY_TYPES :: payTypes: ', payTypes)
-        vm.$store.dispatch('FETCH_INCOME_PARTICULARS').then(function (particulars) {
+        vm.$store.dispatch('FETCH_TAX_FORM_SETTINGS').then(function (result) {
+          vm.setInputParticulars(result.income_particulars)
+          vm.settings.lang = result.lang
           // console.log('loadData after FETCH_INCOME_PARTICULARS :: particulars: ', particulars)
           // let item
           // let payTypeIdArray
@@ -250,7 +263,7 @@ export default {
     }
   },
   computed: {
-    incomeParticulars () {
+    xxincomeParticulars () {
       return this.$store.getters.incomeParticulars
       // let vm = this
       // let userParticulars = []
@@ -350,5 +363,21 @@ export default {
     padding: 2px 0;
     background-color: #1E847F;
     color: white;
+  }
+
+  #tax-form-settings-dialog .option-group-button {
+    white-space: nowrap;
+  }
+  #tax-form-settings-dialog .option-group-button:hover {
+    cursor: pointer;
+  }
+  #tax-form-settings-dialog .container {
+    height: 460px;
+  }
+  #tax-form-settings-dialog .container table {
+    height: 100%;
+  }
+  #tax-form-settings-dialog .container table tr td {
+    vertical-align: top;
   }
 </style>

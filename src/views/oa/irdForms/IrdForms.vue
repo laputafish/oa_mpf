@@ -29,7 +29,7 @@
             <!--<button type="button" class="btn-width-80 btn btn-default">{{ $t('buttons.export') }}</button>-->
           </div>
         </div>
-        <datatable v-bind="$data"></datatable>
+        <datatable v-cloak v-bind="$data"></datatable>
       </div>
       <ird-form-record ref="currentForm" v-else
                          :formId="selectedFormId"
@@ -76,10 +76,11 @@ export default {
         const cols = [
           {title: vm.$t('tax.form_date'), field: 'form_date', sortable: true},
           {title: vm.$t('tax.form_no'), field: 'form_no', sortable: true},
-          {title: vm.$t('tax.form_type'), field: 'form_type'},
+          {title: vm.$t('tax.form_type'), field: 'form_type', thClass: 'text-center', tdClass: 'text-center', tdComp: 'FormType'},
           {title: vm.$t('tax.no_of_employee'), field: 'employee_count', tdClass: 'text-center', thClass: 'text-center'},
           {title: vm.$t('tax.employees'), field: 'id', tdComp: 'Employees', sortable: false},
-          {title: vm.$t('general.status'), field: 'status', tdComp: 'Status'},
+          {title: vm.$t('tax.published'), field: 'published', thClass: 'text-center', tdComp: 'Published', tdClass: 'text-center'},
+          {title: vm.$t('general.status'), field: 'status', tdComp: 'Status', thClass: 'text-center', tdClass: 'text-center'},
           {title: vm.$t('tax.submitted_on'), field: 'submitted_on', sortable: true},
           {title: vm.$t('tax.operation'), tdComp: 'Opt'}
         ]
@@ -275,5 +276,9 @@ export default {
 
   div[name=Datatable] > div[name=SimpleTable] > table > tbody > tr > td {
     padding: 0.2rem;
+  }
+
+  [v-cloak] > * {
+    display: none;
   }
 </style>

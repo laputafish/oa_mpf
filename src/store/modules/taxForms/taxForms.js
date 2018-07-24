@@ -229,8 +229,40 @@ const actions = {
 
   [types.SHOW_TAX_FORM_SETTINGS_DIALOG] ({commit}) {
     commit('showTaxFormSettingsDialog')
-  }
+  },
 
+  [types.UPDATE_TAX_FORM_SETTINGS] ({rootGetters, commit}, payload) {
+    return new Promise((resolve, reject) => {
+      let url = constants.apiUrl + '/tax_forms'
+      let config = rootGetters.apiHeaderConfig
+      payload['command'] = 'update_settings'
+      Vue.axios.post(url, payload, config).then(function (response) {
+        if (response.data.status) {
+          resolve(response.data)
+        }
+      })
+    })
+  },
+
+  [types.FETCH_TAX_FORM_SETTINGS] ({rootGetters, commit}, payload) {
+    return new Promise((resolve, reject) => {
+      let teamId = rootGetters.user ? rootGetters.user.oa_last_team_id : ''
+      let url = constants.apiUrl + '/tax_form_settings'
+      let config = {
+        ...rootGetters.apiHeaderConfig,
+        params: {
+          teamId: teamId
+        }
+      }
+      Vue.axios.get(url, config).then(function (response) {
+        console.log('incomeParticular actions FETCH_TAX_FORM_SETTINGS: resPonse: ', response)
+        if (response.data.status) {
+          commit('setIncomeParticulars', response.data.result)
+          resolve(response.data.result)
+        }
+      })
+    })
+  }
 }
 
 export default {

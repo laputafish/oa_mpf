@@ -1,10 +1,7 @@
 <template>
   <!-- <div id="app">
     <app-menu></app-menu> -->
-  <div>
-    <slot></slot>
-    <router-view/>
-  </div>
+  <router-view/>
   <!-- </div> -->
 </template>
 

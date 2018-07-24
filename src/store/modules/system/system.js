@@ -333,7 +333,7 @@ const mutations = {
     let startedDate = payload.startedDate
     let endedDate = payload.endedDate
     let startFiscalYearStartYear = getFiscalYearOfDate(startedDate)
-    let endFiscalYearStartYear = getFiscalYearOfDate(endedDate) - 1
+    let endFiscalYearStartYear = getFiscalYearOfDate(endedDate)
     state.availableFiscalStartYears = []
     for (var year = startFiscalYearStartYear; year <= endFiscalYearStartYear; year++) {
       let year1Str = year.toString()

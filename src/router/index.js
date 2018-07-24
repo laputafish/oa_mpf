@@ -194,12 +194,6 @@ export default new VueRouter({
           beforeEnter: ifAuthenticated
         },
         {
-          path: 'ird_forms',
-          name: 'tax.staff_declaration_management',
-          component: IrdForms,
-          beforeEnter: ifAuthenticated
-        },
-        {
           path: 'employee_commencement',
           name: 'tax.employee_commencement',
           component: EmployeeCommencement

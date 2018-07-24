@@ -1,6 +1,7 @@
 <template>
   <div class="yoov-radio-toggle">
     <button type="button"
+            :disabled="disabled"
             class="btn btn-min-width-80"
             v-for="(option) in options"
             :key="option[optionValueField]"
@@ -14,6 +15,10 @@
 <script>
 export default {
   props: {
+    disabled: {
+      type: Boolean,
+      default: false
+    },
     options: {
       type: Array,
       required: true

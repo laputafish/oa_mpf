@@ -21,15 +21,15 @@
                   :disabled="whenDisabledInput||form.employees.length===0"
                   class="btn btn-outline-success">
             <i class="fa fa-bolt"></i>
-            {{ $t('buttons.generate_ir56e') }}</button>
+            {{ $t('buttons.generate_forms') }}</button>
           <button type="button"
-                  :disabled="form.status!=='generating' && form.status!=='ready_for_processing'"
+                  :disabled="form.status!=='processing' && form.status!=='ready_for_processing'"
                   @click="terminateGeneration"
                   class="btn btn-width-80 btn-outline-danger">
             <i class="fa fa-hand-stop-o"></i>
             {{ $t('buttons.terminate') }}</button>
           <button type="button"
-                  :disabled="form.status==='generating'||form.status==='ready_for_processing'"
+                  :disabled="form.status==='processing'||form.status==='ready_for_processing'"
                   class="btn btn-width-80 btn-outline-primary"
                   @click="saveRecord">
             <i class="fa fa-save"></i>
@@ -73,6 +73,7 @@
           <label class="text-sm-right col-sm-3 col-form-label" for="formRemark">{{ $t('tax.form_type') }}</label>
           <div class="col-sm-9">
             <yoov-radio-toggle
+              :disabled="whenDisabledInput"
               :options="formTypeOptions"
               optionTitleTag="titleTag"
               :value="form.ird_form_type_id"
@@ -86,6 +87,7 @@
           <label class="text-sm-right col-sm-3 col-form-label" for="formRemark">{{ $t('tax.form_template') }}</label>
           <div class="col-sm-9">
             <yoov-radio-toggle
+              :disabled="whenDisabledInput"
               :options="formOptions"
               optionTitle="title"
               :value="form.ird_form_id"
@@ -99,6 +101,7 @@
           <label class="text-sm-right col-sm-3 col-form-label" for="formRemark">{{ $t('tax.fiscal_years') }}</label>
           <div class="col-sm-9">
             <yoov-radio-toggle
+              :disabled="whenDisabledInput"
               :options="availableFiscalStartYears"
               optionTitle="title"
               :value="form.fiscal_start_year"
@@ -123,6 +126,17 @@
           <label class="text-sm-right col-sm-4 col-form-label" for="formDate">{{ $t('general.form_status') }}</label>
           <div class="col-sm-4">
             <input type="text" v-if="form" readonly class="form-control" id="status" :value="form.status ? $t('general.' + form.status) : ''">
+          </div>
+        </div>
+        <div class="form-group row" v-show="selectedForm && selectedForm.requires_fiscal_year">
+          <label class="text-sm-right col-sm-4 col-form-label" for="formDate">{{ $t('tax.published') }}</label>
+          <div class="col-sm-4">
+            <yoov-radio-toggle
+              :disabled="whenDisabledInput"
+              :options="yesNoOptions"
+              :value="form.published"
+              :optionTitleTag="'titleTag'"
+              @input="(value) => {form.published=value}"></yoov-radio-toggle>
           </div>
         </div>
         <div class="form-group row">
@@ -187,6 +201,10 @@ export default {
   },
   data () {
     return {
+      yesNoOptions: [
+        {titleTag: 'general.yes', value: 1},
+        {titleTag: 'general.no', value: 0}
+      ],
       formType: 'commencements',
       form: {
         type: Object,

@@ -159,7 +159,7 @@ export default {
 <style>
   .app {
     z-index: 0;
-    background-color:white;
+    background-color:rgb(242, 244, 248);
   }
   .app.mobile .container-fluid {
     padding: 0 5px;
