@@ -2,13 +2,15 @@
   <b-modal
     ref="selectEmployeeDialog"
     :title="$t('messages.please_select_department_employee')"
-           class="modal-primary"
-           id="select-employee-dialog"
-           size="lg"
-           cancelClass="btn-outline-primary"
-           on-close-on-backdrop="false"
-           @cancel="closeDialog"
-           @ok="confirm">
+    class="modal-primary"
+    id="select-employee-dialog"
+    size="lg"
+    :ok-title="$t('buttons.ok')"
+    :cancel-title="$t('buttons.cancel')"
+    cancelClass="btn-outline-primary"
+    on-close-on-backdrop="false"
+    @cancel="closeDialog"
+    @ok="confirm">
     <div class="mb-1 d-flex flex-column">
       <div>
       </div>
@@ -50,43 +52,43 @@
                 {{ $t('general.group') }} ({{ availableGroups.length }})
               </template>
               <group-selection-item v-for="group in availableGroups"
-                                       :key="group.id"
-                                       @onSelected="onGroupSelected"
-                                       :group="group">
+                                    :key="group.id"
+                                    @onSelected="onGroupSelected"
+                                    :group="group">
               </group-selection-item>
             </b-tab>
           </b-tabs>
           <!--<div class="tab-headers">-->
-            <!--<ul role="tablist" tabindex="0" class="nav nav-tabs">-->
-              <!--<li role="presentation" class="nav-item"-->
-                  <!--:class="{'bg-primary':tabIndex===0}">-->
-                <!--<a role="tab" tabindex="-1" href="#"-->
-                   <!--@click="tabIndex=0"-->
-                   <!--:class="{active:tabIndex===0}"-->
-                   <!--class="nav-link">員工-->
-                <!--</a>-->
-              <!--</li>-->
-              <!--<li role="presentation" class="nav-item"-->
-                  <!--:class="{'bg-primary':tabIndex===1}">-->
-                <!--<a role="tab" tabindex="-1" href="#"-->
-                   <!--@click="tabIndex=1"-->
-                   <!--:class="{active:tabIndex===1}"-->
-                   <!--class="nav-link">群組-->
-                <!--</a>-->
-              <!--</li>-->
-            <!--</ul>-->
+          <!--<ul role="tablist" tabindex="0" class="nav nav-tabs">-->
+          <!--<li role="presentation" class="nav-item"-->
+          <!--:class="{'bg-primary':tabIndex===0}">-->
+          <!--<a role="tab" tabindex="-1" href="#"-->
+          <!--@click="tabIndex=0"-->
+          <!--:class="{active:tabIndex===0}"-->
+          <!--class="nav-link">員工-->
+          <!--</a>-->
+          <!--</li>-->
+          <!--<li role="presentation" class="nav-item"-->
+          <!--:class="{'bg-primary':tabIndex===1}">-->
+          <!--<a role="tab" tabindex="-1" href="#"-->
+          <!--@click="tabIndex=1"-->
+          <!--:class="{active:tabIndex===1}"-->
+          <!--class="nav-link">群組-->
+          <!--</a>-->
+          <!--</li>-->
+          <!--</ul>-->
           <!--</div>-->
           <!--<div class="flex-grow-1 item-list-container" v-show="tabIndex===0">-->
-            <!--<employee-selection-item v-for="employee in availableEmployees"-->
-                                     <!--:key="employee.id"-->
-                                     <!--@onSelected="onEmployeeSelected"-->
-                                     <!--:employee="employee">-->
-            <!--</employee-selection-item>-->
+          <!--<employee-selection-item v-for="employee in availableEmployees"-->
+          <!--:key="employee.id"-->
+          <!--@onSelected="onEmployeeSelected"-->
+          <!--:employee="employee">-->
+          <!--</employee-selection-item>-->
           <!--</div>-->
           <!--<div class="flex-grow-1 item-list-container" v-show="tabIndex===1">-->
-            <!--<span>-->
-              <!--lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd-->
-            <!--</span>-->
+          <!--<span>-->
+          <!--lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd lksfjs flsdkj flsdkjf lksdj flsdkf jlsdkf klsd-->
+          <!--</span>-->
           <!--</div>-->
         </div>
         <div class="col-sm-6 d-flex flex-column selected-item-column">
@@ -337,58 +339,59 @@ export default {
 </script>
 
 <style>
-#select-employee-dialog .modal-body {
-  height: 520px;
-}
+  #select-employee-dialog .modal-body {
+    height: 520px;
+  }
 
-#select-employee-dialog .modal-body .tab-content > div {
-  height: 390px;
-  padding: 0.5rem;
-  overflow-y: auto;
-}
+  #select-employee-dialog .modal-body .tab-content > div {
+    height: 390px;
+    padding: 0.5rem;
+    overflow-y: auto;
+  }
 
-#select-employee-dialog .employee-selection-pane > div {
-  height: 433px;
-}
+  #select-employee-dialog .employee-selection-pane > div {
+    height: 433px;
+  }
 
-#select-employee-dialog .tab-headers {
-  padding-top: 10px;
-}
-#select-employee-dialog .tab-headers .nav-tabs li {
-  border-top-left-radius: 0.5rem;
-  border-top-right-radius: 0.5rem;
-  border-radius: 0;
-  border: 2px solid white;
-}
+  #select-employee-dialog .tab-headers {
+    padding-top: 10px;
+  }
 
-#select-employee-dialog .tab-headers .nav-tabs li a.active {
-  color: white;
-}
+  #select-employee-dialog .tab-headers .nav-tabs li {
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    border-radius: 0;
+    border: 2px solid white;
+  }
 
-#select-employee-dialog .tab-headers .nav-tabs li a {
-  background-color: transparent;
-  border: none;
-}
+  #select-employee-dialog .tab-headers .nav-tabs li a.active {
+    color: white;
+  }
 
-/*#select-employee-dialog {*/
+  #select-employee-dialog .tab-headers .nav-tabs li a {
+    background-color: transparent;
+    border: none;
+  }
+
+  /*#select-employee-dialog {*/
   /*height: 80%;*/
-/*}*/
+  /*}*/
 
-.selected-item-column {
-  padding-top: 0.9rem;
-  padding-left: 0;
-}
+  .selected-item-column {
+    padding-top: 0.9rem;
+    padding-left: 0;
+  }
 
-#select-employee-dialog .item-list-container {
-  border: 1px solid #dee2e6;
-  height: 100%;
-  overflow-y: scroll;
-  padding: 5px;
-}
+  #select-employee-dialog .item-list-container {
+    border: 1px solid #dee2e6;
+    height: 100%;
+    overflow-y: scroll;
+    padding: 5px;
+  }
 
-.selected-item-column .selected-item-container {
-  width: 100%;
-  border: 1px solid #dee2e6;
-  height: 433px;
-}
+  .selected-item-column .selected-item-container {
+    width: 100%;
+    border: 1px solid #dee2e6;
+    height: 433px;
+  }
 </style>

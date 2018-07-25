@@ -177,7 +177,7 @@ export default new VueRouter({
         },
         {
           path: 'ird_forms',
-          name: 'tax.staff_declaration_management',
+          name: 'tax.tax_form_management',
           component: IrdForms,
           beforeEnter: ifAuthenticated
         },

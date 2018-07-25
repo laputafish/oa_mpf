@@ -1,5 +1,5 @@
 <template>
-  <div style="position:relative;">
+  <div id="ird-form-record" style="position:relative;">
     <div class="row">
       <div class="col-sm-4">
         <h3 v-if="form.id===0">
@@ -551,25 +551,6 @@ export default {
         vm.form.employees.splice(index, 1)
       }
     },
-    onCommandHandler (commandOptions) {
-      let command = commandOptions.command
-      let vm = this
-      // let options = commandOptions.options
-      switch (command) {
-        case 'generate':
-          vm.$store.dispatch('START_FORM_GENERATION', {
-            'formId': vm.form.id,
-            'formType': vm.formType
-          })
-          break
-        case 'terminate':
-          vm.$store.dispatch('TERMINATE_FORM_GENERATION', {
-            'formId': vm.form.id,
-            'formType': vm.formType
-          })
-          break
-      }
-    },
     grabYear (moment) {
       let vm = this
       if (moment) {
@@ -579,7 +560,7 @@ export default {
         return null
       }
     },
-    saveRecord () {
+    saveRecord (callback) {
       let vm = this
       vm.$validator.validateAll()
       vm.$nextTick(function () {
@@ -589,18 +570,64 @@ export default {
             vm.form.form_date = vm.grabYear(vm.form.form_date)
             vm.form.submitted_on = vm.grabYear(vm.form.submitted_on)
             vm.$store.dispatch('SAVE_FORM_RECORD', vm.form).then(function (response) {
-              vm.$emit('onModeChanged', 'list')
+              console.log('SAVE_FORM_RECORD :: response: ', response)
+              if (typeof callback === 'function') {
+                vm.$emit('onFormSaved', response.id)
+                callback(response)
+              } else {
+                vm.$emit('onModeChanged', 'list')
+              }
             })
           } else {
             // update
             vm.form.form_date = vm.grabYear(vm.form.form_date)
             vm.form.submitted_on = vm.grabYear(vm.form.submitted_on)
             vm.$store.dispatch('UPDATE_FORM_RECORD', vm.form).then(function (response) {
-              vm.$emit('onModeChanged', 'list')
+              console.log('UPDATE_FORM_RECORD :: response: ', response)
+              if (typeof callback === 'function') {
+                callback(response)
+              } else {
+                vm.$emit('onModeChanged', 'list')
+              }
             })
           }
         }
       })
+    },
+    onCommandHandler (commandOptions) {
+      let command = commandOptions.command
+      let vm = this
+      // let options = commandOptions.options
+      switch (command) {
+        case 'generate':
+          console.log('onCommandHandler :: save_and_generate')
+          vm.saveRecord((result) => {
+            console.log('save_and_generate :: saveRecord :: result: ', result)
+            vm.$store.dispatch('FETCH_ACTIVE_FORM', {id: result.id}).then(function (response) {
+              console.log('save_and_generate :: saveRecord :: FETCH_ACTIVE_FORM :: form id = ' + vm.form.id)
+              console.log('save_and_generate :: saveRecord :: FETCH_ACTIVE_FORM :: response: ', response)
+              vm.$store.dispatch('START_FORM_GENERATION', {
+                'formId': vm.form.id,
+                'formType': vm.formType
+              }).then(function (response) {
+                console.log('save_and_generate :: saveRecord :: FETCH_ACTIVE_FORM :: START_FORM_GENERATION :: response: ', response)
+              })
+            })
+          })
+          break
+        // case 'generate':
+        //   vm.$store.dispatch('START_FORM_GENERATION', {
+        //     'formId': vm.form.id,
+        //     'formType': vm.formType
+        //   })
+        //   break
+        case 'terminate':
+          vm.$store.dispatch('TERMINATE_FORM_GENERATION', {
+            'formId': vm.form.id,
+            'formType': vm.formType
+          })
+          break
+      }
     },
     cancel () {
       this.$emit('onModeChanged', 'list')
@@ -610,6 +637,10 @@ export default {
 </script>
 
 <style>
+  #ird-form-record button[disabled=disabled],
+  #ird-form-record button[disabled=disabled]:hover {
+    cursor: default;
+  }
   @media(min-width: 768px) {
     .text-sm-right {
       text-align: right;

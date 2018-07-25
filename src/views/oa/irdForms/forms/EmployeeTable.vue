@@ -3,7 +3,12 @@
     <div class="table-title">
       <div class="mt-2">{{ title }}</div>
     </div>
-    <div class="btn-group btn-group-gap" style="position:absolute;top:0;right:60px;">
+    <div class="table-toolbar btn-group btn-group-gap">
+      <!--<button type="button"-->
+              <!--@click="selectEmployees"-->
+              <!--:disabled="status==='ready_for_processing'||status==='processing'"-->
+              <!--class="btn btn-outline-primary">-->
+        <!--<img class="pdf-icon" :src="pdfIcon"/>&nbsp;{{ $t('tax.record_verification_form') }}</button>-->
       <button type="button"
               @click="selectEmployees"
               :disabled="status==='ready_for_processing'||status==='processing'"
@@ -17,6 +22,7 @@
 <script>
 import {EventBus} from '@/event-bus'
 import components from './comps'
+import * as constants from '@/store/constants'
 
 export default {
   components,
@@ -38,6 +44,10 @@ export default {
     formId: {
       type: Number,
       default: 0
+    },
+    isIR56: {
+      type: Boolean,
+      default: false
     }
     // @ onEmployeesAdded(employees)
     // @ onEmployeesRemove(employees)
@@ -80,6 +90,9 @@ export default {
   computed: {
     getFormId () {
       return this.form.id
+    },
+    pdfIcon () {
+      return constants.apiUrl + '/media/icons/defaults/pdf'
     }
   },
   methods: {
@@ -188,5 +201,9 @@ export default {
   .employee-table .table-title {
     position: absolute;
     left: 0;
+  }
+  .employee-table .pdf-icon {
+    width: 16px;
+    height: 16px;
   }
 </style>

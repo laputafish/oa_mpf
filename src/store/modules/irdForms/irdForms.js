@@ -20,12 +20,15 @@ const mutations = {
 
 const actions = {
   [types.FETCH_IRD_FORM_TYPES] ({rootGetters, commit}) {
-    let url = constants.apiUrl + '/ird_form_types'
-    let config = rootGetters.apiHeaderConfig
-    Vue.axios.get(url, config).then(response => {
-      if (response.data.status) {
-        commit('setIrdFormTypes', response.data.result)
-      }
+    return new Promise((resolve, reject) => {
+      let url = constants.apiUrl + '/ird_form_types'
+      let config = rootGetters.apiHeaderConfig
+      Vue.axios.get(url, config).then(response => {
+        if (response.data.status) {
+          commit('setIrdFormTypes', response.data.result)
+          resolve(response.data.result)
+        }
+      }).then((error) => reject(error))
     })
   },
 

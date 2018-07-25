@@ -255,6 +255,14 @@ Vue.filter('formatSize', function (size) {
 //   }
 // })
 
+Vue.mixin({
+  methods: {
+    i18nForDatatable: (srcTxt) => {
+      this.t('database.' + srcTxt)
+    }
+  }
+})
+
 export const app = new Vue({
   el: '#app',
   router,

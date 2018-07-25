@@ -1,3 +1,139 @@
 {
-  "lang": "en"
+  "lang": "en",
+  "general": {
+    "basic": "Basic",
+    "new": "New",
+    "all": "All",
+    "all_staff": "All Staff",
+    "warning": "Warning",
+    "employee": "Staff",
+    "employees": "Employee",
+    "dashboard": "Dashboard",
+    "profile": "My Profile",
+    "home": "Home",
+    "user_customed": "User Customed",
+    "chinese": "中文",
+    "english": "English",
+    "status": "Status",
+    "form_status": "Form Status",
+
+    "generating_": "Processing ...",
+    "pending": "Idle",
+    "ready_for_processing": "Pending",
+    "processing": "Processing",
+    "generating": "Generating",
+    "ready": "Ready",
+    "completed": "Completed",
+    "terminated": "Terminated",
+
+    "group": "Group",
+    "name": "Name",
+    "general": "no",
+    "selected": "Selected",
+    "search_in_name_order": "Search in Name Order",
+    "all_employees": "All Employees",
+    "number": "No.",
+    "form": "Form",
+    "form_ready": "Form Ready",
+    "language": "Language",
+
+    "yes": "Yes",
+    "no": "No"
+  },
+  "buttons": {
+    "close": "Close",
+    "settings": "Settings",
+    "ok": "OK",
+    "cancel": "Cancel",
+    "add": "Add",
+    "new": "New",
+    "export": "Export",
+    "submit": "Submit",
+    "edit": "Edit",
+    "generate_ir56e": "Generate IR56E Forms",
+    "generate_forms": "Generate Forms",
+    "terminate": "Terminate",
+    "add_all_employees": "Add All Employees"
+  },
+  "login": {
+    "login": "Login",
+    "logout": "Logout",
+    "sign_in_to_your_account": "Sign in to your account",
+    "forgot_password": "Forgot Password"
+  },
+  "tax": {
+    "tax_forms": "Tax Forms",
+    "tax_form_settings": "Tax Form Settings",
+    "notification_to_ird": "Notification for IRD",
+    "employee_commencement": "Commencement (IR56E)",
+    "employee_termination": "Termination (IR56F)",
+    "employee_departure_from_hk": "Departure (IR56G)",
+    "employee_salary": "Salary (IR56B/IR56M)",
+    "commencement": "Commencement",
+    "termination": "Termination",
+    "departure": "Departure",
+    "salary": "Salary",
+    "salary_form": "Salary Form",
+    "form_date": "Form Date",
+    "no_of_employee": "No. of Employees",
+    "employees": "Employees",
+    "operation": "Operation",
+    "joined_date": "Joined Date",
+    "form_no": "Form No.",
+    "remark": "Remark",
+    "submitted_on": "Submission Date",
+    "tax_form_management": "Tax Form Management",
+    "form_type": "Form Type",
+    "form_template": "Form Template",
+    "hand_writing": "Hand Writing",
+    "fiscal_years": "Fiscal Year",
+    "signature": "Signature",
+    "designation": "Designation",
+
+    "salary_wages": "Salary/Wages",
+    "leave_pay": "Leave Pay",
+    "directors_fee": "Director's Fee",
+    "commission_fees": "Commission Fees",
+    "bonus": "Bonus",
+    "back_pay_": "補發薪金, 代通知金, 退休或終止服務的獎賞或酬金",
+    "certain_payments_": "從退休計劃支付的若干款項",
+    "salaries_tax_": "僱主代付的薪俸稅",
+    "education_benefits": "Education Benefits",
+    "gain_realized_": "在股份認購計劃中賺取的收益",
+    "any_other_rewards_": "任何其他報酬, 津貼或額外賞賜",
+    "pensions": "Pensions",
+    "salary_tax_records": "Salary Tax Records",
+
+    "published": "Published",
+    "sheet_no": "Sheet No.",
+    "signature_designation": "Designation",
+    "record_verification_form": "Record Verification"
+  },
+  "mpf": {
+    "mpf_management": "MPF Management"
+  },
+  "folder": {
+    "personal_folder": "Peronsal Folder",
+    "public_folder": "Public Folder",
+    "shared_folder": "Shared Folder"
+  },
+  "file": {
+    "file_manager": "File Management"
+  },
+  "team": {
+    "company_team": "Company/Team",
+    "team_selection": "Team Selection",
+    "team_settings": "Team Settings"
+  },
+  "salary": {
+    "basic_salary": "Basic Salary"
+  },
+  "messages": {
+    "please_select_department_employee": "Please select department/employee",
+    "access_denied": "Access Denied!",
+    "are_you_sure": "Are you sure",
+    "form_no_is_required": "Form no. is required.",
+    "designation_is_required": "Designation is required."
+  }
+
 }

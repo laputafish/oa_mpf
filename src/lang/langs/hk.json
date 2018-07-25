@@ -82,7 +82,7 @@
     "form_no": "表格編號",
     "remark": "備註",
     "submitted_on": "寄出日期",
-    "staff_declaration_management": "員工申報管理",
+    "tax_form_management": "稅務表格管理",
     "form_type": "表格類型",
     "form_template": "表格模板",
     "hand_writing": "手寫版",
@@ -106,7 +106,8 @@
 
     "published": "已發佈",
     "sheet_no": "表格編號",
-    "signature_designation": "簽署人職位"
+    "signature_designation": "簽署人職位",
+    "record_verification_form": "記錄核對表"
   },
   "mpf": {
     "mpf_management": "MPF 管理"
@@ -134,6 +135,9 @@
     "form_no_is_required": "表格編號必須填寫.",
     "designation_is_required": "簽署人職位必須填寫.",
     "are_you_sure": "是否確定"
+  },
+  "database": {
+    "items_per_page": "項 / 頁",
+    "total": "總數量"
   }
-
 }

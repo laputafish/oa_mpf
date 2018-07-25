@@ -10,7 +10,7 @@ export default {
       }
     },
     {
-      name: 'tax.notification_to_ird',
+      name: 'tax.tax_form_management',
       url: '/ird_forms',
       icon: 'fa fa-file-text'
     },

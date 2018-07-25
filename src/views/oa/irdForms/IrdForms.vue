@@ -24,7 +24,7 @@
         </div>
 
         <div style="position:relative;">
-          <div class="btn-group" style="position:absolute;top:0;right:60px;">
+          <div class="table-toolbar btn-group">
             <!-- Button: New -->
             <button type="button"
                     @click="newForm"
@@ -37,6 +37,7 @@
       <ird-form-record ref="currentForm" v-else
                          :formId="selectedFormId"
                          :defaultIrdFormTypeId="selectedIrdFormTypeId"
+                        @onFormSaved="onFormSavedHandler"
                          @onModeChanged="onModeChangedHandler"></ird-form-record>
     </b-card>
     <select-employee-dialog
@@ -92,13 +93,38 @@ export default {
       data: [],
       total: 0,
       query: {
-        sort: 'form_date',
+        filter: 'ird_form_type_id:4',
+        sort: 'form_no',
         order: 'desc'
       }
     }
   },
   created () {
     let vm = this
+    vm.$store.dispatch('refreshOAToken').then(function (oaAuth) {
+      let payload = {oaAuth: oaAuth}
+      // vm.$store.dispatch('FETCH_EMPLOYEES', payload)
+      // vm.$store.dispatch('FETCH_GROUPS', payload)
+      vm.$store.dispatch('FETCH_IRD_FORM_TYPES', payload).then((irdFormTypes) => {
+        // let defaults = irdFormTypes.filter((item) => {
+        //   return item.is_default
+        // })
+        // if (defaults.length > 0) {
+        //   let filter = 'ird_form_type_id:' + defaults[0].id
+        //   vm.query = {
+        //     filter: filter,
+        //     sort: 'form_no',
+        //     order: 'desc'
+        //   }
+        // }
+      })
+      vm.$store.dispatch('FETCH_AVAILABLE_FISCAL_YEARS', payload) // via /payrolls
+    })
+    // vm.query = {
+    //   filter: 'ird_form_type_id:' + vm.defaultIrdFormTypeId,
+    //   sort: 'form_no',
+    //   order: 'desc'
+    // }
     EventBus.$on('editRecord', function (record) {
       vm.selectedFormId = record.id
       // vm.selectedForm = record
@@ -241,6 +267,10 @@ export default {
         vm.total = response.total
       })
     },
+    onFormSavedHandler (formId) {
+      let vm = this
+      vm.selectedFormId = formId
+    },
     onModeChangedHandler (mode) {
       let vm = this
       console.log('onModeChangedHandler :: mode = ' + mode)
@@ -257,13 +287,6 @@ export default {
   mounted () {
     let vm = this
     vm.subscribe()
-    vm.$store.dispatch('refreshOAToken').then(function (oaAuth) {
-      let payload = {oaAuth: oaAuth}
-      // vm.$store.dispatch('FETCH_EMPLOYEES', payload)
-      // vm.$store.dispatch('FETCH_GROUPS', payload)
-      vm.$store.dispatch('FETCH_IRD_FORM_TYPES', payload)
-      vm.$store.dispatch('FETCH_AVAILABLE_FISCAL_YEARS', payload) // via /payrolls
-    })
   },
   beforeDestroy () {
     EventBus.$off('editRecord')
@@ -284,11 +307,20 @@ export default {
     right: -5px;
   }
 
+  #ird-forms .table-toolbar {
+    position:absolute;
+    top:0;
+    right:0
+  }
   div[name=Datatable] > div[name=SimpleTable] > table > tbody > tr > td {
     padding: 0.2rem;
   }
 
   [v-cloak] > * {
     display: none;
+  }
+
+  div[name=HeaderSettings] {
+    visibility: hidden;
   }
 </style>
