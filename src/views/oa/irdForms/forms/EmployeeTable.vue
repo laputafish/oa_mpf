@@ -34,6 +34,10 @@ export default {
     title: {
       type: String,
       default: ''
+    },
+    formId: {
+      type: Number,
+      default: 0
     }
     // @ onEmployeesAdded(employees)
     // @ onEmployeesRemove(employees)
@@ -47,6 +51,7 @@ export default {
       columns: (() => {
         const cols = [
           {title: vm.$t('general.number'), field: 'recordNo', tdClass: 'text-center', thClass: 'text-center'},
+          {title: vm.$t('tax.sheet_no'), tdComp: 'SheetNo', field: 'sheet_no', tdClass: 'text-center', thClass: 'text-center'},
           {title: vm.$t('general.name'), field: 'name', sortable: true, tdClass: 'text-left', thClass: 'text-left'},
           {title: vm.$t('tax.joined_date'), field: 'joinedDate', tdComp: 'JoinedDate', sortable: true, thClass: 'text-center', tdClass: 'text-center'},
           {title: vm.$t('general.status'), field: 'status', sortable: true, tdComp: 'Status'},
@@ -57,7 +62,10 @@ export default {
       })(),
       data: [],
       total: 0,
-      query: {}
+      query: {},
+      xprops: {
+        formId: this.getFormId
+      }
     }
   },
   created () {
@@ -68,6 +76,11 @@ export default {
   beforeDestroy () {
     EventBus.$off('onEmployeesSelected')
     EventBus.$off('onEmployeeDeleted')
+  },
+  computed: {
+    getFormId () {
+      return this.form.id
+    }
   },
   methods: {
     onEmployeeDeleted (employee) {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <span :class="badgeClass" class="min-width-80 badge">
-      <i v-show="row.status==='processing'" class="fa fa-spinner fa-spin"></i>&nbsp;{{ $t(caption) }}
+      <i v-show="row.status==='processing'||row.status==='ready_for_processing'" class="fa fa-spinner fa-spin"></i>&nbsp;{{ $t(caption) }}
     </span>
     <!--<span v-for="(step,index) in steps" :key="index">-->
       <!--<i class="fa fa-caret-right" v-if="index>0" style="margin-left:5px;"></i>-->

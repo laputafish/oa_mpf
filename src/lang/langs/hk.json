@@ -104,7 +104,9 @@
     "pensions": "退休金",
     "salary_tax_records": "薪俸稅記錄",
 
-    "published": "已發佈"
+    "published": "已發佈",
+    "sheet_no": "表格編號",
+    "signature_designation": "簽署人職位"
   },
   "mpf": {
     "mpf_management": "MPF 管理"
@@ -128,6 +130,9 @@
   "messages": {
     "please_select_department_employee": "請選擇部門/人員",
     "access_denied": "沒有相關權限!",
+    "are_you_sure": "是否確定",
+    "form_no_is_required": "表格編號必須填寫.",
+    "designation_is_required": "簽署人職位必須填寫.",
     "are_you_sure": "是否確定"
   }
 

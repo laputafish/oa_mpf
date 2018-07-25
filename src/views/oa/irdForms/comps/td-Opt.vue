@@ -41,7 +41,15 @@ export default {
   },
   methods: {
     deleteRecord () {
-
+      let vm = this
+      let options = {
+        okText: vm.$t('buttons.ok'),
+        cancelText: vm.$t('buttons.cancel'),
+        animation: 'bounce'
+      }
+      vm.$dialog.confirm(vm.$t('messages.are_you_sure') + '?', options).then(function (dialogRef) {
+        EventBus.$emit('deleteRecord', vm.row)
+      })
     },
     editRecord () {
       EventBus.$emit('editRecord', this.row)

@@ -31,6 +31,21 @@ const actions = {
       })
     })
   },
+  [types.REMOVE_FORM_RECORD]: ({rootGetters, commit}, payload) => {
+    let formId = payload
+    return new Promise((resolve, reject) => {
+      let url = constants.apiUrl + '/forms/' + formId
+      Vue.axios.delete(url).then(function (response) {
+        if (response.data.status) {
+          resolve(true)
+        } else {
+          reject(new Error('server error'))
+        }
+      }, function (error) {
+        reject(error)
+      })
+    })
+  },
   [types.SAVE_FORM_RECORD]: ({rootGetters, commit}, payload) => {
     let form = payload
     return new Promise((resolve, reject) => {

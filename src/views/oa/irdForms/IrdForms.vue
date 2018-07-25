@@ -3,6 +3,7 @@
     <b-card>
       <div slot="header" >
         <div class="btn-group btn-group-gap">
+          <!-- Button: Settings -->
           <button type="button"
                   @click="showSettings"
                   class="pull-right btn btn-outline-primary">
@@ -14,6 +15,7 @@
       <div style="position:relative;" v-if="mode==='list'">
         <div>
           <div class="text-center">
+            <!-- Filters -->
             <yoov-radio-toggle
               :options="irdFormTypeFilters"
               optionTitleTag="titleTag"
@@ -23,6 +25,7 @@
 
         <div style="position:relative;">
           <div class="btn-group" style="position:absolute;top:0;right:60px;">
+            <!-- Button: New -->
             <button type="button"
                     @click="newForm"
                     class="btn-width-80 btn btn-primary">{{ $t('buttons.new') }}</button>
@@ -100,6 +103,11 @@ export default {
       vm.selectedFormId = record.id
       // vm.selectedForm = record
       vm.mode = 'record'
+    })
+    EventBus.$on('deleteRecord', function (record) {
+      vm.$store.dispatch('REMOVE_FORM_RECORD', record.id).then(function (response) {
+        vm.onQueryChangedHandler(vm.query)
+      })
     })
     EventBus.$on('showSelectEmployeeDialog', function (selectedFormEmployeeIds) {
       console.log('EventBus.on(showSelectEmployeeDialog)')
@@ -222,6 +230,7 @@ export default {
       ])
     },
     newForm () {
+      this.selectedFormId = 0
       this.mode = 'record'
     },
     onQueryChangedHandler (query) {
@@ -258,6 +267,7 @@ export default {
   },
   beforeDestroy () {
     EventBus.$off('editRecord')
+    EventBus.$off('deleteRecord')
     helpers.unSubscribe(this)
   }
 }

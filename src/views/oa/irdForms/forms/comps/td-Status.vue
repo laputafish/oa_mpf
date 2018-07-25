@@ -1,7 +1,7 @@
 <template>
   <div>
     <span :class="badgeClass" class="badge">
-      <i v-show="row.status==='processing'" class="fa fa-spinner fa-spin"></i>&nbsp;{{ $t(caption) }}
+      <i v-show="row.status==='processing'||row.status==='ready_for_processing'" class="fa fa-spinner fa-spin"></i>&nbsp;{{ $t(caption) }}
     </span>
   </div>
 </template>

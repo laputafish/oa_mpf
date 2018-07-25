@@ -1,64 +1,70 @@
 <template>
   <div style="position:relative;">
     <div class="row">
-      <div class="col-sm-12">
-        <h3 class="pull-left" v-if="form.id===0">
+      <div class="col-sm-4">
+        <h3 v-if="form.id===0">
           {{ $t('general.new') }}
         </h3>
         <h3 class="pull-left" v-else>
           #{{ form.form_no }}
         </h3>
-        <div v-if="form.employees" class="btn-group btn-group-gap pull-right">
-          <h4 class="d-inline pt-1 text-danger">
-            <span v-show="form.status==='processing'">
+      </div>
+      <div v-if="form.employees" class="col-sm-8">
+        <div class="row">
+          <h4 class="pt-1 text-danger col-sm text-center">
+            <span v-show="form.status==='processing'||form.status==='ready_for_processing'">
               <i class="fa fa-spinner fa-spin"></i>
-              {{ $t('general.processing') }}
+              {{ $t('general.' + form.status) }}
             </span>
-          </h4>
-          &nbsp;&nbsp;
-          <button type="button"
-                  @click="startGeneration"
-                  :disabled="whenDisabledInput||form.employees.length===0"
-                  class="btn btn-outline-success">
-            <i class="fa fa-bolt"></i>
-            {{ $t('buttons.generate_forms') }}</button>
-          <button type="button"
-                  :disabled="form.status!=='processing' && form.status!=='ready_for_processing'"
-                  @click="terminateGeneration"
-                  class="btn btn-width-80 btn-outline-danger">
-            <i class="fa fa-hand-stop-o"></i>
-            {{ $t('buttons.terminate') }}</button>
-          <button type="button"
-                  :disabled="form.status==='processing'||form.status==='ready_for_processing'"
-                  class="btn btn-width-80 btn-outline-primary"
-                  @click="saveRecord">
-            <i class="fa fa-save"></i>
-            {{ $t('buttons.submit') }}</button>
-          <button type="button"
-                  class="btn btn-width-80 btn-outline-default"
-                  @click="cancel">
-            <i class="fa fa-close"></i>
-            {{ $t('buttons.cancel') }}</button>
+          </h4><div class="col-sm text-right">
+            <button type="button"
+                    @click="startGeneration"
+                    :disabled="whenDisabledInput||form.employees.length===0"
+                    class="btn btn-outline-success">
+              <i class="fa fa-bolt"></i>
+              {{ $t('buttons.generate_forms') }}</button>
+            <button type="button"
+                    :disabled="form.status!=='processing' && form.status!=='ready_for_processing'"
+                    @click="terminateGeneration"
+                    class="btn btn-width-80 btn-outline-danger">
+              <i class="fa fa-hand-stop-o"></i>
+              {{ $t('buttons.terminate') }}</button>
+            <button type="button"
+                    :disabled="form.status==='processing'||form.status==='ready_for_processing'"
+                    class="btn btn-width-80 btn-outline-primary"
+                    @click="saveRecord">
+              <i class="fa fa-save"></i>
+              {{ $t('buttons.submit') }}</button>
+            <button type="button"
+                    class="btn btn-width-80 btn-outline-default"
+                    @click="cancel">
+              <i class="fa fa-close"></i>
+              {{ $t('buttons.cancel') }}</button>
+          </div>
         </div>
-        <div v-else class="btn-group btn-group-gap pull-right" style="height:39px;">
-        </div>
+      </div>
+      <div v-else class="col-sm-8 btn-group btn-group-gap pull-right" style="height:39px;">
       </div>
     </div>
     <hr/>
     <div class="row">
       <div class="col-sm-7">
         <div class="form-group row">
-          <label class="text-sm-right col-sm-3 col-form-label" for="formNo">{{ $t('tax.form_no') }}</label>
+          <label class="text-sm-right col-sm-3 col-form-label" for="formNo">{{ $t('tax.form_no') }}*</label>
           <div class="col-sm-9">
             <input v-model="form.form_no"
+                   v-validate="'required'"
+                   name="formNo"
                    :disabled="whenDisabledInput"
                    class="form-control"
+                   :class="{'border-danger':errors.has('formNo')}"
                    id="formNo"
                    type="text"/>
+            <span class="error" v-if="errors.has('formNo')">{{ $t('message.form_no_is_required') }}</span>
           </div>
         </div>
         <div class="form-group row">
-          <label class="text-sm-right col-sm-3 col-form-label" for="formDate">{{ $t('tax.form_date') }}</label>
+          <label class="text-sm-right col-sm-3 col-form-label" for="formDate">{{ $t('tax.form_date') }}*</label>
           <div class="col-sm-9">
             <date-picker v-model="form.form_date"
                          :disabled="whenDisabledInput"
@@ -151,26 +157,30 @@
         </div>
 
         <!-- Signature Name -->
-        <div class="form-group row">
-          <label class="text-sm-right col-sm-4 col-form-label" for="signature">{{ $t('tax.signature') }}</label>
-          <div class="col-sm-8">
-            <input v-model="form.signature_name"
-                   :disabled="whenDisabledInput"
-                   class="form-control"
-                   id="signature"
-                   type="text"/>
-          </div>
-        </div>
+        <!--<div class="form-group row">-->
+          <!--<label class="text-sm-right col-sm-4 col-form-label" for="signature">{{ $t('tax.signature') }}</label>-->
+          <!--<div class="col-sm-8">-->
+            <!--<input v-model="form.signature_name"-->
+                   <!--:disabled="whenDisabledInput"-->
+                   <!--class="form-control"-->
+                   <!--id="signature"-->
+                   <!--type="text"/>-->
+          <!--</div>-->
+        <!--</div>-->
 
         <!-- Designation -->
         <div class="form-group row">
-          <label class="text-sm-right col-sm-4 col-form-label" for="designation">{{ $t('tax.designation') }}</label>
-          <div class="col-sm-8">
+          <label class="text-sm-right col-sm-4 col-form-label" for="designation">{{ $t('tax.signature_designation') }}*</label>
+          <div class="col-sm-8 co-md-7 co-lg-6">
             <input v-model="form.designation"
+                   name="designation"
+                   v-validate="'required'"
                    :disabled="whenDisabledInput"
                    class="form-control"
+                   :class="{'border-danger':errors.has('designation')}"
                    id="designation"
                    type="text"/>
+            <span class="error" v-if="errors.has('designation')">{{ $t('messages.designation_is_required') }}</span>
           </div>
         </div>
 
@@ -178,6 +188,7 @@
     </div>
     <hr/>
     <employee-table
+      :formId="form.id"
       :title="$t('general.employee')"
       @onEmployeesUpdated="onEmployeesUpdatedHandler"
       @onEmployeesRemoved="onEmployeesRemovedHandler"
@@ -478,7 +489,7 @@ export default {
             'name': oaEmployee.displayName,
             // specical
             'joinedDate': oaEmployee.joinedDate,
-            'form_url': constants.apiUrl + '/media/forms/' + vm.formType + '/' + vm.form.id + '/' + oaEmployee.id,
+            'form_url': constants.apiUrl + '/media/ird_forms/' + vm.form.id + '/' + oaEmployee.id,
             'info': oaEmployee
           })
         }
@@ -504,7 +515,7 @@ export default {
             vm.form.employees[i].name = oaEmployee.displayName
             vm.form.employees[i].info = oaEmployee
             vm.form.employees[i].joinedDate = oaEmployee.joinedDate
-            vm.form.employees[i].form_url = constants.apiUrl + '/media/forms/' + vm.formType + '/' + vm.form.id + '/' + oaEmployee.id
+            vm.form.employees[i].form_url = constants.apiUrl + '/media/ird_forms/' + vm.form.id + '/' + oaEmployee.id
           }
         }
         if (vm.form.id === 0) {
@@ -570,21 +581,26 @@ export default {
     },
     saveRecord () {
       let vm = this
-      if (vm.form.id === 0) {
-        // new
-        vm.form.form_date = vm.grabYear(vm.form.form_date)
-        vm.form.submitted_on = vm.grabYear(vm.form.submitted_on)
-        vm.$store.dispatch('SAVE_FORM_RECORD', vm.form).then(function (response) {
-          vm.$emit('onModeChanged', 'list')
-        })
-      } else {
-        // update
-        vm.form.form_date = vm.grabYear(vm.form.form_date)
-        vm.form.submitted_on = vm.grabYear(vm.form.submitted_on)
-        vm.$store.dispatch('UPDATE_FORM_RECORD', vm.form).then(function (response) {
-          vm.$emit('onModeChanged', 'list')
-        })
-      }
+      vm.$validator.validateAll()
+      vm.$nextTick(function () {
+        if (!vm.errors.any()) {
+          if (vm.form.id === 0) {
+            // new
+            vm.form.form_date = vm.grabYear(vm.form.form_date)
+            vm.form.submitted_on = vm.grabYear(vm.form.submitted_on)
+            vm.$store.dispatch('SAVE_FORM_RECORD', vm.form).then(function (response) {
+              vm.$emit('onModeChanged', 'list')
+            })
+          } else {
+            // update
+            vm.form.form_date = vm.grabYear(vm.form.form_date)
+            vm.form.submitted_on = vm.grabYear(vm.form.submitted_on)
+            vm.$store.dispatch('UPDATE_FORM_RECORD', vm.form).then(function (response) {
+              vm.$emit('onModeChanged', 'list')
+            })
+          }
+        }
+      })
     },
     cancel () {
       this.$emit('onModeChanged', 'list')
