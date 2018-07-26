@@ -61,7 +61,7 @@
               <!--</div>-->
             </div>
           </td>
-          <td style="vertical-align:top;">
+          <td>
             <table v-if="activeOptionGroup==='basic'" class="table-striped">
               <tr>
                 <td class="particular-label">
@@ -102,39 +102,54 @@
                 </td>
               </tr>
             </table>
-            <table v-if="activeOptionGroup==='salary_apply_computerized_form'" class="table-striped"
-                   style="width: 100%;">
-              <tr>
-                <td class="particular-label">
-                  {{ $t('general.language') }}
-                </td>
-                <td>
-                  <yoov-radio-toggle
-                    :options="languageOptions"
-                    optionTitleTag="titleTag"
-                    v-model="sample.language">
+            <div v-if="activeOptionGroup==='salary_apply_computerized_form'">
+              <table style="width: 100%;">
+                <tr>
+                  <td class="particular-label">
+                    {{ $t('general.language') }}
+                  </td>
+                  <td>
+                    <yoov-radio-toggle
+                      :options="languageOptions"
+                      optionTitleTag="titleTag"
+                      v-model="sample.language">
 
-                  </yoov-radio-toggle>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2" class="particular-label">
-                  {{ $t('tax.required_items') }}
-                  <button type="button" class="btn-sm btn btn-primary"
-                          @click="generate">
-                    {{ $t('buttons.build_necessary_documents') }}
-                  </button>
-                  <ol>
-                    <li :key="document.caption" v-for="document in necessaryDocuments">
-                      {{ document.caption }}
-                      <a :href="document.link">
-                        <img :src="getIcon(document)">
-                      </a>
-                    </li>
-                  </ol>
-                </td>
-              </tr>
-            </table>
+                    </yoov-radio-toggle>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="particular-label">
+                    {{ $t('tax.form_date') }}
+                  </td>
+                  <td>
+                    <date-picker v-model="sample.formDate"
+                                 id="formDate"
+                                 type="date"
+                                 format="YYYY-MM-DD"></date-picker>
+                  </td>
+                </tr>
+              </table>
+              <hr/>
+              <table style="width: 100%;">
+                <tr>
+                  <td class="particular-label">
+                    {{ $t('tax.required_items') }}
+                    <button type="button" class="btn-sm btn btn-primary"
+                            @click="generate">
+                      {{ $t('buttons.build_necessary_documents') }}
+                    </button>
+                    <ol>
+                      <li :key="document.caption" v-for="document in necessaryDocuments">
+                        {{ document.caption }}
+                        <a :href="document.link">
+                          <img :src="getIcon(document)">
+                        </a>
+                      </li>
+                    </ol>
+                  </td>
+                </tr>
+              </table>
+            </div>
           </td>
         </tr>
       </table>
@@ -155,6 +170,7 @@ import YoovModal from '@/components/Modal'
 import YoovRadioToggle from '@/components/forms/YoovRadioToggle'
 import vSelect from 'vue-select'
 import * as constants from '@/store/constants'
+import DatePicker from 'vue2-datepicker'
 
 export default {
   data () {
@@ -210,28 +226,29 @@ export default {
         }
       ],
       sample: {
-        'language': 'en-us'
+        'language': 'en-us',
+        'formDate': ''
       }
     }
   },
   components: {
     'yoov-modal': YoovModal,
     'yoov-radio-toggle': YoovRadioToggle,
-    'v-select': vSelect
+    'v-select': vSelect,
+    'date-picker': DatePicker
   },
   methods: {
     generate () {
       let vm = this
       let data = {
         lang: vm.sample.language,
-        formCode: 'IR56B'
+        formCode: 'IR56B',
+        formDate: vm.sample.formDate
       }
       vm.$store.dispatch('GENERATE_SAMPLE_FORM', data).then(function (response) {
-        if (response.status) {
-          vm.$dialog.alert('Generation will be ready soon.')
-        } else {
-          vm.$dialog.alert('*** System Error ***')
-        }
+        vm.$dialog.alert('Generation will be ready soon.')
+      }).catch(function (error) {
+        console.log('TaxFormSettingsDialog :: generate :: error: ', error)
       })
     },
 
@@ -388,6 +405,7 @@ export default {
     // alert('mounted :: teamId = ' + this.teamId)
     let vm = this
     vm.loadData()
+    vm.sample.formDate = vm.$moment().format('YYYY-MM-DD')
     vm.necessaryDocuments = [
       {
         caption: vm.$t('tax._necessary_documents_item_1_'),
@@ -515,5 +533,10 @@ export default {
 
   #tax-form-settings-dialog .modal-body input[type=search] {
     width: 100px !important;
+  }
+
+  .mx-input-append > .mx-calendar-icon {
+    width: 100%;
+    height: auto !important;
   }
 </style>

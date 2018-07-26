@@ -1,6 +1,6 @@
+import Vue from 'vue'
 import * as types from './meetings_types'
 import * as constants from '../../constants'
-import axios from 'axios'
 
 const state = {
   meetings: [],
@@ -48,7 +48,7 @@ const actions = {
   [types.STORE_MEETING] ({commit, dispatch}, payload) {
     let meeting = payload.meeting
     let url = constants.apiUrl + '/meetings'
-    axios.post(url, meeting).then(function (response) {
+    Vue.axios.post(url, meeting).then(function (response) {
       if (typeof payload.callback === 'function') {
         payload.callback()
       }
@@ -59,7 +59,7 @@ const actions = {
   [types.UPDATE_MEETING] ({commit, dispatch}, payload) {
     let meeting = payload.meeting
     let url = constants.apiUrl + '/meetings/' + meeting.id
-    axios.put(url, meeting).then(function (response) {
+    Vue.axios.put(url, meeting).then(function (response) {
       if (typeof payload.callback === 'function') {
         payload.callback()
       }
@@ -72,7 +72,7 @@ const actions = {
   },
 
   [types.GET_MEETINGS] ({commit, state}, payload) {
-    axios.get(constants.apiUrl + '/meetings').then((response) => {
+    Vue.axios.get(constants.apiUrl + '/meetings').then((response) => {
       console.log('GET_MEETINGS :: data: ', response.data)
       commit('setMeetings', response.data)
       commit('changeLoadingMeetingsState', false)
@@ -94,7 +94,7 @@ const actions = {
   },
 
   async [types.DELETE_MEETING] ({commit, state}, meetingId) {
-    await axios.delete(constants.apiUrl + '/meetings/' + meetingId).then((response) => {
+    await Vue.axios.delete(constants.apiUrl + '/meetings/' + meetingId).then((response) => {
 
     })
   },
