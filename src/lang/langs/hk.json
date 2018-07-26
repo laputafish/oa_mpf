@@ -53,7 +53,8 @@
     "generate_ir56e": "創建IR56E表格",
     "generate_forms": "建立表格",
     "terminate": "終止",
-    "add_all_employees": "添加所有員工"
+    "add_all_employees": "添加所有員工",
+    "build_necessary_documents": "建立所需文件"
   },
   "login": {
     "login": "登入",
@@ -73,7 +74,7 @@
     "termination": "離職",
     "departure": "離港",
     "salary": "薪酬",
-    "salary_form": "薪酬表格",
+    "salary_form_ir56b": "薪酬表格IR56B",
     "form_date": "表格日期",
     "no_of_employee": "員工人數",
     "employees": "員工",
@@ -107,7 +108,14 @@
     "published": "已發佈",
     "sheet_no": "表格編號",
     "signature_designation": "簽署人職位",
-    "record_verification_form": "記錄核對表"
+    "record_verification_form": "記錄核對表",
+    "income_field_mapping": "入息欄位對應",
+    "apply_for_computerized_ir56b": "申請遞交電腦格式",
+    "required_items": "需要文件/檔案",
+    "_necessary_documents_item_1_": "申請書",
+    "_necessary_documents_item_2_": "載有20至30份IR56B測試數據的可攜式儲存裝置",
+    "_necessary_documents_item_3_": "其中3份IR56B測試數據，並提供其列印的IR56B紙張印本",
+    "_necessary_documents_item_4_": "一份全部IR56B測試數據的核對表紙張印本."
   },
   "mpf": {
     "mpf_management": "MPF 管理"
