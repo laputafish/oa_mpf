@@ -1,11 +1,11 @@
 <template>
-  <div class="yoov-radio-toggle">
+  <div class="yoov-checkbox-toggle">
     <button type="button"
             :disabled="disabled"
             class="btn btn-min-width-80"
             v-for="(option) in options"
             :key="option[optionValueField]"
-            :class="{'btn-primary':value===option[optionValueField],'btn-default':value!==option[optionValueField]}"
+            :class="{'btn-primary':selectedValues.indexOf(option[optionValueField])>=0,'btn-default':selectedValues.indexOf(option[optionValueField])<0}"
             @click="selectOption(option[optionValueField])">
       {{ optionTitleTag != '' ? $t(option[optionTitleTag]) : option[optionTitle] }}
     </button>
@@ -42,33 +42,41 @@ export default {
   created () {
     console.log('YoovRadioToggle.created: options: ', this.options)
   },
+  data () {
+    return {
+      selectedValues: []
+    }
+  },
+  mounted () {
+    this.selectedValues = this.value ? this.value.split(',') : []
+  },
   watch: {
     'value': {
       handler: function (val) {
+        this.selectedValues = val ? val.split(',') : []
       },
       deep: true
     }
   },
   methods: {
     selectOption (optionValue) {
-      this.$emit('input', optionValue)
+      let vm = this
+      let index = vm.selectedValues.indexOf(optionValue)
+      if (index >= 0) {
+        vm.selectedValues.splice(index, 1)
+      } else {
+        vm.selectedValues.push(optionValue)
+      }
+      this.$emit('input', vm.selectedValues.join(','))
     }
   }
 }
 </script>
 
 <style>
-  .yoov-radio-toggle button {
+  .yoov-checkbox-toggle button {
     border-radius: 0;
     margin-right: 1px;
-  }
-  .yoov-radio-toggle button:first-child {
-    border-top-left-radius: 0.4rem !important;
-    border-bottom-left-radius: 0.4rem !important;
-  }
-  .yoov-radio-toggle button:last-child {
-    border-top-right-radius: 0.4rem !important;
-    border-bottom-right-radius: 0.4rem !important;
   }
 
 </style>

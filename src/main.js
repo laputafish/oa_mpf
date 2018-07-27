@@ -263,11 +263,19 @@ Vue.mixin({
   }
 })
 
+const myMixin = {
+  methods: {
+    getCurrentFiscalYear () {
+      return 2017
+    }
+  }
+}
 export const app = new Vue({
   el: '#app',
   router,
   store,
   i18n,
+  mixins: [myMixin],
   template: '<App/>',
   mounted () {
     // after current component is mounted

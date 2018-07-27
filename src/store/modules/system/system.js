@@ -254,6 +254,9 @@ const mutations = {
     // Vue.axios.defaults.headers.common['Accept'] = 'application/json'
     // console.log('store :: setToken :: localStorage.setItem :: token = ' + token)
   },
+  setEmployeeId (state, payload) {
+    state.user.employee_id = payload
+  },
   [types.SET_ACTIVE_MENU] (state, data) {
     state.activeMenu = data
   },
@@ -360,8 +363,15 @@ const mutations = {
 const actions = {
   async [types.CHECK_TOKEN] ({commit, getters, dispatch}, payload) {
     // let token = localStorage.getItem('token')
+    if (getters.token) {
+      if (typeof payload.callback === 'function') {
+        payload.callback(true)
+      }
+    }
+
     let token = localStorage.getItem('accessToken')
-    console.log('checkToken token=getters.cookieToken   token=' + token)
+    console.log('CHECK_TOKEN getters.token = ' + getters.token)
+    console.log('CHECK_TOKEN token=getters.cookieToken   token=' + token)
     let result = false
     if (token) {
       console.log('store :: checkToken dispatch(SET_TOKEN)')
@@ -500,16 +510,20 @@ const actions = {
     await dispatch('updateOAAuth', null)
   },
 
-  async [types.SET_TEAM] ({rootGetters, getters, commit}, payload) {
-    // payload = team
-    let team = payload
-    let url = constants.apiUrl + '/users/' + getters.user.id
-    let headerConfig = rootGetters.apiHeaderConfig
-    let data = {
-      oa_last_team_id: team.id
-    }
-    await Vue.axios.put(url, data, headerConfig).then(function (response) {
-      commit('setActiveTeam', payload)
+  [types.SET_TEAM] ({rootGetters, getters, commit}, payload) {
+    return new Promise((resolve, reject) => {
+      // payload = team
+      let team = payload
+      let url = constants.apiUrl + '/users/' + getters.user.id
+      let data = {
+        oa_last_team_id: team.id
+      }
+      Vue.axios.put(url, data).then(function (response) {
+        commit('setActiveTeam', payload)
+        resolve(payload)
+      }).catch(function (error) {
+        reject(error)
+      })
     })
   },
 

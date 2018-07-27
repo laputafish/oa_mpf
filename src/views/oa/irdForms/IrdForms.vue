@@ -1,14 +1,40 @@
 <template>
   <div class="animated fadeIn mx-3" id="ird-forms">
-    <b-card>
+    <b-card v-if="mode === 'setup'">
+      <div slot="header">
+        <div class="btn-group btn-group-gap">
+          <!-- Button: Settings -->
+          <button type="button"
+                  @click="returnLastMode"
+                  class="pull-right btn btn-outline-primary">
+            <i class="fa fa-reply"></i>&nbsp;{{ $t('buttons.back') }}
+          </button>
+          <!--<button type="button"-->
+          <!--@click="showSettings"-->
+          <!--class="pull-right btn btn-outline-primary">-->
+          <!--<i class="fa fa-gear"></i>&nbsp;{{ $t('buttons.settings') }}-->
+          <!--</button>-->
+        </div>
+        {{ $t('tax.setup') }}
+      </div>
+      <ird-form-setup
+        @close="returnLastMode"
+        ref="setupForm"></ird-form-setup>
+    </b-card>
+    <b-card v-else>
       <div slot="header" >
         <div class="btn-group btn-group-gap">
           <!-- Button: Settings -->
           <button type="button"
-                  @click="showSettings"
+                  @click="changeMode('setup')"
                   class="pull-right btn btn-outline-primary">
             <i class="fa fa-gear"></i>&nbsp;{{ $t('buttons.settings') }}
           </button>
+          <!--<button type="button"-->
+                  <!--@click="showSettings"-->
+                  <!--class="pull-right btn btn-outline-primary">-->
+            <!--<i class="fa fa-gear"></i>&nbsp;{{ $t('buttons.settings') }}-->
+          <!--</button>-->
         </div>
         {{ $t($route.name) }}
       </div>
@@ -34,11 +60,12 @@
         </div>
         <datatable v-cloak v-bind="$data"></datatable>
       </div>
-      <ird-form-record ref="currentForm" v-else
-                         :formId="selectedFormId"
-                         :defaultIrdFormTypeId="selectedIrdFormTypeId"
-                        @onFormSaved="onFormSavedHandler"
-                         @onModeChanged="onModeChangedHandler"></ird-form-record>
+      <ird-form-record v-if="mode=='record'"
+                       ref="currentForm"
+                       :formId="selectedFormId"
+                       :defaultIrdFormTypeId="selectedIrdFormTypeId"
+                       @onFormSaved="onFormSavedHandler"
+                       @onModeChanged="onModeChangedHandler"></ird-form-record>
     </b-card>
     <select-employee-dialog
       ref="selectEmployeeDialog"
@@ -52,6 +79,7 @@
 import {EventBus} from '@/event-bus'
 import components from './comps'
 import IrdFormRecord from './forms/IrdFormRecord'
+import IrdFormSetup from './forms/IrdFormSetup'
 import SelectEmployeeDialog from '@/dialogs/SelectEmployeeDialog'
 import helpers from '@/helpers.js'
 import YoovRadioToggle from '@/components/forms/YoovRadioToggle'
@@ -60,12 +88,14 @@ export default {
   components: {
     ...components,
     'ird-form-record': IrdFormRecord,
+    'ird-form-setup': IrdFormSetup,
     'select-employee-dialog': SelectEmployeeDialog,
     'yoov-radio-toggle': YoovRadioToggle
   },
   data () {
     let vm = this
     return {
+      lastMode: 'list',
       irdFormTypeFilters: [],
       showingTaxFormSettingsDialog: false,
       selectedIrdFormTypeId: 0,
@@ -204,6 +234,18 @@ export default {
     }
   },
   methods: {
+    returnLastMode () {
+      let vm = this
+      vm.mode = vm.lastMode
+      vm.lastMode = 'list'
+      vm.$router.go(-1)
+    },
+    changeMode (mode) {
+      let vm = this
+      vm.lastMode = vm.mode
+      vm.mode = mode
+      vm.$router.push('/ird_forms/setup')
+    },
     showSettings () {
       this.$store.dispatch('SHOW_TAX_FORM_SETTINGS_DIALOG')
     },

@@ -65,6 +65,7 @@ export default {
     },
     routeList () {
       console.log('Full :: computed(routeList) (required by breadcrumb): ', this.$route.matched)
+      console.log('Full.vue :: $route.matched: ', this.$route.matched)
       return this.$route.matched
     },
     user () {
@@ -128,7 +129,8 @@ export default {
         let payload = {oaAuth: oaAuth}
         vm.$store.dispatch('FETCH_SELF', payload).then(function () {
           vm.$store.dispatch('FETCH_EMPLOYEES', payload).then(function () {
-            vm.$store.dispatch('FETCH_GROUPS', payload)
+            vm.$store.dispatch('FETCH_OA_GROUPS', payload)
+            vm.$store.dispatch('FETCH_OA_PERMISSIONS', payload)
           })
         })
       })

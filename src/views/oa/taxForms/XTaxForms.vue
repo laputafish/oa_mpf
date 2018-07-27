@@ -290,7 +290,7 @@ export default {
     user: function (val) {
       let vm = this
       console.log('TaxForms.vue :: watch(user) user:', val)
-      vm.$store.dispatch('FETCH_GROUPS')
+      vm.$store.dispatch('FETCH_OA_GROUPS')
     },
     teamId: function (val) {
       let vm = this

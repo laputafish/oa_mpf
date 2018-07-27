@@ -6,7 +6,7 @@ const state = {
   teams: [],
   showTeamSelection: false,
   showTeamSettings: false,
-  teamInfo: null
+  oaTeam: null
 }
 
 const getters = {
@@ -18,6 +18,9 @@ const getters = {
   },
   showTeamSelection: (state) => {
     return state.showTeamSelection
+  },
+  oaTeam: (state) => {
+    return state.oaTeam
   }
 }
 
@@ -41,14 +44,17 @@ const mutations = {
 
   hideTeamSettings: (state) => {
     state.showTeamSettings = false
+  },
+
+  setOATeam: (state, payload) => {
+    state.oaTeam = payload
   }
 }
 
 const actions = {
   async [types.FETCH_TEAMS] ({rootGetters, state, commit}) {
     let url = constants.oaApiUrl + '/t/teams?include=currency'
-    let config = rootGetters.oaApiHeaderConfig
-    console.log('fetch teams: config: ', config)
+    let config = {}
     await Vue.axios.get(url, config).then(response => {
       if (response.data.status) {
         console.log('FETCH_TEAMS :: response.data.result : ', response.data.result)
@@ -58,11 +64,20 @@ const actions = {
     })
   },
 
+  async [types.FETCH_TEAM] ({rootGetters, state, commit}) {
+    let url = constants.oaApiUrl + '/t/teams/' + rootGetters.teamId
+    await Vue.axios.get(url).then(response => {
+      if (response.data.status) {
+        console.log('FETCH_TEAMS :: response.data.result : ', response.data.result)
+        commit('setOATeam', response.data.result)
+        console.log('fetch teams :: teams: ', response.data.result)
+      }
+    })
+  },
+
   async [types.FETCH_TEAM_INFO] ({rootGetters, state, commit}) {
     let url = constants.oaApiUrl + '/t/teams?include=currency'
-    let config = rootGetters.oaApiHeaderConfig
-    console.log('fetch teams: config: ', config)
-    await Vue.axios.get(url, config).then(response => {
+    await Vue.axios.get(url).then(response => {
       if (response.data.status) {
         console.log('FETCH_TEAMS :: response.data.result : ', response.data.result)
         commit('setTeams', response.data.result)

@@ -97,6 +97,7 @@ import EmployeeTermination from '@/views/oa/irdForms/employeeTermination/Employe
 import EmployeeDeparture from '@/views/oa/irdForms/employeeDeparture/EmployeeDeparture'
 import EmployeeSalary from '@/views/oa/irdForms/employeeSalary/EmployeeSalary'
 import IrdForms from '@/views/oa/irdForms/IrdForms'
+// import IrdFormSetup from '@/views/oa/irdFormSetup/IrdFormSetup'
 import MyIrdForms from '@/views/oa/myIrdForms/MyIrdForms'
 
 // import jQuery from 'jquery'
@@ -117,12 +118,35 @@ Vue.use(VueRouter)
 //   return true
 // }
 //
+const adminModules = [
+  '/ird_forms', '/ird_forms/setup'
+]
+
+const checkRole = (roles, targetRole) => {
+  let result = false
+  for (var i = 0; i < roles.length; i++) {
+    if (roles[i].name === targetRole) {
+      result = true
+      break
+    }
+  }
+  return result
+}
+
 const ifAuthenticated = (to, from, next) => {
   if (store.getters.isAuthenticated) {
     store.dispatch('CHECK_TOKEN', {
       callback: function (status) {
         if (status) {
-          next()
+          if (adminModules.indexOf(to.path) >= 0) {
+            store.dispatch('FETCH_OA_PERMISSIONS').then((roles) => {
+              if (checkRole(roles, 'Payroll Management')) {
+                next()
+              } else {
+                next('/my_ird_forms')
+              }
+            })
+          }
         } else {
           next('/login')
         }
@@ -136,6 +160,12 @@ const ifAuthenticated = (to, from, next) => {
     next('/login')
   }
 }
+
+// const withPrefix = (prefix, routes) =>
+//   routes.map((route) => {
+//     route.path = prefix + route.path
+//     return route
+//   })
 
 export default new VueRouter({
   mode: 'history',
@@ -151,6 +181,7 @@ export default new VueRouter({
       // },
       name: 'general.home',
       component: Full,
+      beforeEnter: ifAuthenticated,
       // beforeEnter: (from, to, next) => {
       //   if (checkToken()) {
       //     next()
@@ -172,20 +203,25 @@ export default new VueRouter({
         {
           path: 'mpf_management',
           name: 'mpf.mpf_management',
-          component: MpfManagement,
-          beforeEnter: ifAuthenticated
+          component: MpfManagement
         },
         {
           path: 'ird_forms',
           name: 'tax.tax_form_management',
           component: IrdForms,
-          beforeEnter: ifAuthenticated
+          children: [
+            {
+              path: 'setup',
+              name: 'tax.setup'
+            }
+          ]
         },
         {
           path: 'my_ird_forms',
           name: 'tax.salary_tax_records',
-          component: MyIrdForms,
-          beforeEnter: ifAuthenticated
+          component: MyIrdForms
+          // ,
+          // beforeEnter: ifAuthenticated
         },
         {
           path: 'employee_commencement',

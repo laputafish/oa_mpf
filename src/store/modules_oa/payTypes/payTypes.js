@@ -26,7 +26,6 @@ const actions = {
       console.log('FETCH_PAY_TYPES :; teamId = ' + teamId)
       if (teamId && teamId !== '') {
         let config = {
-          ...rootGetters.oaApiHeaderConfig,
           params: {
             teamId: teamId
           }

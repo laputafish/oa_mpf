@@ -1,2 +1,4 @@
 export const FETCH_SELF = 'FETCH_SELF'
+export const FETCH_OA_PERMISSIONS = 'FETCH_OA_PERMISSIONS'
 export const SET_TEAM = 'SET_TEAM'
+export const UPDATE_EMPLOYEE_ID = 'UPDATE_EMPLOYEE_ID'

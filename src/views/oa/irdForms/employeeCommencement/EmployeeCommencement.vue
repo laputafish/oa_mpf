@@ -192,7 +192,7 @@ export default {
     let vm = this
     vm.subscribe()
     vm.$store.dispatch('FETCH_EMPLOYEES')
-    vm.$store.dispatch('FETCH_GROUPS')
+    vm.$store.dispatch('FETCH_OA_GROUPS')
   },
   beforeDestroy () {
     EventBus.$off('editRecord')

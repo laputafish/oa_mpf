@@ -111,9 +111,9 @@ export default {
       let vm = this
       vm.$store.dispatch('SET_TEAM', team).then(function () {
         let promises = [
-          vm.$store.dispatch('FETCH_SELF'),
           vm.$store.dispatch('FETCH_EMPLOYEES'),
-          vm.$store.dispatch('FETCH_GROUPS')
+          vm.$store.dispatch('FETCH_OA_GROUPS'),
+          vm.$store.dispatch('FETCH_OA_PERMISSIONS')
         ]
         Promise.all(promises).then(function () {
           vm.$router.push({name: 'tax.notification_to_ird'})
@@ -140,40 +140,50 @@ export default {
             if (isSupervisor) {
               vm.$router.push({name: 'SuperDashboard'})
             } else {
-              console.log('login :: if not isSupervisor   user: ', vm.$store.getters.user)
-              let teamId = vm.$store.getters.user.oa_last_team_id
-              if (teamId) {
-                vm.$store.dispatch('FETCH_TEAMS').then(function () {
-                  let selectedTeam = null
-                  console.log('after dispatch(FETCH_TEAMS) :: teamId = ' + teamId)
-                  console.log('after dispatch(FETCH_TEAMS) :: teams: ', vm.teams)
-                  console.log('belong team check : team id = ' + teamId)
-                  var loopTeam = null
-                  for (var i = 0; i < vm.teams.length; i++) {
-                    loopTeam = vm.teams[i]
-                    console.log('loopo team id = ' + loopTeam.id)
-                    if (loopTeam.id === teamId) {
-                      selectedTeam = loopTeam
-                      vm.$store.dispatch('SET_ACTIVE_TEAM', loopTeam)
-                      break
-                    }
-                  }
-                  if (selectedTeam === null) {
-                    vm.showingTeamSelectionDialog = true
-                  } else {
-                    vm.$router.push({name: 'tax.tax_forms'})
-                  }
+              if (vm.user.employee_id === 0) {
+                vm.$store.dispatch('FETCH_SELF').then(function (response) {
+                  vm.checkActiveTeam()
                 })
               } else {
-                vm.$store.dispatch('FETCH_TEAMS').then(function () {
-                  vm.showingTeamSelectionDialog = true
-                })
+                vm.checkActiveTeam()
               }
             }
           } else {
             vm.$dialog.alert('Access Denied!')
           }
         })
+    },
+    checkActiveTeam () {
+      let vm = this
+      console.log('login :: if not isSupervisor   user: ', vm.$store.getters.user)
+      let teamId = vm.$store.getters.user.oa_last_team_id
+      if (teamId) {
+        vm.$store.dispatch('FETCH_TEAMS').then(function () {
+          let selectedTeam = null
+          console.log('after dispatch(FETCH_TEAMS) :: teamId = ' + teamId)
+          console.log('after dispatch(FETCH_TEAMS) :: teams: ', vm.teams)
+          console.log('belong team check : team id = ' + teamId)
+          var loopTeam = null
+          for (var i = 0; i < vm.teams.length; i++) {
+            loopTeam = vm.teams[i]
+            console.log('loopo team id = ' + loopTeam.id)
+            if (loopTeam.id === teamId) {
+              selectedTeam = loopTeam
+              vm.$store.dispatch('SET_ACTIVE_TEAM', loopTeam)
+              break
+            }
+          }
+          if (selectedTeam === null) {
+            vm.showingTeamSelectionDialog = true
+          } else {
+            vm.$router.push({name: 'tax.tax_form_management'})
+          }
+        })
+      } else {
+        vm.$store.dispatch('FETCH_TEAMS').then(function () {
+          vm.showingTeamSelectionDialog = true
+        })
+      }
     }
   }
 }

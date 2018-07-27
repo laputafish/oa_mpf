@@ -47,6 +47,7 @@
     "cancel": "取消",
     "add": "新增",
     "new": "新增",
+    "save": "儲存",
     "export": "匯出",
     "submit": "遞交",
     "edit": "編輯",
@@ -54,7 +55,8 @@
     "generate_forms": "建立表格",
     "terminate": "終止",
     "add_all_employees": "添加所有員工",
-    "build_necessary_documents": "建立所需文件"
+    "build_necessary_documents": "建立所需文件",
+    "back": "返回"
   },
   "login": {
     "login": "登入",
@@ -111,11 +113,17 @@
     "record_verification_form": "記錄核對表",
     "income_field_mapping": "入息欄位對應",
     "apply_for_computerized_ir56b": "申請遞交電腦格式",
-    "required_items": "需要文件/檔案",
+    "required_items_for_submission": "需要提交的文件及檔案",
     "_necessary_documents_item_1_": "申請書",
     "_necessary_documents_item_2_": "載有20至30份IR56B測試數據的可攜式儲存裝置",
     "_necessary_documents_item_3_": "其中3份IR56B測試數據，並提供其列印的IR56B紙張印本",
-    "_necessary_documents_item_4_": "一份全部IR56B測試數據的核對表紙張印本."
+    "_necessary_documents_item_4_": "一份全部IR56B測試數據的核對表紙張印本.",
+
+    "apply_for_approval_of_softcopy": "申請電腦軟件格式的IR56表格",
+    "apply_for_approval_of_printed_forms": "申請自行列印的IR56表格",
+    "update_previously_approval": "更新先前已獲批准軟件格式",
+
+    "setup": "設定"
   },
   "mpf": {
     "mpf_management": "MPF 管理"
