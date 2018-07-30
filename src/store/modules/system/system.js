@@ -370,28 +370,18 @@ const actions = {
     }
 
     let token = localStorage.getItem('accessToken')
-    console.log('CHECK_TOKEN getters.token = ' + getters.token)
-    console.log('CHECK_TOKEN token=getters.cookieToken   token=' + token)
     let result = false
     if (token) {
-      console.log('store :: checkToken dispatch(SET_TOKEN)')
       await dispatch(types.SET_TOKEN, token).then(function () {
-        console.log('store :; checkToken dispatch(SET_TOKEN).then: token: ' + getters.token)
-        console.log('store :; checkToken dispatch(SET_TOKEN).then: FETCH_USER_BY_TOKEN.')
-
-        dispatch('FETCH_USER_BY_TOKEN').then(function () {
-          console.log('store :: FETCH_USER_BY_TOKEN :: user:', getters.user)
+        dispatch('FETCH_USER_BY_TOKEN').then(function (response) {
+          console.log('CHECK_TOKEN >> FETCH_USER_BY_TOKEN :; response: ', response)
           if (getters.user) {
-            console.log('store :: checkToken :: getters.user')
             result = true
             if (typeof payload.callback === 'function') {
-              console.log('store :: checkToken :: payload.callback === function')
               payload.callback(result)
             }
           } else {
-            console.log('store :: checkToken :: not getters.user')
             if (typeof payload.callback === 'function') {
-              console.log('store :: checkToken :: payload.callback === function')
               payload.callback(result)
             }
           }
@@ -401,9 +391,7 @@ const actions = {
         })
       })
     } else {
-      console.log('store :: checkToken :: not getters.token')
       if (typeof payload.callback === 'function') {
-        console.log('store :: checkToken :: payload.callback === function')
         payload.callback(result)
       }
     }
@@ -510,7 +498,7 @@ const actions = {
     await dispatch('updateOAAuth', null)
   },
 
-  [types.SET_TEAM] ({rootGetters, getters, commit}, payload) {
+  [types.SET_DB_TEAM] ({rootGetters, getters, commit}, payload) {
     return new Promise((resolve, reject) => {
       // payload = team
       let team = payload
@@ -541,12 +529,37 @@ const actions = {
       Vue.axios.get(url, config).then(function (response) {
         console.log('system.js FETCH_USER_BY_TOKEN: response: ', response.data)
         console.log('system.js FETCH_USER_BY_TOKEN ready to call SET_USER')
+
         dispatch(types.SET_USER, {
           user: response.data
-        }).then(function (response) {
-          console.log('FETCH_USER_BY_TOKEN > SET_USER => resolve(response): ', response)
-          resolve(response)
+        }).then(function (user) {
+          dispatch('FETCH_OA_USER_EMPLOYEE').then(function (userEmployee) {
+            console.log('FETCH_OA_USER_EMPLOYEE.then:: userEmployee: ', userEmployee)
+            resolve(user)
+          }).catch(function (error) {
+            reject(error)
+          })
+        }).catch(function (error) {
+          reject(error)
         })
+        // return new Promise((resolve, reject) => {
+        //   dispatch(types.SET_USER, {
+        //     user: response.data
+        //   }).then(function (response) {
+        //     console.log('FETCH_USER_BY_TOKEN >> SET_USER :: response: ', response)
+        //     resolve(response)
+        //     // return new Promise((resolve, reject) => {
+        //     //   dispatch('FETCH_OA_USER_EMPLOYEE').then(function (userEmployee) {
+        //     //     console.log('FETCH_OA_USER_EMPLOYEE :: userEmployee: ', userEmployee)
+        //     //     resolve(userEmployee)
+        //     //   }).catch(function (error) {
+        //     //     reject(error)
+        //     //   })
+        //     // })
+        //   }).catch(function (error) {
+        //     reject(error)
+        //   })
+        // })
       }, function (error) {
         reject(error)
       })

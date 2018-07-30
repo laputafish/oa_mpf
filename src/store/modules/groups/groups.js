@@ -329,7 +329,7 @@ const actions = {
         teamId: rootGetters.user.oa_last_team_id
       }
     }
-    if (payload['oaAuth']) {
+    if (payload && payload['oaAuth']) {
       config['headers'] = vm.oaAuth2Headers(payload['oaAuth'])
     }
     console.log('types.FETCH_EMPLOYEES :: before axios.get')

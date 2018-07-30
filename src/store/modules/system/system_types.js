@@ -11,7 +11,7 @@ export const SET_OAAUTH = 'SET_OAAUTH'
 // set memory active team
 export const SET_ACTIVE_TEAM = 'SET_ACTIVE_TEAM'
 
-export const SET_TEAM = 'SET_TEAM'
+export const SET_DB_TEAM = 'SET_DB_TEAM'
 export const FETCH_USER = 'FETCH_USER'
 export const FETCH_TEAM_SETTINGS = 'FETCH_TEAM_SETTINGS'
 export const GET_PUBLIC_FOLDERS = 'GET_PUBLIC_FOLDERS'

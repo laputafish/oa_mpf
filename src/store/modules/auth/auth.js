@@ -18,7 +18,7 @@ const getters = {
 }
 
 const mutations = {
-  [types.AUTH_REQUEST]: (state) => {
+  setAuthRequest: (state) => {
     state.status = 'loading'
   },
   [types.AUTH_SUCCESS]: (state, token) => {
@@ -69,7 +69,7 @@ const actions = {
   [types.AUTH_REQUEST]: ({commit, dispatch}, {credentials}) => {
     console.log('AUTH_REQUEST')
     return new Promise((resolve, reject) => { // The Promise used for router redirect in login
-      commit(types.AUTH_REQUEST)
+      commit('setAuthRequest')
       let url = constants.url + '/oauth/token'
       let data = {
         username: credentials.email,

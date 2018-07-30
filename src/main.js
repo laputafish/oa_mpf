@@ -115,7 +115,7 @@ Vue.mixin({
 Vue.use(vSelect)
 
 Vue.axios.interceptors.request.use(function (config) {
-  console.log('axios :: interceptors :: url = ' + config.url + ' headers: ', config.headers)
+  // console.log('axios :: interceptors :: url = ' + config.url + ' headers: ', config.headers)
   // alert(JSON.stringify(config))
   // console.log('axios.interceptors: config: ', JSON.stringify(config))
   // console.log('axios :: store.getters.apiHeaderConfig: ',
@@ -125,16 +125,16 @@ Vue.axios.interceptors.request.use(function (config) {
 
   let promiseConfig = null
   if (config.url.indexOf(constants.apiUrl) === 0) {
-    console.log('axios :: is app api')
+    // console.log('axios :: is app api')
     // using app api
-    if (config.url.indexOf('oa_token') >= 0) {
-      console.log('axios :: store.getters: ', store.getters)
-    }
+    // if (config.url.indexOf('oa_token') >= 0) {
+    //   console.log('axios :: store.getters: ', store.getters)
+    // }
     config.headers = store.getters.apiHeaderConfig.headers
     // console.log('axios :: using apiUrl')
     promiseConfig = Promise.resolve(config)
   } else if (config.url.indexOf(constants.oaApiUrl) === 0) {
-    console.log('axios :: is oa api')
+    // console.log('axios :: is oa api')
     // using oa api
 
     // Check if oaAuth header applied
@@ -142,9 +142,9 @@ Vue.axios.interceptors.request.use(function (config) {
       promiseConfig = Promise.resolve(config)
     } else {
       promiseConfig = new Promise((resolve, reject) => {
-        console.log('axios (url=' + config.url + ') : ready to refreshOAToken')
+        // console.log('axios (url=' + config.url + ') : ready to refreshOAToken')
         store.dispatch('refreshOAToken').then(function (response) {
-          console.log('axios :: refreshOAToken : response: ', response)
+          // console.log('axios :: refreshOAToken : response: ', response)
 
           let headerConfig = {
             'Authorization': response.oaTokenType + ' ' + response.oaAccessToken,
@@ -156,14 +156,14 @@ Vue.axios.interceptors.request.use(function (config) {
           //   console.log('axios (oa): url = ' + config.url + ': headerConfig is null')
           //   reject(config)
           // } else {
-          console.log('axios (oa): url = ' + config.url + ': headerConfig ok')
+          // console.log('axios (oa): url = ' + config.url + ': headerConfig ok')
           config.headers = headerConfig
-          console.log('axios :: config.headers: ', config.headers)
+          // console.log('axios :: config.headers: ', config.headers)
           resolve(config)
           // }
         }, function (error) {
           alert('refreshOAToken error')
-          console.log('axios :: error: ', error)
+          // console.log('axios :: error: ', error)
           reject(error)
         })
       })

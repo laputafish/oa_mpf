@@ -108,15 +108,21 @@ export default {
       }
     },
     onTeamSelectedHandler (team) {
+      alert('onTeamSelectedHandler')
       let vm = this
-      vm.$store.dispatch('SET_TEAM', team).then(function () {
+      vm.$store.dispatch('SET_DB_TEAM', team).then(function () {
         let promises = [
           vm.$store.dispatch('FETCH_EMPLOYEES'),
           vm.$store.dispatch('FETCH_OA_GROUPS'),
-          vm.$store.dispatch('FETCH_OA_PERMISSIONS')
+          vm.$store.dispatch('FETCH_OA_USER_EMPLOYEE').then(function (employee) {
+            // let employeeId = employee.groups[0]['groupEmployee']['employeeId']
+            // console.log('FETCH_OA_USER_EMPLOYEE.then: employee: ', employee)
+            // vm.$store.dispatch('FETCH_OA_PERMISSIONS', {employeeId: employeeId})
+          })
         ]
         Promise.all(promises).then(function () {
-          vm.$router.push({name: 'tax.notification_to_ird'})
+          console.log('onTeamSelectedHandler :: all(promises).then => tax_form_management')
+          vm.$router.push({name: 'tax.tax_form_management'})
           // vm.$router.push({name: 'tax.tax_forms'})
         })
       })
@@ -166,7 +172,7 @@ export default {
           var loopTeam = null
           for (var i = 0; i < vm.teams.length; i++) {
             loopTeam = vm.teams[i]
-            console.log('loopo team id = ' + loopTeam.id)
+            console.log('loop team id = ' + loopTeam.id)
             if (loopTeam.id === teamId) {
               selectedTeam = loopTeam
               vm.$store.dispatch('SET_ACTIVE_TEAM', loopTeam)
@@ -176,6 +182,7 @@ export default {
           if (selectedTeam === null) {
             vm.showingTeamSelectionDialog = true
           } else {
+            console.log('Login.vue => push(tax.tax_form_management)')
             vm.$router.push({name: 'tax.tax_form_management'})
           }
         })

@@ -1,5 +1,6 @@
 <template>
   <div class="animated fadeIn mx-3" id="ird-forms">
+    isPayrollAdmin: {{ isPayrollAdmin }};
     <b-card v-if="mode === 'setup'">
       <div slot="header">
         <div class="btn-group btn-group-gap">
@@ -190,6 +191,9 @@ export default {
     // },
     teamId () {
       return this.$store.getters.teamId
+    },
+    isPayrollAdmin () {
+      return this.$store.getters.isPayrollAdmin
     }
   },
   watch: {
@@ -327,6 +331,7 @@ export default {
     }
   },
   mounted () {
+    // alert('Irdforms.vue mounted')
     let vm = this
     vm.subscribe()
   },

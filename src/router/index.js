@@ -118,6 +118,7 @@ Vue.use(VueRouter)
 //   return true
 // }
 //
+
 const adminModules = [
   '/ird_forms', '/ird_forms/setup'
 ]
@@ -139,13 +140,21 @@ const ifAuthenticated = (to, from, next) => {
       callback: function (status) {
         if (status) {
           if (adminModules.indexOf(to.path) >= 0) {
-            store.dispatch('FETCH_OA_PERMISSIONS').then((roles) => {
-              if (checkRole(roles, 'Payroll Management')) {
-                next()
-              } else {
-                next('/my_ird_forms')
-              }
-            })
+            let roles = store.getters.roles
+            console.log('router/index.js/roles: ', roles)
+            if (checkRole(roles, 'Payroll Management')) {
+              next()
+            } else {
+              next('/my_ird_forms')
+            }
+            // store.dispatch('FETCH_OA_PERMISSIONS').then((roles) => {
+            //   console.log('FETCH OA PERMISSIONS: roles: ', roles)
+            //   if (checkRole(roles, 'Payroll Management')) {
+            //     next()
+            //   } else {
+            //     next('/my_ird_forms')
+            //   }
+            // })
           }
         } else {
           next('/login')
@@ -608,6 +617,10 @@ export default new VueRouter({
           component: Register
         }
       ]
+    },
+    {
+      path: '*',
+      redirect: '/'
     }
   ]
 })

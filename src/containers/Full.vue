@@ -82,6 +82,9 @@ export default {
     teams () {
       console.log('Full.vue :: computed(teams)')
       return this.$store.getters.teams
+    },
+    isPayrollAdmin () {
+      return this.$store.getters.isPayrollAdmin
     }
   },
   created () {
@@ -96,6 +99,7 @@ export default {
     // })
   },
   mounted () {
+    // alert('Full.vue mounted')
     let vm = this
     console.log('Full.vue :: mounted')
     // if (!vm.user) {
@@ -138,7 +142,7 @@ export default {
     onTeamSelectedHandler (team) {
       let vm = this
       console.log('Full.vue :: onTeamSelectedHandler')
-      vm.$store.dispatch('SET_TEAM', team).then(function () {
+      vm.$store.dispatch('SET_DB_TEAM', team).then(function () {
         vm.loadGroupsAndEmployees()
       })
     },
