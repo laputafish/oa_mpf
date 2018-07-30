@@ -26,7 +26,30 @@ const actions = {
         }
       })
     })
+  },
+
+  [types.UPDATE_APPROVAL_REQUEST_FORM] ({rootGetters}, payload) {
+    return new Promise((resolve, reject) => {
+      let url = constants.apiUrl + '/sample_forms'
+      Vue.axios.post(url, payload).then(function (response) {
+        if (response.data.status) {
+          resolve(response.data.result)
+        }
+      })
+    })
+  },
+
+  [types.FETCH_SAMPLE_FORM] () {
+    return new Promise((resolve, reject) => {
+      let url = constants.apiUrl + '/sample_forms/0'
+      Vue.axios.get(url).then(function (response) {
+        if (response.data.status) {
+          resolve(response.data.result)
+        }
+      })
+    })
   }
+
 }
 
 export default {

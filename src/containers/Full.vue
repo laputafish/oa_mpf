@@ -50,10 +50,30 @@ export default {
   },
   data () {
     return {
-      nav: nav.items
+      // nav: nav.items
     }
   },
   computed: {
+    roles () {
+      let vm = this
+      return vm.$store.getters.roles.map(item => item.name)
+    },
+    nav () {
+      let vm = this
+      let result = []
+      for (var i = 0; i < nav.items.length; i++) {
+        var item = nav.items[i]
+        if (Object.keys(item).indexOf('authRole') >= 0) {
+          let authRole = item['authRole']
+          if (vm.roles.indexOf(authRole) >= 0) {
+            result.push(item)
+          }
+        } else {
+          result.push(item)
+        }
+      }
+      return result
+    },
     isMobile () {
       return this.$mq === 'mobile'
     },

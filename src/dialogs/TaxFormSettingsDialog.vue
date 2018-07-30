@@ -72,7 +72,6 @@
                     :options="languageOptions"
                     optionTitleTag="titleTag"
                     v-model="settings.language">
-
                   </yoov-radio-toggle>
                 </td>
               </tr>

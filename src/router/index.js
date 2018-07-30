@@ -97,6 +97,8 @@ import EmployeeTermination from '@/views/oa/irdForms/employeeTermination/Employe
 import EmployeeDeparture from '@/views/oa/irdForms/employeeDeparture/EmployeeDeparture'
 import EmployeeSalary from '@/views/oa/irdForms/employeeSalary/EmployeeSalary'
 import IrdForms from '@/views/oa/irdForms/IrdForms'
+import ApplyForIrdApproval from '@/views/oa/applyForIrdApproval/ApplyForIrdApproval'
+
 // import IrdFormSetup from '@/views/oa/irdFormSetup/IrdFormSetup'
 import MyIrdForms from '@/views/oa/myIrdForms/MyIrdForms'
 
@@ -135,9 +137,27 @@ const checkRole = (roles, targetRole) => {
 }
 
 const ifAuthenticated = (to, from, next) => {
-  if (store.getters.isAuthenticated) {
+  if (store.getters.user) {
+    console.log('ifAuthenticated :: user is defined.')
+    if (store.getters.isAuthenticated) {
+      console.log('ifAuthenticated :: is Authenicated')
+      if (adminModules.indexOf(to.path) >= 0) {
+        console.log('ifAuthenticated :: modules requires checking')
+        let roles = store.getters.roles
+        if (checkRole(roles, 'Payroll Management')) {
+          next()
+        } else {
+          next('/my_ird_forms')
+        }
+      } else {
+        next()
+      }
+    }
+  } else {
+    console.log('ifAuthenticated :: user is undefined')
     store.dispatch('CHECK_TOKEN', {
       callback: function (status) {
+        console.log('CHECK_TOKEN :: callback :: status = ' + (status ? 'yes' : ' no'))
         if (status) {
           if (adminModules.indexOf(to.path) >= 0) {
             let roles = store.getters.roles
@@ -145,6 +165,7 @@ const ifAuthenticated = (to, from, next) => {
             if (checkRole(roles, 'Payroll Management')) {
               next()
             } else {
+              console.log('ifAuthenticated :; next(my_ird_forms)')
               next('/my_ird_forms')
             }
             // store.dispatch('FETCH_OA_PERMISSIONS').then((roles) => {
@@ -155,19 +176,49 @@ const ifAuthenticated = (to, from, next) => {
             //     next('/my_ird_forms')
             //   }
             // })
+          } else {
+            next()
           }
         } else {
           next('/login')
         }
       }
     })
-    //
-    // alert('isAuthenticated is true')
-    // next()
-    // return
-  } else {
-    next('/login')
+    // next('/login')
   }
+  // if (false && store.getters.isAuthenticated) {
+  //   store.dispatch('CHECK_TOKEN', {
+  //     callback: function (status) {
+  //       if (status) {
+  //         if (adminModules.indexOf(to.path) >= 0) {
+  //           let roles = store.getters.roles
+  //           console.log('router/index.js/roles: ', roles)
+  //           if (checkRole(roles, 'Payroll Management')) {
+  //             next()
+  //           } else {
+  //             next('/my_ird_forms')
+  //           }
+  //           // store.dispatch('FETCH_OA_PERMISSIONS').then((roles) => {
+  //           //   console.log('FETCH OA PERMISSIONS: roles: ', roles)
+  //           //   if (checkRole(roles, 'Payroll Management')) {
+  //           //     next()
+  //           //   } else {
+  //           //     next('/my_ird_forms')
+  //           //   }
+  //           // })
+  //         }
+  //       } else {
+  //         next('/login')
+  //       }
+  //     }
+  //   })
+  //   //
+  //   // alert('isAuthenticated is true')
+  //   // next()
+  //   // return
+  // } else {
+  //   next('/login')
+  // }
 }
 
 // const withPrefix = (prefix, routes) =>
@@ -224,6 +275,11 @@ export default new VueRouter({
               name: 'tax.setup'
             }
           ]
+        },
+        {
+          path: 'apply_for_approval',
+          name: 'tax.apply_for_computerized_form_approval',
+          component: ApplyForIrdApproval
         },
         {
           path: 'my_ird_forms',

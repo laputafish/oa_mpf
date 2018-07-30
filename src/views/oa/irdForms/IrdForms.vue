@@ -1,9 +1,8 @@
 <template>
   <div class="animated fadeIn mx-3" id="ird-forms">
-    isPayrollAdmin: {{ isPayrollAdmin }};
     <b-card v-if="mode === 'setup'">
       <div slot="header">
-        <div class="btn-group btn-group-gap">
+        <div class="btn-group btn-group-gap card-header-toolbar">
           <!-- Button: Settings -->
           <button type="button"
                   @click="returnLastMode"
@@ -24,7 +23,7 @@
     </b-card>
     <b-card v-else>
       <div slot="header" >
-        <div class="btn-group btn-group-gap">
+        <div class="btn-group btn-group-gap card-header-toolbar">
           <!-- Button: Settings -->
           <button type="button"
                   @click="changeMode('setup')"
@@ -348,11 +347,11 @@ export default {
     position: relative;
   }
 
-  #ird-forms .card-header div div.btn-group {
-    position: absolute;
-    top: -1px;
-    right: -5px;
-  }
+  /*#ird-forms .card-header div div.btn-group {*/
+    /*position: absolute;*/
+    /*top: -1px;*/
+    /*right: -5px;*/
+  /*}*/
 
   #ird-forms .table-toolbar {
     position:absolute;
@@ -370,4 +369,5 @@ export default {
   div[name=HeaderSettings] {
     visibility: hidden;
   }
+
 </style>

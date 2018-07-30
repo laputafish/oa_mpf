@@ -25,6 +25,7 @@ const getters = {
     }
     return result
   }
+
 }
 
 const mutations = {

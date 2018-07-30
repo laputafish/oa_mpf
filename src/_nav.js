@@ -12,7 +12,14 @@ export default {
     {
       name: 'tax.tax_form_management',
       url: '/ird_forms',
-      icon: 'fa fa-file-text'
+      icon: 'fa fa-file-text',
+      authRole: 'Payroll Management'
+    },
+    {
+      name: 'tax.apply_for_computerized_form_approval',
+      url: '/apply_for_approval',
+      icon: 'fa fa-file-text',
+      authRole: 'Payroll Management'
     },
     {
       name: 'tax.salary_tax_records',

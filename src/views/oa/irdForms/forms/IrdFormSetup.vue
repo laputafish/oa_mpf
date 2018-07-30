@@ -28,16 +28,16 @@
                       </div>
                     </div>
                   </li>
-                  <li>
-                    <div key="apply"
-                         @click="activeOptionGroup='salary_apply_computerized_form'"
-                         :class="{'active':activeOptionGroup==='salary_apply_computerized_form'}"
-                         class="option-group-button">
-                      <div class="border-0 rounded-2 title-container form-control">
-                        {{ $t('tax.apply_for_computerized_ir56b')}}
-                      </div>
-                    </div>
-                  </li>
+                  <!--<li>-->
+                    <!--<div key="apply"-->
+                         <!--@click="activeOptionGroup='salary_apply_computerized_form'"-->
+                         <!--:class="{'active':activeOptionGroup==='salary_apply_computerized_form'}"-->
+                         <!--class="option-group-button">-->
+                      <!--<div class="border-0 rounded-2 title-container form-control">-->
+                        <!--{{ $t('tax.apply_for_computerized_ir56b')}}-->
+                      <!--</div>-->
+                    <!--</div>-->
+                  <!--</li>-->
                   <li>
                     <div key="salary">
                       <div class="border-0 rounded-2 title-container form-control ">
@@ -114,141 +114,6 @@
                   </td>
                 </tr>
               </table>
-              <!-- ****************************************** -->
-              <!-- Apply for submission of computerized forms -->
-              <!-- ****************************************** -->
-              <div v-if="activeOptionGroup==='salary_apply_computerized_form'">
-                <table style="width: 100%;">
-                  <tr>
-                    <td class="particular-label">
-                      {{ $t('general.language') }}
-                    </td>
-                    <td>
-                      <yoov-radio-toggle
-                        :options="languageOptions"
-                        optionTitleTag="titleTag"
-                        v-model="sample.language">
-                      </yoov-radio-toggle>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="particular-label">
-                      {{ $t('tax.apply_for_approval_of_softcopy') }}
-                    </td>
-                    <td>
-                      <yoov-checkbox-toggle
-                        :options="softcopyOptions"
-                        v-model="sample.applySoftcopies">
-                      </yoov-checkbox-toggle>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="particular-label">
-                      {{ $t('tax.apply_for_approval_of_printed_forms') }}
-                    </td>
-                    <td>
-                      <yoov-checkbox-toggle
-                        :options="printedFormOptions"
-                        v-model="sample.applyPrintedForms">
-                      </yoov-checkbox-toggle>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="particular-label">
-                      {{ $t('tax.update_previously_approval') }}
-                    </td>
-                    <td>
-                      <yoov-radio-toggle
-                        :options="[{label: $t('general.yes'), value:1},{label: $t('general.no'), value:0}]"
-                        v-model="sample.is_update">
-                      </yoov-radio-toggle>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="particular-label">
-                      {{ $t('tax.form_date') }}
-                    </td>
-                    <td>
-                      <date-picker v-model="sample.formDate"
-                                   id="formDate"
-                                   type="date"
-                                   format="YYYY-MM-DD"></date-picker>
-                    </td>
-                  </tr>
-                </table>
-                <hr/>
-                <!-- *****************-->
-                <!-- Requirement List -->
-                <!-- *****************-->
-                <div style="position:relative;">
-                  <button type="button" class="btn-sm btn btn-primary pull-right"
-                          @click="generate">
-                    {{ $t('buttons.build_necessary_documents') }}
-                  </button>
-                  <h4>
-                    {{ $t('tax.required_items_for_submission') }}
-                  </h4>
-                </div>
-                <hr/>
-                <table class="requirement-list-table" style="width: 100%;">
-                  <thead>
-                  <tr>
-                    <th class="col-50">
-                      軟複本檔案
-                    </th>
-                    <th class="col-50">
-                      紙張印本
-                    </th>
-                  </tr>
-                  </thead>
-                  <tr>
-                    <td class="col-50 softcopy-col">
-                      <div class="badge badge-primary">需要儲存在可攜儲存裝置 (一隻磁碟/唯讀光碟(CD-ROM/DVD-ROM)/USB儲存裝置，並在其貼上標籤，註明偏主名稱，偏主檔案號碼及有關的課稅年度，以便記認。</div>
-                      <div  class="item-list-table rounded-2 border-1 border-info">
-                        <table>
-                          <tr v-for="(item,index) in selectedSoftcopyItems"
-                            :key="index">
-                            <td><img class="document-icon" :src="getIconByFileType('pdf')"></td>
-                            <td>{{ item['label'] }}</td>
-                          </tr>
-                        </table>
-                      </div>
-                      <div class="text-left">
-                        <table class="employer-info-badge rounded-2 badge badge-info">
-                          <tr>
-                            <td class="label-in-badge">僱主名稱</td>
-                            <td>{{ oaTeam.name }}</td>
-                          </tr>
-                          <tr>
-                            <td class="label-in-badge">僱主檔案號碼</td>
-                            <td>{{ oaTeam.setting.registrationNumber }}</td>
-                          </tr>
-                          <tr>
-                            <td class="label-in-badge">課稅年度</td>
-                            <td>{{ fiscalYears(sample.fiscal_start_year) }}</td>
-                          </tr>
-                        </table>
-                      </div>
-                    </td>
-                    <td class="col-50 printed-form-col">
-                      <div class="item-list-table rounded-2 border-1 border-info flex-grow-1">
-                        <table>
-                          <tr v-for="(item,index) in selectedPrintedFormItems"
-                              :key="index">
-                            <td><img class="document-icon" :src="getIconByFileType('pdf')"></td>
-                            <td>{{ item['label'] }}</td>
-                          </tr>
-                          <tr v-if="!selectedPrintedFormItems || selectedPrintedFormItems.length === 0">
-                            <td class="text-center">
-                              <br/><br/><br/>
-                            </td>
-                          </tr>
-                        </table>
-                      </div>
-                    </td>
-                  </tr>
-                </table>
-              </div>
             </td>
           </tr>
         </table>
@@ -271,7 +136,6 @@ export default {
   mixins: [myMixin],
   data () {
     return {
-      necessaryDocuments: [],
       optionGroupButtons: [
         {captionTag: 'general.basic', value: 'basic'},
         {captionTag: 'tax.salary_form', value: 'salary'}
@@ -297,39 +161,6 @@ export default {
           titleTag: 'general.english',
           value: 'en-us'
         }
-      ],
-      sample: {
-        'language': 'en-us',
-        'formDate': '',
-        'applySoftcopies': '',
-        'applyPrintedForms': '',
-        'is_update': 0,
-        'sample.fiscal_start_year': 2017
-      },
-      softcopyOptions: [
-        {label: 'IR56B', value: 'soft_ir56b'},
-        {label: 'IR56M', value: 'soft_ir56m'}
-      ],
-      printedFormOptions: [
-        {label: 'IR56E', value: 'print_ir56e'},
-        {label: 'IR56F', value: 'print_ir56f'},
-        {label: 'IR56G', value: 'print_ir56g'},
-        {label: 'IR56M', value: 'print_ir56m'}
-      ],
-      softcopyItems: [
-        {label: 'IR56B 測試數據', value: 'soft_ir56b'},
-        {label: 'IR56M 測試數據', value: 'soft_ir56m'}
-      ],
-      printedFormItems: [
-        {label: '申請書', value: '0', essential: true},
-        {label: 'IR56B 測試數據紙張印本其中三份', value: 'soft_ir56b'},
-        {label: 'IR56B 測試數據核對表 (所有測試數據)', value: 'soft_ir56b'},
-        {label: 'IR56M 測試數據紙張印本其中三份', value: 'soft_ir56m'},
-        {label: 'IR56M 測試數據核對表 (所有測試數據)', value: 'soft_ir56m'},
-        {label: 'IR56E 測試數據紙張印本三份', value: 'print_ir56e'},
-        {label: 'IR56F 測試數據紙張印本三份', value: 'print_ir56f'},
-        {label: 'IR56G 測試數據紙張印本三份', value: 'print_ir56g'},
-        {label: 'IR56M 測試數據紙張印本三份', value: 'print_ir56m'}
       ]
     }
   },
@@ -341,9 +172,6 @@ export default {
     'update': 0
   },
   methods: {
-    fiscalYears (startYear) {
-      return startYear.toString().substr(-2) + '/' + (startYear + 2).toString().substr(-2)
-    },
     save () {
       let vm = this
       let particulars = []
@@ -380,7 +208,7 @@ export default {
     generate () {
       let vm = this
       let data = {
-        lang: vm.sample.language,
+        lang: vm.sample.language, // en-us
         formCode: 'IR56B',
         formDate: vm.sample.formDate
       }
@@ -569,6 +397,7 @@ export default {
           name: payType.name
         })
       }
+      console.log('computed.payTypes: ', result)
       return result
     }
   },
@@ -583,35 +412,35 @@ export default {
   mounted () {
     // alert('mounted :: teamId = ' + this.teamId)
     let vm = this
-    vm.sample.fiscal_start_year = vm.getCurrentFiscalStartYear()
     vm.loadData()
-    vm.sample.formDate = vm.$moment().format('YYYY-MM-DD')
-    vm.necessaryDocuments = [
-      {
-        caption: vm.$t('tax._necessary_documents_item_1_'),
-        type: 'inline',
-        fileType: 'pdf',
-        link: constants.apiUrl + '/media/forms/ir56b/apply_letter'
-      },
-      {
-        caption: vm.$t('tax._necessary_documents_item_2_'),
-        type: 'download',
-        fileType: 'xml',
-        link: constants.apiUrl + '/media/forms/ir56b/xml'
-      },
-      {
-        caption: vm.$t('tax._necessary_documents_item_3_'),
-        type: 'inline',
-        fileType: 'pdf',
-        link: constants.apiUrl + '/media/forms/ir56b/samples'
-      },
-      {
-        caption: vm.$t('tax._necessary_documents_item_4_'),
-        type: 'inline',
-        fileType: 'pdf',
-        link: constants.apiUrl + '/media/forms/ir56b/control_list'
-      }
-    ]
+    // vm.sample.fiscal_start_year = vm.getCurrentFiscalStartYear()
+    // vm.sample.formDate = vm.$moment().format('YYYY-MM-DD')
+    // vm.necessaryDocuments = [
+    //   {
+    //     caption: vm.$t('tax._necessary_documents_item_1_'),
+    //     type: 'inline',
+    //     fileType: 'pdf',
+    //     link: constants.apiUrl + '/media/forms/ir56b/apply_letter'
+    //   },
+    //   {
+    //     caption: vm.$t('tax._necessary_documents_item_2_'),
+    //     type: 'download',
+    //     fileType: 'xml',
+    //     link: constants.apiUrl + '/media/forms/ir56b/xml'
+    //   },
+    //   {
+    //     caption: vm.$t('tax._necessary_documents_item_3_'),
+    //     type: 'inline',
+    //     fileType: 'pdf',
+    //     link: constants.apiUrl + '/media/forms/ir56b/samples'
+    //   },
+    //   {
+    //     caption: vm.$t('tax._necessary_documents_item_4_'),
+    //     type: 'inline',
+    //     fileType: 'pdf',
+    //     link: constants.apiUrl + '/media/forms/ir56b/control_list'
+    //   }
+    // ]
   }
 }
 </script>

@@ -331,3 +331,14 @@ sidebar-fixed .main, .sidebar-fixed .app-footer {
 .min-width-80 {
   min-width: 80px;
 }
+
+.card-header-toolbar {
+  position: absolute;
+  top: -1px;
+  right: -5px;
+}
+
+.card .card-header > div {
+  position: relative;
+}
+
