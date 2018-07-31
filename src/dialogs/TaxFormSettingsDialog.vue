@@ -244,7 +244,7 @@ export default {
         formCode: 'IR56B',
         formDate: vm.sample.formDate
       }
-      vm.$store.dispatch('GENERATE_SAMPLE_FORM', data).then(function (response) {
+      vm.$store.dispatch('GENERATE_IRD_REQUEST_FORM', data).then(function (response) {
         vm.$dialog.alert('Generation will be ready soon.')
       }).catch(function (error) {
         console.log('TaxFormSettingsDialog :: generate :: error: ', error)

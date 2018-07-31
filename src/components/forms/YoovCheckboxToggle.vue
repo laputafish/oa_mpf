@@ -78,5 +78,8 @@ export default {
     border-radius: 0;
     margin-right: 1px;
   }
+  .yoov-checkbox-toggle button[disabled=disabled] {
+    cursor: not-allowed
+  }
 
 </style>

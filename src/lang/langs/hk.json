@@ -128,6 +128,8 @@
 
     "setup": "設定",
 
+    "employer_name": "僱主名稱",
+    "fiscal_years": "課稅年度",
     "company_file_no": "僱主檔案編號",
     "application_date": "申請書日期",
     "company_name": "公司名稱",
@@ -159,7 +161,8 @@
     "are_you_sure": "是否確定",
     "form_no_is_required": "表格編號必須填寫.",
     "designation_is_required": "簽署人職位必須填寫.",
-    "are_you_sure": "是否確定"
+    "are_you_sure": "是否確定",
+    "generation_will_be_ready_soon": "有關文件準備中"
   },
   "database": {
     "items_per_page": "項 / 頁",

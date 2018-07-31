@@ -13,6 +13,8 @@ import fileManager from './modules/fileManager/fileManager'
 import dragging from './modules/dragging/dragging'
 import dialogs from './modules/dialogs/dialogs'
 import employee from './modules/employee/employee'
+import language from './modules/language/language'
+
 // import employees from './modules/employees/employees'
 import teams from './modules/teams/teams'
 import groups from './modules/groups/groups'
@@ -69,7 +71,8 @@ export const store = new Vuex.Store({
     employeeTerminations,
     irdForms,
     formRecord,
-    sampleForms
+    sampleForms,
+    language
   },
   plugins: [
     createPersistedState({

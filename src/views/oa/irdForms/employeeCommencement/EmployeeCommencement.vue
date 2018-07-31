@@ -159,8 +159,8 @@ export default {
     subscribe () {
       let vm = this
       helpers.subscribe(vm, vm.teamId, [
-        {channel: 'commencement_form_status_updated', handler: vm.onStatusUpdated},
-        {channel: 'commencement_form_employee_status_updated', handler: vm.onEmployeeStatusUpdated}
+        {channel: 'ird_form_status_updated', handler: vm.onStatusUpdated},
+        {channel: 'ird_form_employee_status_updated', handler: vm.onEmployeeStatusUpdated}
       ])
     },
     newForm () {

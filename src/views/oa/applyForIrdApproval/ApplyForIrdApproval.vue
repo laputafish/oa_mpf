@@ -1,26 +1,36 @@
 <template>
   <div class="animated fadeIn mx-3" id="apply-for-ird-approval">
     <b-card>
-      <div slot="header">
-        <div class="btn-group btn-group-gap card-header-toolbar">
-          <!-- Button: Settings -->
-          <button type="button"
-            @click="generate"
-            class="pull-right btn btn-outline-primary">
-            <i class="fa fa-reply"></i>&nbsp;{{ $t('buttons.generate_necessary_documents') }}
-          </button>
-          <button type="button"
-            @click="save"
-            class="pull-right btn btn-outline-primary">
-          <i class="fa fa-reply"></i>&nbsp;{{ $t('buttons.save') }}
-        </button>
-          <!--<button type="button"-->
-          <!--@click="showSettings"-->
-          <!--class="pull-right btn btn-outline-primary">-->
-          <!--<i class="fa fa-gear"></i>&nbsp;{{ $t('buttons.settings') }}-->
-          <!--</button>-->
+      <div slot="header" class="row">
+        <div class="col-sm-4">
+          {{ $t('tax.apply_for_computerized_form_approval') }}
         </div>
-        {{ $t('tax.apply_for_computerized_form_approval') }}
+        <div class="col-sm-4 text-center" style="min-height: 28px;">
+          <div v-show="fieldDisabled">
+            <i class="fa fa-spinner fa-spin"></i>&nbsp;{{ $t('general.' + sample.status)}}
+            <div class="clearfix"></div>
+          </div>
+        </div>
+        <div class="col-sm-4 text-right">
+          <div class="btn-group btn-group-gap" style="margin-bottom: -5px;">
+            <!-- Button: Settings -->
+            <button type="button"
+                    @click="generate"
+                    class="pull-right btn btn-outline-primary">
+              <i class="fa fa-reply"></i>&nbsp;{{ $t('buttons.generate_necessary_documents') }}
+            </button>
+            <button type="button"
+                    @click="save"
+                    class="pull-right btn btn-outline-primary">
+              <i class="fa fa-reply"></i>&nbsp;{{ $t('buttons.save') }}
+            </button>
+            <!--<button type="button"-->
+            <!--@click="showSettings"-->
+            <!--class="pull-right btn btn-outline-primary">-->
+            <!--<i class="fa fa-gear"></i>&nbsp;{{ $t('buttons.settings') }}-->
+            <!--</button>-->
+          </div>
+        </div>
       </div>
       <!-- ****************************************** -->
       <!-- Apply for submission of computerized forms -->
@@ -29,6 +39,7 @@
         <div class="row">
           <div class="col-sm-6">
             <table style="width: 100%;">
+              <tr><td></td><td></td></tr>
               <!-- Company Name -->
               <tr>
                 <td class="particular-label">
@@ -46,9 +57,10 @@
                 </td>
                 <td>
                   <input v-validate="'required'"
-                         :class="{'border-danger':errors.has('tel_no')}"
+                         :disabled="fieldDisabled"
                          name="tel_no"
-                    class="form-control" v-model="sample.tel_no"/>
+                         :class="{'border-danger':errors.has('tel_no')}"
+                         class="form-control" v-model="sample.tel_no"/>
                 </td>
               </tr>
               <!-- Signature Name -->
@@ -57,11 +69,24 @@
                   {{ $t('tax.signature_name') }}
                 </td>
                 <td>
-                  <input
-                    v-validate="'required'"
-                    :class="{'border-danger': errors.has('signature_name')}"
-                    name="signature_name"
-                    class="form-control" v-model="sample.signature_name"/>
+                  <input v-validate="'required'"
+                         :disabled="fieldDisabled"
+                         name="signature_name"
+                         :class="{'border-danger': errors.has('signature_name')}"
+                         class="form-control" v-model="sample.signature_name"/>
+                </td>
+              </tr>
+              <!-- Designation -->
+              <tr>
+                <td class="particular-label">
+                  {{ $t('tax.designation') }}
+                </td>
+                <td>
+                  <input v-validate="'required'"
+                         :disabled="fieldDisabled"
+                         name="designation"
+                         :class="{'border-danger':errors.has['designation']}"
+                         class="form-control" v-model="sample.designation"/>
                 </td>
               </tr>
               <!-- Language -->
@@ -71,9 +96,11 @@
                 </td>
                 <td>
                   <yoov-radio-toggle
-                    :options="languageOptions"
-                    optionTitleTag="titleTag"
-                    v-model="sample.language">
+                    :disabled="fieldDisabled"
+                    :options="languages"
+                    optionTitle="name"
+                    optionValueField="id"
+                    v-model="sample.lang_id">
                   </yoov-radio-toggle>
                 </td>
               </tr>
@@ -81,6 +108,15 @@
           </div>
           <div class="col-sm-6">
             <table style="width: 100%;">
+              <!-- Status -->
+              <tr>
+                <td class="particular-label">
+                  {{ $t('general.status') }}
+                </td>
+                <td>
+                  <input class="form-control-plaintext" :value="$t('general.' + sample.status)">
+                </td>
+              </tr>
               <!-- Company file no. -->
               <tr>
                 <td class="particular-label">
@@ -96,30 +132,22 @@
                   {{ $t('tax.application_date') }}
                 </td>
                 <td>
-                  <date-picker v-model="sample.application_date"
-                               id="formDate"
-                               type="date"
-                               format="YYYY-MM-DD"></date-picker>
+                  <date-picker
+                    :disabled="fieldDisabled"
+                    v-model="sample.application_date"
+                    id="formDate"
+                    type="date"
+                    format="YYYY-MM-DD"></date-picker>
                 </td>
               </tr>
-              <!-- Designation -->
-              <tr>
-                <td class="particular-label">
-                  {{ $t('tax.designation') }}
-                </td>
-                <td>
-                  <input
-                    name="designation"
-                    :class="{'border-danger':errors.has['designation']}"
-                    class="form-control" v-model="sample.designation"/>
-                </td>
-              </tr>
+              <!-- Update previously approval -->
               <tr>
                 <td class="particular-label">
                   {{ $t('tax.update_previously_approval') }}
                 </td>
                 <td>
                   <yoov-radio-toggle
+                    :disabled="fieldDisabled"
                     :options="[{label: $t('general.yes'), value:1},{label: $t('general.no'), value:0}]"
                     v-model="sample.is_update">
                   </yoov-radio-toggle>
@@ -137,6 +165,7 @@
                 </td>
                 <td>
                   <yoov-checkbox-toggle
+                    :disabled="fieldDisabled"
                     :options="printedFormOptions"
                     v-model="sample.apply_printed_forms">
                   </yoov-checkbox-toggle>
@@ -148,6 +177,7 @@
                 </td>
                 <td>
                   <yoov-checkbox-toggle
+                    :disabled="fieldDisabled"
                     :options="softcopyOptions"
                     v-model="sample.apply_softcopies">
                   </yoov-checkbox-toggle>
@@ -161,11 +191,11 @@
         <!-- Requirement List -->
         <!-- *****************-->
         <div style="position:relative;">
-          <button type="button" class="btn-sm btn btn-primary pull-right"
-                  @click="generate">
-            {{ $t('buttons.build_necessary_documents') }}
-          </button>
-          <h4>
+          <!--<button type="button" class="btn-sm btn btn-primary pull-right"-->
+                  <!--@click="generate">-->
+            <!--{{ $t('buttons.build_necessary_documents') }}-->
+          <!--</button>-->
+          <h4 class="text-center">
             {{ $t('tax.required_items_for_submission') }}
           </h4>
         </div>
@@ -188,7 +218,14 @@
                 <table>
                   <tr v-for="(item,index) in selectedSoftcopyItems"
                       :key="index">
-                    <td><img class="document-icon" :src="getIconByFileType('pdf')"></td>
+                    <td>
+                      <img v-if="sample.status !== 'ready'"
+                           class="form-icon" :src="getIconByFileType('unknown')">
+                      <a v-else
+                         href="http://yoovapi/apiv2/media/sample_forms/3/239" target="_blank">
+                        <img :src="getIconByFileType('pdf')" class="form-icon">
+                      </a>
+                    </td>
                     <td>{{ item['label'] }}</td>
                   </tr>
                 </table>
@@ -196,15 +233,15 @@
               <div class="text-left">
                 <table class="employer-info-badge rounded-2 badge badge-info">
                   <tr>
-                    <td class="label-in-badge">僱主名稱</td>
+                    <td class="label-in-badge">{{ $t('tax.employer_name') }}</td>
                     <td>{{ oaTeam ? oaTeam.name : '' }}</td>
                   </tr>
                   <tr>
-                    <td class="label-in-badge">僱主檔案號碼</td>
+                    <td class="label-in-badge">{{ $t('tax.company_file_no') }}</td>
                     <td>{{ oaTeam ? oaTeam.setting.registrationNumber : ''}}</td>
                   </tr>
                   <tr>
-                    <td class="label-in-badge">課稅年度</td>
+                    <td class="label-in-badge">{{ $t('tax.fiscal_years') }}</td>
                     <td>{{ fiscalYears(sample.fiscal_start_year) }}</td>
                   </tr>
                 </table>
@@ -215,7 +252,14 @@
                 <table>
                   <tr v-for="(item,index) in selectedPrintedFormItems"
                       :key="index">
-                    <td><img class="document-icon" :src="getIconByFileType('pdf')"></td>
+                    <td>
+                      <img v-if="sample.status !== 'ready'"
+                           class="form-icon" :src="getIconByFileType('unknown')">
+                      <a v-else
+                         href="http://yoovapi/apiv2/media/sample_forms/3/239" target="_blank">
+                        <img :src="getIconByFileType('pdf')" class="form-icon">
+                      </a>
+                    </td>
                     <td>{{ item['label'] }}</td>
                   </tr>
                   <tr v-if="!selectedPrintedFormItems || selectedPrintedFormItems.length === 0">
@@ -230,7 +274,6 @@
         </table>
       </div>
     </b-card>
-    {{ oaTeam }}
   </div>
 </template>
 
@@ -242,6 +285,7 @@ import YoovCheckboxToggle from '@/components/forms/YoovCheckboxToggle'
 import vSelect from 'vue-select'
 import DatePicker from 'vue2-datepicker'
 import myMixin from '@/appHelpers'
+import helpers from '@/helpers.js'
 
 export default {
   components: {
@@ -256,28 +300,28 @@ export default {
   data () {
     return {
       necessaryDocuments: [],
-      languageOptions: [
-        // {
-        //   id: 0,
-        //   titleTag: 'general.user_customed',
-        //   value: 'user_customed'
-        // },
-        {
-          id: 1,
-          titleTag: 'general.chinese',
-          value: 'zh-hk'
-        },
-        {
-          id: 2,
-          titleTag: 'general.english',
-          value: 'en-us'
-        }
-      ],
+      // languageOptions: [
+      //   // {
+      //   //   id: 0,
+      //   //   titleTag: 'general.user_customed',
+      //   //   value: 'user_customed'
+      //   // },
+      //   {
+      //     id: 1,
+      //     titleTag: 'general.chinese',
+      //     value: 'zh-hk'
+      //   },
+      //   {
+      //     id: 2,
+      //     titleTag: 'general.english',
+      //     value: 'en-us'
+      //   }
+      // ],
       sample: {
         'company_name': '',
         'tel_no': '',
         'signature_name': '',
-        'language': 'en-us',
+        'lang_id': 0,
         'company_file_no': '',
         'application_date': '',
         'designation': '',
@@ -298,27 +342,73 @@ export default {
         {label: 'IR56M', value: 'ir56m'}
       ],
       softcopyItems: [
-        {label: 'IR56B 測試數據', value: 'ir56b'},
-        {label: 'IR56M 測試數據', value: 'ir56m'}
+        {label: 'IR56B 測試數據', value: 'ir56b', processing: true},
+        {label: 'IR56M 測試數據', value: 'ir56m', processing: false}
       ],
       printedFormItems: [
-        {label: '申請書', value: '0', essential: true},
+        {label: '申請書', value: '0', essential: true, processing: false},
         // Soft
-        {label: 'IR56B 測試數據紙張印本其中三份', value: 'ir56b', type: 'soft'},
-        {label: 'IR56B 測試數據核對表 (所有測試數據)', value: 'ir56b', type: 'soft'},
-        {label: 'IR56M 測試數據紙張印本其中三份', value: 'ir56m', type: 'soft'},
-        {label: 'IR56M 測試數據核對表 (所有測試數據)', value: 'ir56m', type: 'soft'},
+        {label: 'IR56B 測試數據紙張印本其中三份', value: 'ir56b', type: 'soft', processing: false},
+        {label: 'IR56B 測試數據核對表 (所有測試數據)', value: 'ir56b', type: 'soft', processing: false},
+        {label: 'IR56M 測試數據紙張印本其中三份', value: 'ir56m', type: 'soft', processing: false},
+        {label: 'IR56M 測試數據核對表 (所有測試數據)', value: 'ir56m', type: 'soft', processing: false},
         // Print
-        {label: 'IR56E 測試數據紙張印本三份', value: 'ir56e', type: 'print'},
-        {label: 'IR56F 測試數據紙張印本三份', value: 'ir56f', type: 'print'},
-        {label: 'IR56G 測試數據紙張印本三份', value: 'ir56g', type: 'print'},
-        {label: 'IR56M 測試數據紙張印本三份', value: 'ir56m', type: 'print'}
+        {label: 'IR56E 測試數據紙張印本三份', value: 'ir56e', type: 'print', processing: false},
+        {label: 'IR56F 測試數據紙張印本三份', value: 'ir56f', type: 'print', processing: false},
+        {label: 'IR56G 測試數據紙張印本三份', value: 'ir56g', type: 'print', processing: false},
+        {label: 'IR56M 測試數據紙張印本三份', value: 'ir56m', type: 'print', processing: false}
       ]
     }
   },
   methods: {
+    onFormStatusUpdated (data) {
+      let statusInfo = data.statusInfo
+      let formId = statusInfo.formId.toString()
+      let status = statusInfo.status
+
+      console.log('Pusher :: received: form#' + formId + ' (status=' + status + ')')
+      this.updateFormStatus(formId, status)
+    },
+    onFormItemStatusUpdated (data) {
+      let statusInfo = data.statusInfo
+      let formId = statusInfo.formId.toString()
+      let employeeId = statusInfo.employeeId.toString()
+      let status = statusInfo.status
+      this.updateFormEmployeeStatus(formId, employeeId, status)
+      console.log('Pusher (formEmployee) :: form#' + formId + ' employee#' + employeeId + ' (status=' + status + ')')
+      // let formId = statusInfo.formId.toString()
+      // let status = statusInfo.status
+      //
+      // console.log('onEmployeeStatusUpdated :: data: ', data)
+    },
+    subscribe () {
+      let vm = this
+      helpers.subscribe(vm, vm.teamId, [
+        {channel: 'ird_request_form_status_updated', handler: vm.onFormStatusUpdated},
+        {channel: 'ird_request_form_item_status_updated', handler: vm.onFormItemStatusUpdated}
+      ])
+    },
     fiscalYears (startYear) {
       return startYear ? startYear.toString().substr(-2) + '/' + (startYear + 1).toString().substr(-2) : ''
+    },
+    generate () {
+      let vm = this
+      vm.$validator.validateAll()
+      vm.$nextTick(function () {
+        if (!vm.errors.any()) {
+          let config = vm.sample
+          vm.$store.dispatch('GENERATE_IRD_REQUEST_FORM', config).then(function (response) {
+            vm.$dialog.alert(vm.$t('messages.generation_will_be_ready_soon'), {
+              okText: vm.$t('buttons.close')
+            })
+            vm.sample.status = 'ready_for_processing'
+          }).catch(function (error) {
+            console.log('TaxFormSettingsDialog :: generate :: error: ', error)
+          })
+        } else {
+          alert('has error')
+        }
+      })
     },
     save () {
       let vm = this
@@ -328,7 +418,9 @@ export default {
         if (!vm.errors.any()) {
           let config = vm.sample
           vm.$store.dispatch('UPDATE_APPROVAL_REQUEST_FORM', config).then(function (response) {
-            vm.$dialog.alert(vm.$t('general.save_successfully') + '!')
+            vm.$dialog.alert(vm.$t('general.save_successfully') + '!', {
+              okText: vm.$t('buttons.close')
+            })
           }).catch(function (error) {
             console.log('TaxFormSettingsDialog :: generate :: error: ', error)
           })
@@ -336,52 +428,7 @@ export default {
           alert('has error')
         }
       })
-      // return
-      // let particulars = []
-      //
-      // let particular
-      // for (var i = 0; i < vm.settings.inputParticulars.length; i++) {
-      //   particular = vm.settings.inputParticulars[i]
-      //   particulars.push({
-      //     id: particular.id,
-      //     name: particular.name,
-      //     pay_type_ids: particular.pay_types.map(payType => payType.id)
-      //   })
-      // }
-      //
-      // // save
-      // let data = {
-      //   lang: vm.settings.language,
-      //   incomeParticulars: particulars,
-      //   teamId: vm.teamId
-      // }
-      // console.log('onOkClicked >> UPDATE_TAX_FORM_SETTINGS  data:', data)
-      // vm.$store.dispatch('UPDATE_TAX_FORM_SETTINGS', data).then(function (response) {
-      //   console.log('UPDATE_INCOME: response: ', response)
-      //   if (response.status) {
-      //     vm.$emit('close')
-      //   } else {
-      //     vm.$dialog.alert({
-      //       title: 'Warning',
-      //       message: response.message
-      //     })
-      //   }
-      // })
     },
-    generate () {
-      let vm = this
-      let data = {
-        lang: vm.sample.language, // en-us
-        formCode: 'IR56B',
-        formDate: vm.sample.formDate
-      }
-      vm.$store.dispatch('GENERATE_SAMPLE_FORM', data).then(function (response) {
-        vm.$dialog.alert('Generation will be ready soon.')
-      }).catch(function (error) {
-        console.log('TaxFormSettingsDialog :: generate :: error: ', error)
-      })
-    },
-
     getIcon (document) {
       return this.getIconByFileType(document.fileType)
     },
@@ -453,18 +500,27 @@ export default {
     }
   },
   computed: {
+    fieldDisabled () {
+      let vm = this
+      return vm.sample.status === 'ready_for_processing' || vm.sample.status === 'processing'
+    },
     // 'apply_softcopies': '',
     // 'apply_printed_forms': '',
+    languages () {
+      return this.$store.getters.languages
+    },
     selectedSoftcopyItems () {
       let vm = this
       let result = []
-      let selectedItems = vm.sample.apply_softcopies.split(',')
-      if (vm.softcopyItems) {
-        for (var i = 0; i < vm.softcopyItems.length; i++) {
-          var item = vm.softcopyItems[i]
-          var valid = item.type ? (item.type === 'soft') : true
-          if ((item['essential'] || selectedItems.indexOf(item['value']) >= 0) && valid) {
-            result.push(item)
+      if (vm.sample.apply_softcopies) {
+        let selectedItems = vm.sample.apply_softcopies.split(',')
+        if (vm.softcopyItems) {
+          for (var i = 0; i < vm.softcopyItems.length; i++) {
+            var item = vm.softcopyItems[i]
+            var valid = item.type ? (item.type === 'soft') : true
+            if ((item['essential'] || selectedItems.indexOf(item['value']) >= 0) && valid) {
+              result.push(item)
+            }
           }
         }
       }
@@ -473,28 +529,30 @@ export default {
     selectedPrintedFormItems () {
       let vm = this
       let result = []
-      let selectedSoftcopyItems = vm.sample.apply_softcopies.split(',')
-      let selectedPrintedFormItems = vm.sample.apply_printed_forms.split(',')
-      if (vm.printedFormItems) {
-        for (var i = 0; i < vm.printedFormItems.length; i++) {
-          var item = vm.printedFormItems[i]
-          // var valid = item.type ? (item.type === 'print') : true
-          if (item['essential'] ||
-            (selectedSoftcopyItems.indexOf(item['value']) >= 0 && item['type'] === 'soft') ||
-            (selectedPrintedFormItems.indexOf(item['value']) >= 0 && item['type'] === 'print')) {
-            if (item['value'] === 'ir56m') {
-              if (
-                (selectedSoftcopyItems.indexOf('ir56m') >= 0) &&
-                (selectedPrintedFormItems.indexOf('ir56m') >= 0)
-              ) {
-                if (item['type'] === 'soft') {
+      if (vm.sample.apply_softcopies) {
+        let selectedSoftcopyItems = vm.sample.apply_softcopies.split(',')
+        let selectedPrintedFormItems = vm.sample.apply_printed_forms.split(',')
+        if (vm.printedFormItems) {
+          for (var i = 0; i < vm.printedFormItems.length; i++) {
+            var item = vm.printedFormItems[i]
+            // var valid = item.type ? (item.type === 'print') : true
+            if (item['essential'] ||
+              (selectedSoftcopyItems.indexOf(item['value']) >= 0 && item['type'] === 'soft') ||
+              (selectedPrintedFormItems.indexOf(item['value']) >= 0 && item['type'] === 'print')) {
+              if (item['value'] === 'ir56m') {
+                if (
+                  (selectedSoftcopyItems.indexOf('ir56m') >= 0) &&
+                  (selectedPrintedFormItems.indexOf('ir56m') >= 0)
+                ) {
+                  if (item['type'] === 'soft') {
+                    result.push(item)
+                  }
+                } else {
                   result.push(item)
                 }
               } else {
                 result.push(item)
               }
-            } else {
-              result.push(item)
             }
           }
         }
@@ -559,9 +617,16 @@ export default {
       vm.update(val)
     }
   },
+  created () {
+    this.$store.dispatch('FETCH_LANGUAGES')
+  },
+  beforeDestroy () {
+    helpers.unSubscribe(this)
+  },
   mounted () {
     // alert('mounted :: teamId = ' + this.teamId)
     let vm = this
+    vm.subscribe()
     vm.loadData()
     vm.$store.dispatch('FETCH_SAMPLE_FORM').then(function (response) {
       vm.sample = response
@@ -740,8 +805,8 @@ export default {
   #apply-for-ird-approval .printed-form-col .item-list-table table {
     width: auto;
   }
-  #apply-for-ird-approval .requirement-list-table .document-icon {
-    width: 16px;
-    height: 16px;
+  #apply-for-ird-approval .item-list-table .form-icon {
+    width: 24px;
+    height: 24px;
   }
 </style>
