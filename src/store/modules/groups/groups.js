@@ -321,10 +321,10 @@ const actions = {
 
   async [types.FETCH_EMPLOYEES] ({rootGetters, state, commit, dispatch, getters}, payload) {
     let vm = this
-    let url = constants.oaApiUrl + '/user/employees'
+    let url = constants.oaApiUrl + '/admin/employees'
     let config = {
       'params': {
-        state: 'active',
+        status: 'active',
         include: 'groups,workingGroups,permissions',
         teamId: rootGetters.user.oa_last_team_id
       }

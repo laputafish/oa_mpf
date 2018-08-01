@@ -163,9 +163,12 @@
           <label class="text-sm-right col-sm-4 col-form-label" for="signatureName">{{ $t('tax.signature_name') }}</label>
           <div class="col-sm-8">
             <input v-model="form.signature_name"
+                   name="signatureName"
+                   id="signatureName"
+                   v-validate="'required'"
                    :disabled="whenDisabledInput"
                    class="form-control"
-                   id="signatureName"
+                   :class="{'border-danger':errors.has('signatureName')}"
                    type="text"/>
           </div>
         </div>
@@ -176,11 +179,11 @@
           <div class="col-sm-8 co-md-7 co-lg-6">
             <input v-model="form.designation"
                    name="designation"
+                   id="designation"
                    v-validate="'required'"
                    :disabled="whenDisabledInput"
                    class="form-control"
                    :class="{'border-danger':errors.has('designation')}"
-                   id="designation"
                    type="text"/>
             <span class="error" v-if="errors.has('designation')">{{ $t('messages.designation_is_required') }}</span>
           </div>
