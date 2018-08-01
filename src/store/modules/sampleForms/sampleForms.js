@@ -15,11 +15,23 @@ const mutations = {
 }
 
 const actions = {
-  [types.GENERATE_IRD_REQUEST_FORM] ({rootGetters}, payload) {
+  [types.TERMINATE_IRD_REQUEST_FORM_GENERATION] (context, payload) {
+    return new Promise((resolve, reject) => {
+      let url = constants.apiUrl + '/sample_forms'
+      let data = {
+        command: 'terminate'
+      }
+      Vue.axios.post(url, data).then(function (response) {
+        if (response.data.status) {
+          resolve(response.data.result)
+        }
+      })
+    })
+  },
+  [types.GENERATE_IRD_REQUEST_FORM] (context, payload) {
     return new Promise((resolve, reject) => {
       let url = constants.apiUrl + '/sample_forms'
       payload.command = 'generate'
-      console.log('GENERATE_IRD_REQUEST_FORM :: payload: ', payload)
       Vue.axios.post(url, payload).then(function (response) {
         if (response.data.status) {
           resolve(response.data.result)

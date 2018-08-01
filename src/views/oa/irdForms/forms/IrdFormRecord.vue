@@ -18,17 +18,19 @@
             </span>
           </h4><div class="col-sm text-right">
             <button type="button"
-                    @click="startGeneration"
-                    :disabled="whenDisabledInput||form.employees.length===0"
-                    class="btn btn-outline-success">
-              <i class="fa fa-bolt"></i>
-              {{ $t('buttons.generate_forms') }}</button>
-            <button type="button"
+                    v-if="form.status==='processing'||form.status==='ready_for_processing'"
                     :disabled="form.status!=='processing' && form.status!=='ready_for_processing'"
                     @click="terminateGeneration"
-                    class="btn btn-width-80 btn-outline-danger">
+                    class="btn btn-width-80 btn-danger min-width-100">
               <i class="fa fa-hand-stop-o"></i>
               {{ $t('buttons.terminate') }}</button>
+            <button type="button"
+                    v-else
+                    @click="startGeneration"
+                    :disabled="whenDisabledInput||form.employees.length===0"
+                    class="btn btn-outline-success min-width-100">
+              <i class="fa fa-bolt"></i>
+              {{ $t('buttons.generate_forms') }}</button>
             <button type="button"
                     :disabled="form.status==='processing'||form.status==='ready_for_processing'"
                     class="btn btn-width-80 btn-outline-primary"
@@ -157,16 +159,16 @@
         </div>
 
         <!-- Signature Name -->
-        <!--<div class="form-group row">-->
-          <!--<label class="text-sm-right col-sm-4 col-form-label" for="signature">{{ $t('tax.signature') }}</label>-->
-          <!--<div class="col-sm-8">-->
-            <!--<input v-model="form.signature_name"-->
-                   <!--:disabled="whenDisabledInput"-->
-                   <!--class="form-control"-->
-                   <!--id="signature"-->
-                   <!--type="text"/>-->
-          <!--</div>-->
-        <!--</div>-->
+        <div class="form-group row">
+          <label class="text-sm-right col-sm-4 col-form-label" for="signatureName">{{ $t('tax.signature_name') }}</label>
+          <div class="col-sm-8">
+            <input v-model="form.signature_name"
+                   :disabled="whenDisabledInput"
+                   class="form-control"
+                   id="signatureName"
+                   type="text"/>
+          </div>
+        </div>
 
         <!-- Designation -->
         <div class="form-group row">

@@ -15,14 +15,21 @@
           <div class="btn-group btn-group-gap" style="margin-bottom: -5px;">
             <!-- Button: Settings -->
             <button type="button"
+                    v-if="sample.status==='ready_for_processing'||sample.status==='processing'"
+                    @click="terminate"
+                    class="pull-right btn btn-danger min-width-100">
+              <i class="fa fa-stop"></i>&nbsp;{{ $t('buttons.stop') }}
+            </button>
+            <button type="button"
+                    v-else
                     @click="generate"
-                    class="pull-right btn btn-outline-primary">
-              <i class="fa fa-reply"></i>&nbsp;{{ $t('buttons.generate_necessary_documents') }}
+                    class="pull-right btn btn-outline-primary min-width-100">
+              <i class="fa fa-bolt"></i>&nbsp;{{ $t('buttons.generate_necessary_documents') }}
             </button>
             <button type="button"
                     @click="save"
-                    class="pull-right btn btn-outline-primary">
-              <i class="fa fa-reply"></i>&nbsp;{{ $t('buttons.save') }}
+                    class="pull-right btn btn-outline-primary min-width-100">
+              <i class="fa fa-save"></i>&nbsp;{{ $t('buttons.save') }}
             </button>
             <!--<button type="button"-->
             <!--@click="showSettings"-->
@@ -366,7 +373,7 @@ export default {
       let formId = statusInfo.formId.toString()
       let status = statusInfo.status
 
-      console.log('Pusher :: received: form#' + formId + ' (status=' + status + ')')
+      console.log('Pusher (onFormStatusUpdated):: received: form#' + formId + ' (status=' + status + ')')
       this.updateFormStatus(formId, status)
     },
     onFormItemStatusUpdated (data) {
@@ -375,7 +382,7 @@ export default {
       let employeeId = statusInfo.employeeId.toString()
       let status = statusInfo.status
       this.updateFormEmployeeStatus(formId, employeeId, status)
-      console.log('Pusher (formEmployee) :: form#' + formId + ' employee#' + employeeId + ' (status=' + status + ')')
+      console.log('Pusher (onFormItemStatusUpdated) :: form#' + formId + ' employee#' + employeeId + ' (status=' + status + ')')
       // let formId = statusInfo.formId.toString()
       // let status = statusInfo.status
       //
@@ -391,6 +398,12 @@ export default {
     fiscalYears (startYear) {
       return startYear ? startYear.toString().substr(-2) + '/' + (startYear + 1).toString().substr(-2) : ''
     },
+    terminate () {
+      let vm = this
+      vm.$store.dispatch('TERMINATE_IRD_REQUEST_FORM_GENERATION').then(function (response) {
+        vm.sample.status = 'terminated'
+      })
+    },
     generate () {
       let vm = this
       vm.$validator.validateAll()
@@ -398,9 +411,6 @@ export default {
         if (!vm.errors.any()) {
           let config = vm.sample
           vm.$store.dispatch('GENERATE_IRD_REQUEST_FORM', config).then(function (response) {
-            vm.$dialog.alert(vm.$t('messages.generation_will_be_ready_soon'), {
-              okText: vm.$t('buttons.close')
-            })
             vm.sample.status = 'ready_for_processing'
           }).catch(function (error) {
             console.log('TaxFormSettingsDialog :: generate :: error: ', error)
