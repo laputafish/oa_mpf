@@ -156,7 +156,7 @@ export default {
 
       let data = []
       for (var i = query.offset; i <= lastIndex; i++) {
-        vm.tableEmployees[i].recordNo = query.offset + i + 1
+        vm.tableEmployees[i].recordNo = i + 1
         if (query.sort !== '') {
           console.log('#' + i + ': ' + vm.tableEmployees[i][query.sort])
         }

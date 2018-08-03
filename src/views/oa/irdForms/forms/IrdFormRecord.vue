@@ -21,7 +21,7 @@
                     v-if="form.status==='processing'||form.status==='ready_for_processing'"
                     :disabled="form.status!=='processing' && form.status!=='ready_for_processing'"
                     @click="terminateGeneration"
-                    class="btn btn-width-80 btn-danger min-width-100">
+                    class="btn min-width-80 btn-danger min-width-100">
               <i class="fa fa-hand-stop-o"></i>
               {{ $t('buttons.terminate') }}</button>
             <button type="button"
@@ -30,13 +30,21 @@
                     :disabled="whenDisabledInput||form.employees.length===0"
                     class="btn btn-outline-success min-width-100">
               <i class="fa fa-bolt"></i>
-              {{ $t('buttons.generate_forms') }}</button>
+              {{ $t('buttons.generate_forms') }}
+              <span v-if="loadingCommand==='generate'">
+                &nbsp;<i class="fa fa-spinner fa-spin"></i>
+              </span>
+            </button>
             <button type="button"
                     :disabled="form.status==='processing'||form.status==='ready_for_processing'"
-                    class="btn btn-width-80 btn-outline-primary"
+                    class="btn min-width-80 btn-outline-primary"
                     @click="saveRecord">
               <i class="fa fa-save"></i>
-              {{ $t('buttons.submit') }}</button>
+              {{ $t('buttons.submit') }}
+              <span v-if="loadingCommand==='save'">
+                &nbsp;<i class="fa fa-spinner fa-spin"></i>
+              </span>
+            </button>
             <button type="button"
                     class="btn btn-width-80 btn-outline-default"
                     @click="cancel">
@@ -78,9 +86,10 @@
 
         <!-- Form Type Selection -->
         <div class="form-group row">
-          <label class="text-sm-right col-sm-3 col-form-label" for="formRemark">{{ $t('tax.form_type') }}</label>
+          <label class="text-sm-right col-sm-3 col-form-label" for="irdFormTypeId">{{ $t('tax.form_type') }}</label>
           <div class="col-sm-9">
             <yoov-radio-toggle
+              id="irdFormTypeId"
               :disabled="whenDisabledInput"
               :options="formTypeOptions"
               optionTitleTag="titleTag"
@@ -92,9 +101,10 @@
 
         <!-- Form Selection -->
         <div class="form-group row">
-          <label class="text-sm-right col-sm-3 col-form-label" for="formRemark">{{ $t('tax.form_template') }}</label>
+          <label class="text-sm-right col-sm-3 col-form-label" for="irdFormId">{{ $t('tax.form_template') }}</label>
           <div class="col-sm-9">
             <yoov-radio-toggle
+              id="irdFormId"
               :disabled="whenDisabledInput"
               :options="formOptions"
               optionTitle="title"
@@ -106,9 +116,10 @@
 
         <!-- fiscal year -->
         <div class="form-group row" v-show="selectedForm && selectedForm.requires_fiscal_year">
-          <label class="text-sm-right col-sm-3 col-form-label" for="formRemark">{{ $t('tax.fiscal_years') }}</label>
+          <label class="text-sm-right col-sm-3 col-form-label" for="fiscalStartYear">{{ $t('tax.fiscal_years') }}</label>
           <div class="col-sm-9">
             <yoov-radio-toggle
+              id="fiscalStartYear"
               :disabled="whenDisabledInput"
               :options="availableFiscalStartYears"
               optionTitle="title"
@@ -124,7 +135,7 @@
             <textarea v-model="form.remark"
                       :disabled="whenDisabledInput"
                       class="form-control"
-                      rows="5"
+                      rows="2"
                       id="formRemark"></textarea>
           </div>
         </div>
@@ -170,6 +181,7 @@
                    class="form-control"
                    :class="{'border-danger':errors.has('signatureName')}"
                    type="text"/>
+            <span class="error" v-if="errors.has('designation')">{{ $t('messages.signature_name_is_required') }}</span>
           </div>
         </div>
 
@@ -186,6 +198,16 @@
                    :class="{'border-danger':errors.has('designation')}"
                    type="text"/>
             <span class="error" v-if="errors.has('designation')">{{ $t('messages.designation_is_required') }}</span>
+          </div>
+        </div>
+
+        <div class="form-group row" v-if="form.files && form.files.length>0">
+          <label class="text-sm-right col-sm-4 col-form-label" for="files">{{ $t('tax.related_files') }}*</label>
+          <div class="col-sm-8 co-md-7 co-lg-6">
+            <form-file-item
+              v-for="(file, index) in form.files"
+              :key="index"
+              :file="file"></form-file-item>
           </div>
         </div>
 
@@ -208,15 +230,18 @@ import DatePicker from 'vue2-datepicker'
 import EmployeeTable from './EmployeeTable'
 import * as constants from '@/store/constants.json'
 import YoovRadioToggle from '@/components/forms/YoovRadioToggle'
+import FormFileItem from './comps/FormFileItem'
 
 export default {
   components: {
     'date-picker': DatePicker,
     'employee-table': EmployeeTable,
-    'yoov-radio-toggle': YoovRadioToggle
+    'yoov-radio-toggle': YoovRadioToggle,
+    'form-file-item': FormFileItem
   },
   data () {
     return {
+      loadingCommand: '',
       yesNoOptions: [
         {titleTag: 'general.yes', value: 1},
         {titleTag: 'general.no', value: 0}
@@ -261,7 +286,8 @@ export default {
       let vm = this
       return vm.form.status === 'processing' ||
         vm.form.status === 'ready_for_processing' ||
-        vm.form.status === 'completed'
+        vm.form.status === 'completed' ||
+        vm.loadingCommand !== ''
     },
     irdFormTypes () {
       return this.$store.getters.irdFormTypes
@@ -570,6 +596,9 @@ export default {
       vm.$validator.validateAll()
       vm.$nextTick(function () {
         if (!vm.errors.any()) {
+          if (vm.loadingCommand === '') {
+            vm.loadingCommand = 'save'
+          }
           if (vm.form.id === 0) {
             // new
             vm.form.form_date = vm.grabYear(vm.form.form_date)
@@ -596,25 +625,27 @@ export default {
               }
             })
           }
+        } else {
+          vm.loadingCommand = ''
         }
       })
     },
     onCommandHandler (commandOptions) {
       let command = commandOptions.command
       let vm = this
+
+      vm.loadingCommand = command
+
       // let options = commandOptions.options
       switch (command) {
         case 'generate':
-          console.log('onCommandHandler :: save_and_generate')
           vm.saveRecord((result) => {
-            console.log('save_and_generate :: saveRecord :: result: ', result)
             vm.$store.dispatch('FETCH_ACTIVE_FORM', {id: result.id}).then(function (response) {
-              console.log('save_and_generate :: saveRecord :: FETCH_ACTIVE_FORM :: form id = ' + vm.form.id)
-              console.log('save_and_generate :: saveRecord :: FETCH_ACTIVE_FORM :: response: ', response)
               vm.$store.dispatch('START_FORM_GENERATION', {
                 'formId': vm.form.id,
                 'formType': vm.formType
               }).then(function (response) {
+                vm.loadingCommand = ''
                 console.log('save_and_generate :: saveRecord :: FETCH_ACTIVE_FORM :: START_FORM_GENERATION :: response: ', response)
               })
             })
@@ -630,6 +661,8 @@ export default {
           vm.$store.dispatch('TERMINATE_FORM_GENERATION', {
             'formId': vm.form.id,
             'formType': vm.formType
+          }).then(function (response) {
+            vm.loadingCommand = ''
           })
           break
       }

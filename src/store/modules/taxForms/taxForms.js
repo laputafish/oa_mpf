@@ -212,25 +212,29 @@ const actions = {
         'formType': formType
       }
       Vue.axios.post(url, data, config).then(function (response) {
-        if (response.data.status) {
-          resolve(response.data.result)
-        }
+        resolve(response.data.result)
       })
     })
   },
 
   [types.TERMINATE_FORM_GENERATION] ({rootGetters, commit}, payload) {
-    let formId = payload.formId
-    let formType = payload.formType
+    return new Promise((resolve, reject) => {
+      let formId = payload.formId
+      let formType = payload.formType
 
-    let url = constants.apiUrl + '/forms'
-    let config = rootGetters.apiHeaderConfig
-    let data = {
-      'command': 'terminate',
-      'formId': formId,
-      'formType': formType
-    }
-    Vue.axios.post(url, data, config)
+      let url = constants.apiUrl + '/forms'
+      let config = rootGetters.apiHeaderConfig
+      let data = {
+        'command': 'terminate',
+        'formId': formId,
+        'formType': formType
+      }
+      Vue.axios.post(url, data, config).then(function (response) {
+        resolve(response.data.result)
+      }).catch(function (error) {
+        reject(error)
+      })
+    })
   },
 
   [types.SHOW_TAX_FORM_SETTINGS_DIALOG] ({commit}) {

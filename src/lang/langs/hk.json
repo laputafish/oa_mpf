@@ -39,6 +39,7 @@
 
     "yes": "是",
     "no": "否",
+    "no_data": "未有資料",
 
     "save_successfully": "已成功儲存"
   },
@@ -135,7 +136,12 @@
     "application_date": "申請書日期",
     "company_name": "公司名稱",
     "tel_no": "電話號碼",
-    "signature_name": "簽署人姓名"
+    "signature_name": "簽署人姓名",
+
+    "related_files": "有關檔案",
+    "control_list": "核對表",
+    "xml_data_file": "XML資料檔",
+    "xsd_file": "資料結構描述檔"
   },
   "mpf": {
     "mpf_management": "MPF 管理"
@@ -162,6 +168,7 @@
     "are_you_sure": "是否確定",
     "form_no_is_required": "表格編號必須填寫.",
     "designation_is_required": "簽署人職位必須填寫.",
+    "signature_name_is_required": "簽署人姓名必須填寫.",
     "are_you_sure": "是否確定",
     "generation_will_be_ready_soon": "有關文件準備中"
   },
