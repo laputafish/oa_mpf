@@ -217,8 +217,10 @@
     <employee-table
       :formId="form.id"
       :title="$t('general.employee')"
+      @onEmployeesAllAdded="onEmployeesAllAddedHandler"
       @onEmployeesUpdated="onEmployeesUpdatedHandler"
       @onEmployeesRemoved="onEmployeesRemovedHandler"
+      @onEmployeesAllRemoved="onEmployeesAllRemovedHandler"
       @onCommand="onCommandHandler"
       :status="form ? form.status : 'disabled'"
       :employees="form ? form.employees : []"></employee-table>
@@ -488,11 +490,14 @@ export default {
         id: vm.formId
       })
     },
-    updateEmployeeStatus (employeeId, status) {
+    updateEmployeeStatus (employeeId, status, sheetNo) {
       let vm = this
       for (var i = 0; i < vm.form.employees.length; i++) {
         if (vm.form.employees[i].employee_id === parseInt(employeeId)) {
           vm.form.employees[i].status = status
+          if (typeof sheetNo !== 'undefined') {
+            vm.form.employees[i].sheetNo = sheetNo
+          }
           break
         }
       }
@@ -514,7 +519,7 @@ export default {
         if (existedIds.indexOf(oaEmployee.id) === -1) {
           vm.form.employees.push({
             'form_id': vm.form.id,
-            'employee_id': oaEmployee.id.toString(),
+            'employee_id': parseInt(oaEmployee.id),
             'status': 'pending',
             'file': '',
             'name': oaEmployee.displayName,
@@ -557,9 +562,32 @@ export default {
       }
     },
 
-    onEmployeesRemovedHandler (employees) {
-      // console.log('CommencementForm :: onEmployeesRemovedHandler')
+    onEmployeesAllAddedHandler () {
+      let vm = this
+      for (var i = 0; i < vm.employees.length; i++) {
+        let oaEmployee = vm.employees[i]
+        let oaEmployeeId = parseInt(oaEmployee.id)
+        if (!vm.form.employees.find(element => element.employee_id === oaEmployeeId)) {
+          vm.form.employees.push({
+            'form_id': vm.form.id,
+            'employee_id': oaEmployeeId,
+            'status': 'pending',
+            'file': '',
+            'name': oaEmployee.displayName,
+            // specical
+            'joinedDate': oaEmployee.joinedDate,
+            'form_url': constants.apiUrl + '/media/ird_forms/' + vm.form.id + '/' + oaEmployee.id,
+            'info': oaEmployee
+          })
+        }
+      }
+    },
 
+    onEmployeesAllRemovedHandler (employees) {
+      this.form.employees = []
+    },
+
+    onEmployeesRemovedHandler (employees) {
       if (employees.length === 0) return
 
       let vm = this

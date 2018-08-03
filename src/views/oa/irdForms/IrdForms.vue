@@ -266,10 +266,10 @@ export default {
       }
     },
 
-    updateFormEmployeeStatus (formId, employeeId, status) {
+    updateFormEmployeeStatus (formId, employeeId, status, sheetNo) {
       let vm = this
       if (vm.mode === 'record') {
-        vm.$refs.currentForm.updateEmployeeStatus(employeeId, status)
+        vm.$refs.currentForm.updateEmployeeStatus(employeeId, status, sheetNo)
       }
     },
 
@@ -286,12 +286,8 @@ export default {
       let formId = statusInfo.formId.toString()
       let employeeId = statusInfo.employeeId.toString()
       let status = statusInfo.status
-      this.updateFormEmployeeStatus(formId, employeeId, status)
-      console.log('Pusher (formEmployee) :: form#' + formId + ' employee#' + employeeId + ' (status=' + status + ')')
-      // let formId = statusInfo.formId.toString()
-      // let status = statusInfo.status
-      //
-      // console.log('onEmployeeStatusUpdated :: data: ', data)
+      let sheetNo = statusInfo.sheetNo
+      this.updateFormEmployeeStatus(formId, employeeId, status, sheetNo)
     },
     subscribe () {
       let vm = this

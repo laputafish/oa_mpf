@@ -11,7 +11,14 @@
       </div>
     </div>
     <hr/>
-    <div class="row">
+    <div class="row" v-show="loading">
+      <div class="col-sm-12 text-center">
+        <div class="ird-form-setup-spinner">
+          <i class="fa fa-spinner fa-spin"></i>
+        </div>
+      </div>
+    </div>
+    <div class="row" v-show="!loading">
       <div class="col-sm-12">
         <table style="width:100%;">
           <tr>
@@ -71,21 +78,53 @@
               <!-- ****************************************** -->
               <!--               Basic Setting                -->
               <!-- ****************************************** -->
-              <table v-if="activeOptionGroup==='basic'" class="table-striped">
-                <tr>
-                  <td class="particular-label">
+              <div v-if="activeOptionGroup==='basic'" class="table-striped">
+                <div class="form-group row">
+                  <label class="text-sm-right col-sm-4 col-form-label" for="signatureName">
                     {{ $t('general.language') }}
-                  </td>
-                  <td>
+                  </label>
+                  <div class="col-sm-8">
                     <yoov-radio-toggle
                       :options="languageOptions"
                       optionTitleTag="titleTag"
-                      v-model="settings.language">
-
+                      v-model="settings.lang">
                     </yoov-radio-toggle>
-                  </td>
-                </tr>
-              </table>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="text-sm-right col-sm-4 col-form-label" for="signatureName">{{ $t('tax.signature_name')
+                    }}</label>
+                  <div class="col-sm-8">
+                    <input v-model="settings.signatureName"
+                           name="signatureName"
+                           id="signatureName"
+                           :disabled="whenDisabledInput"
+                           class="form-control max-width-300"
+                           :class="{'border-danger':errors.has('signatureName')}"
+                           type="text"/>
+                    <span class="error"
+                          v-if="errors.has('designation')">{{ $t('messages.signature_name_is_required') }}</span>
+                  </div>
+                </div>
+
+                <!-- Designation -->
+                <div class="form-group row">
+                  <label class="text-sm-right col-sm-4 col-form-label" for="designation">{{
+                    $t('tax.signature_designation') }}</label>
+                  <div class="col-sm-8 co-md-7 co-lg-6">
+                    <input v-model="settings.designation"
+                           name="designation"
+                           id="designation"
+                           :disabled="whenDisabledInput"
+                           class="form-control max-width-300"
+                           :class="{'border-danger':errors.has('designation')}"
+                           type="text"/>
+                    <span class="error"
+                          v-if="errors.has('designation')">{{ $t('messages.designation_is_required') }}</span>
+                  </div>
+                </div>
+              </div>
+
               <!-- ****************************************** -->
               <!--         Income particular mapping          -->
               <!-- ****************************************** -->
@@ -136,13 +175,16 @@ export default {
   mixins: [myMixin],
   data () {
     return {
+      loading: true,
       optionGroupButtons: [
         {captionTag: 'general.basic', value: 'basic'},
         {captionTag: 'tax.salary_form', value: 'salary'}
       ],
       activeOptionGroup: 'basic',
       settings: {
-        language: 'en-us',
+        lang: 'en-us',
+        designation: '',
+        signatureName: '',
         inputParticulars: []
       },
       languageOptions: [
@@ -188,7 +230,9 @@ export default {
 
       // save
       let data = {
-        lang: vm.settings.language,
+        lang: vm.settings.lang,
+        designation: vm.settings.designation,
+        signatureName: vm.settings.signatureName,
         incomeParticulars: particulars,
         teamId: vm.teamId
       }
@@ -276,7 +320,7 @@ export default {
 
       // save
       let data = {
-        lang: vm.settings.language,
+        lang: vm.settings.lang,
         incomeParticulars: particulars,
         teamId: vm.teamId
       }
@@ -295,12 +339,18 @@ export default {
     },
     loadData () {
       let vm = this
+      vm.loading = true
       vm.$store.dispatch('FETCH_PAY_TYPES').then(function (payTypes) {
         vm.$store.dispatch('FETCH_TEAM')
         console.log('loadData after FETCH_PAY_TYPES :: payTypes: ', payTypes)
         vm.$store.dispatch('FETCH_TAX_FORM_SETTINGS').then(function (result) {
           vm.setInputParticulars(result.income_particulars)
           vm.settings.lang = result.lang
+          vm.settings.designation = result.designation
+          vm.settings.signatureName = result.signatureName
+
+          vm.loading = false
+
           // console.log('loadData after FETCH_INCOME_PARTICULARS :: particulars: ', particulars)
           // let item
           // let payTypeIdArray
@@ -406,6 +456,7 @@ export default {
       this.setInputParticulars()
     },
     teamId: function (val) {
+      alert('watch(teamId)')
       this.loadData()
     }
   },
@@ -590,5 +641,12 @@ export default {
   #ird-form-setup .requirement-list-table .document-icon {
     width: 16px;
     height: 16px;
+  }
+
+  #ird-form-setup .ird-form-setup-spinner {
+    text-align: center;
+    font-size: 48px;
+    display: inline-block;
+    vertical-align: middle;
   }
 </style>

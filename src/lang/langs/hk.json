@@ -61,7 +61,9 @@
     "terminate": "終止",
     "add_all_employees": "添加所有員工",
     "build_necessary_documents": "建立所需文件",
-    "back": "返回"
+    "back": "返回",
+    "clear_all": "清除所有",
+    "quick_add": "快速加入"
   },
   "login": {
     "login": "登入",

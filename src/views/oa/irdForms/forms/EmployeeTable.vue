@@ -9,6 +9,17 @@
               <!--:disabled="status==='ready_for_processing'||status==='processing'"-->
               <!--class="btn btn-outline-primary">-->
         <!--<img class="pdf-icon" :src="pdfIcon"/>&nbsp;{{ $t('tax.record_verification_form') }}</button>-->
+
+      <button type="button"
+              @click="clearAll"
+              :disabled="status==='ready_for_processing'||status==='processing'||tableEmployees.length===0"
+              class="btn btn-outline-danger">
+        <i class="fa fa-close"></i>&nbsp;{{ $t('buttons.clear_all') }}</button>
+      <button type="button"
+              @click="addAll"
+              :disabled="status==='ready_for_processing'||status==='processing'"
+              class="btn btn-outline-success">
+        <i class="fa fa-edit"></i>&nbsp;{{ $t('buttons.quick_add') }}</button>
       <button type="button"
               @click="selectEmployees"
               :disabled="status==='ready_for_processing'||status==='processing'"
@@ -112,6 +123,22 @@ export default {
     },
     onEmployeesSelected (employees) {
       this.$emit('onEmployeesUpdated', employees)
+    },
+    addAll () {
+      this.$emit('onEmployeesAllAdded')
+    },
+    clearAll () {
+      let vm = this
+      let options = {
+        okText: vm.$t('buttons.ok'),
+        cancelText: vm.$t('buttons.cancel')
+      }
+      vm.$dialog.confirm(vm.$t('messages.are_you_sure') + '?', options)
+        .then(function () {
+          vm.$emit('onEmployeesAllRemoved')
+        })
+        .catch(function () {
+        })
     },
     selectEmployees () {
       let vm = this
