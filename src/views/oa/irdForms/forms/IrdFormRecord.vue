@@ -329,11 +329,11 @@ export default {
     },
     formOptions () {
       let vm = this
-      let formOptions = []
+      let irdFormOptions = []
 
-      let forms = []
+      let irdForms = []
       if (vm.selectedFormType) {
-        forms = vm.selectedFormType.forms
+        irdForms = vm.selectedFormType.forms
       }
       // for (var i = 0; i < vm.irdFormTypes.length; i++) {
       //   let irdFormType = vm.irdFormTypes[i]
@@ -343,25 +343,30 @@ export default {
       // }
       // check default
       let defaultId = 0
-      for (var j = 0; j < forms.length; j++) {
-        let form = forms[j]
+      for (var j = 0; j < irdForms.length; j++) {
+        let form = irdForms[j]
         let formOption = {
           title: form.ird_code + (form.version ? ' ' + vm.$t('tax.' + form.version) : ''),
           value: form.id
         }
-        formOptions.push(formOption)
-        if (forms[j].is_default) {
-          defaultId = forms[j].id
+        irdFormOptions.push(formOption)
+        if (irdForms[j].is_default) {
+          defaultId = irdForms[j].id
         }
       }
+      if (defaultId === 0) {
+        if (irdForms.length > 0) {
+          defaultId = irdForms[0].id
+        }
+      }
+
       if (defaultId > 0) {
-        vm.form.ird_form_id = defaultId
-      } else {
-        if (forms.length > 0) {
-          vm.form.ird_form_id = forms[0].id
+        if (vm.form.ird_form_id === 0) {
+          vm.form.ird_form_id = defaultId
         }
       }
-      return formOptions
+
+      return irdFormOptions
     },
     defaultFormId () {
       let vm = this
@@ -446,7 +451,7 @@ export default {
       let vm = this
       let result = []
       let irdFormTypes = vm.irdFormTypes
-      console.log('refreshFormTypeOptions: ', irdFormTypes)
+      console.log('getFormTypeOptions: ', irdFormTypes)
       let defaultId = 0
       for (var i = 0; i < irdFormTypes.length; i++) {
         let irdFormType = irdFormTypes[i]
@@ -539,10 +544,13 @@ export default {
     },
     linkupOAEmployee (record) {
       console.log('IrdFormRecord.vue :: linkupOAEmployee :: record: ', record)
+      console.log('IrdFormRecord.vue :: linkupOAEmployee :: record.ird_form_id = ' + record.ird_form.id)
       let vm = this
       if (record) {
         console.log('IrdFormRecord.vue :: linkupOAEmployee :: record exists')
         vm.form = JSON.parse(JSON.stringify(record))
+        console.log('IrdFormRecord.vue :: linkupOAEmployee :: record.ird_form_id = ' + record.ird_form.id)
+        console.log('IrdFormRecord.vue :: linkupOAEmployee :: form.ird_form_id = ' + vm.form.ird_form.id)
         for (var i = 0; i < vm.form.employees.length; i++) {
           var formEmployee = vm.form.employees[i]
           let oaEmployee = vm.employees.find(employee => employee.id === formEmployee.employee_id.toString())
@@ -555,9 +563,14 @@ export default {
           }
         }
         if (vm.form.id === 0) {
+          console.log('IrdFormRecord.vue :: linkupOAEmployee :: (vm.form.id === 0)')
           vm.form.ird_form_type_id = vm.defaultIrdFormTypeId
           vm.form.ird_form_id = vm.getDefaultFormId
+        } else {
+          console.log('IrdFormRecord.vue :: linkupOAEmployee :: (vm.form.id !== 0)')
         }
+        console.log('IrdFormRecord.vue :: linkupOAEmployee :: form.ird_form_id = ' + vm.form.ird_form.id)
+
         console.log('IrdFormRecord.vue :: linkupOAEmployee :: record => form (after): ', vm.form)
       }
     },
