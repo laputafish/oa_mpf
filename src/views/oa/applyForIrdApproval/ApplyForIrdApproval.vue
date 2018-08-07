@@ -457,8 +457,8 @@ export default {
       let particulars = []
 
       let particular
-      for (var i = 0; i < vm.settings.inputParticulars.length; i++) {
-        particular = vm.settings.inputParticulars[i]
+      for (var i = 0; i < vm.settings.ir56bIncomes.length; i++) {
+        particular = vm.settings.ir56bIncomes[i]
         particulars.push({
           id: particular.id,
           name: particular.name,
@@ -469,7 +469,7 @@ export default {
       // save
       let data = {
         lang: vm.settings.language,
-        incomeParticulars: particulars,
+        ir56bIncomes: particulars,
         teamId: vm.teamId
       }
       console.log('onOkClicked >> UPDATE_TAX_FORM_SETTINGS  data:', data)
@@ -570,11 +570,11 @@ export default {
       return result
     },
     xxincomeParticulars () {
-      return this.$store.getters.incomeParticulars
+      return this.$store.getters.ir56bIncomes
       // let vm = this
       // let userParticulars = []
       // if (vm.payTypes) {
-      //   let data = this.$store.getters.incomeParticulars
+      //   let data = this.$store.getters.ir56bIncomes
       //   for (var i = 0; i < data.length; i++) {
       //     var item = data[i]
       //     userParticulars.push({
@@ -590,7 +590,7 @@ export default {
       //         : []
       //     })
       //   }
-      //   console.log('computed(incomeParticulars) :: userParticulars: ', userParticulars)
+      //   console.log('computed(ir56bIncomes) :: userParticulars: ', userParticulars)
       // }
       // return userParticulars
     },
@@ -616,8 +616,8 @@ export default {
     }
   },
   watch: {
-    incomeParticulars: function (val) {
-      this.setInputParticulars()
+    ir56bIncomes: function (val) {
+      this.setIr56bIncomes()
     },
     teamId: function (val) {
       this.loadData()

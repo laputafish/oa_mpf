@@ -77,7 +77,7 @@
               </tr>
             </table>
             <table v-if="activeOptionGroup==='salary_income_mapping'" class="table-striped" style="width: 100%;">
-              <tr v-for="item in settings.inputParticulars"
+              <tr v-for="item in settings.ir56bIncomes"
                   :key="item.id">
                 <td class="particular-label salary-item" v-tooltip="$t('tax.'+item.name_tag)">{{ $t('tax.' +
                   item.name_tag) }}
@@ -205,7 +205,8 @@ export default {
       activeOptionGroup: 'basic',
       settings: {
         language: 'en-us',
-        inputParticulars: []
+        ir56bIncomes: [],
+        ir56fIncomes: []
       },
       languageOptions: [
         // {
@@ -254,14 +255,14 @@ export default {
     getIcon (document) {
       return constants.apiUrl + '/media/icons/defaults/' + document.fileType
     },
-    setInputParticulars (incomeParticulars) {
+    setIr56fIncomes (ir56fIncomes) {
       let vm = this
-      if (typeof incomeParticulars === 'undefined') {
-        incomeParticulars = vm.$store.getters.incomeParticulars
+      if (typeof ir56fIncomes === 'undefined') {
+        ir56fIncomes = vm.$store.getters.ir56fIncomes
       }
       let userParticulars = []
       if (vm.payTypes) {
-        let data = incomeParticulars
+        let data = ir56fIncomes
         for (var i = 0; i < data.length; i++) {
           var item = data[i]
           userParticulars.push({
@@ -278,9 +279,35 @@ export default {
               : []
           })
         }
-        console.log('computed(incomeParticulars) :: userParticulars: ', userParticulars)
       }
-      vm.settings.inputParticulars = userParticulars
+      vm.settings.ir56fIncomes = userParticulars
+    },
+    setIr56bIncomes (ir56bIncomes) {
+      let vm = this
+      if (typeof ir56bIncomes === 'undefined') {
+        ir56bIncomes = vm.$store.getters.ir56bIncomes
+      }
+      let userParticulars = []
+      if (vm.payTypes) {
+        let data = ir56bIncomes
+        for (var i = 0; i < data.length; i++) {
+          var item = data[i]
+          userParticulars.push({
+            id: item.id,
+            is_default: item.is_default,
+            description_tag: item.description_tag,
+            name: item.name,
+            name_tag: item.name_tag,
+            pay_type_ids: item.pay_type_ids,
+            pay_types: vm.payTypes
+              ? vm.payTypes.filter(payType => {
+                return item.pay_type_ids.indexOf(payType.id) >= 0
+              })
+              : []
+          })
+        }
+      }
+      vm.settings.ir56bIncomes = userParticulars
     },
     // onSelectPayType (item, payTypes) {
     //   let vm = this
@@ -291,12 +318,25 @@ export default {
     // },
     onOkClicked () {
       let vm = this
-      let particulars = []
-
       let particular
-      for (var i = 0; i < vm.settings.inputParticulars.length; i++) {
-        particular = vm.settings.inputParticulars[i]
-        particulars.push({
+      let i
+
+      // IR56B Income Mapping
+      let ir56bIncomes = []
+      for (i = 0; i < vm.settings.ir56bIncomes.length; i++) {
+        particular = vm.settings.ir56bIncomes[i]
+        ir56bIncomes.push({
+          id: particular.id,
+          name: particular.name,
+          pay_type_ids: particular.pay_types.map(payType => payType.id)
+        })
+      }
+
+      // IR56F Income Mapping
+      let ir56fIncomes = []
+      for (i = 0; i < vm.settings.ir56fIncomes.length; i++) {
+        particular = vm.settings.ir56fIncomes[i]
+        ir56fIncomes.push({
           id: particular.id,
           name: particular.name,
           pay_type_ids: particular.pay_types.map(payType => payType.id)
@@ -306,7 +346,8 @@ export default {
       // save
       let data = {
         lang: vm.settings.language,
-        incomeParticulars: particulars,
+        ir56bIncomes: ir56bIncomes,
+        ir56fIncomes: ir56fIncomes,
         teamId: vm.teamId
       }
       console.log('onOkClicked >> UPDATE_TAX_FORM_SETTINGS  data:', data)
@@ -327,54 +368,14 @@ export default {
       vm.$store.dispatch('FETCH_PAY_TYPES').then(function (payTypes) {
         console.log('loadData after FETCH_PAY_TYPES :: payTypes: ', payTypes)
         vm.$store.dispatch('FETCH_TAX_FORM_SETTINGS').then(function (result) {
-          vm.setInputParticulars(result.income_particulars)
+          vm.setIr56bIncomes(result.ir56b_incomes)
+          vm.setIr56fIncomes(result.ir56f_incomes)
           vm.settings.lang = result.lang
-          // console.log('loadData after FETCH_INCOME_PARTICULARS :: particulars: ', particulars)
-          // let item
-          // let payTypeIdArray
-          // for (var i = 0; i < particulars.length; i++) {
-          //   item = particulars[i]
-          //   payTypeIdArray = item.pay_type_ids
-          //   vm.inputParticulars.push({
-          //     id: item.id,
-          //     is_default: item.is_default,
-          //     description_tag: item.description_tag,
-          //     name: item.name,
-          //     pay_types: payTypes.filter(payType => {
-          //       return payTypeIdArray.indexOf(payType.id) >= 0
-          //     })
-          //   })
-          // }
         })
       })
     }
   },
   computed: {
-    xxincomeParticulars () {
-      return this.$store.getters.incomeParticulars
-      // let vm = this
-      // let userParticulars = []
-      // if (vm.payTypes) {
-      //   let data = this.$store.getters.incomeParticulars
-      //   for (var i = 0; i < data.length; i++) {
-      //     var item = data[i]
-      //     userParticulars.push({
-      //       id: item.id,
-      //       is_default: item.is_default,
-      //       description_tag: item.description_tag,
-      //       name: item.name,
-      //       pay_type_ids: item.pay_type_ids,
-      //       pay_types: vm.payTypes
-      //         ? vm.payTypes.filter(payType => {
-      //           return item.pay_type_ids.indexOf(payType.id) >= 0
-      //         })
-      //         : []
-      //     })
-      //   }
-      //   console.log('computed(incomeParticulars) :: userParticulars: ', userParticulars)
-      // }
-      // return userParticulars
-    },
     teamId () {
       return this.$store.getters.teamId
     },
@@ -393,8 +394,11 @@ export default {
     }
   },
   watch: {
-    incomeParticulars: function (val) {
-      this.setInputParticulars()
+    ir56bIncomes: function (val) {
+      this.setIr56bIncomes()
+    },
+    ir56fIncomes: function (val) {
+      this.setIr56fIncomes()
     },
     teamId: function (val) {
       this.loadData()

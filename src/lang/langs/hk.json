@@ -84,6 +84,7 @@
     "departure": "離港",
     "salary": "薪酬",
     "salary_form_ir56b": "薪酬表格IR56B",
+    "salary_form_ir56f": "薪酬表格IR56F",
     "form_date": "表格日期",
     "no_of_employee": "員工人數",
     "employees": "員工",
@@ -113,6 +114,7 @@
     "any_other_rewards_": "任何其他報酬, 津貼或額外賞賜",
     "pensions": "退休金",
     "salary_tax_records": "薪俸稅記錄",
+    "payments_not_declared_above_": "未於以上項目填報，但於僱員離職後支付給僱員的款項：",
 
     "published": "已發佈",
     "sheet_no": "表格編號",
@@ -130,6 +132,7 @@
     "apply_for_approval_of_printed_forms": "申請自行列印的IR56表格",
     "update_previously_approval": "更新先前已獲批准軟件格式",
 
+    "others_placed_in_salary": "所有不屬於任何工資類型款項均會撥入基本薪金作處理.",
     "setup": "設定",
 
     "employer_name": "僱主名稱",

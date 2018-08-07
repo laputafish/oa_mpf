@@ -54,8 +54,8 @@
                     <ul style="padding-left: 40px;">
                       <li>
                         <div key="salary"
-                             @click="activeOptionGroup='salary_income_mapping'"
-                             :class="{'active':activeOptionGroup==='salary_income_mapping'}"
+                             @click="activeOptionGroup='ir56b_income_mapping'"
+                             :class="{'active':activeOptionGroup==='ir56b_income_mapping'}"
                              class="option-group-button">
                           <div class="border-0 rounded-2 title-container form-control ">
                             {{ $t('tax.income_field_mapping') }}
@@ -63,7 +63,25 @@
                         </div>
                       </li>
                     </ul>
-                  </li>
+                  </li>                  <li>
+                  <div key="salary">
+                    <div class="border-0 rounded-2 title-container form-control ">
+                      {{ $t('tax.salary_form_ir56f')}}
+                    </div>
+                  </div>
+                  <ul style="padding-left: 40px;">
+                    <li>
+                      <div key="salary"
+                           @click="activeOptionGroup='ir56f_income_mapping'"
+                           :class="{'active':activeOptionGroup==='ir56f_income_mapping'}"
+                           class="option-group-button">
+                        <div class="border-0 rounded-2 title-container form-control ">
+                          {{ $t('tax.income_field_mapping') }}
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
                 </ul>
                 <!--<div v-for="button in optionGroupButtons"-->
                 <!--:key="button.value"-->
@@ -98,7 +116,6 @@
                     <input v-model="settings.signatureName"
                            name="signatureName"
                            id="signatureName"
-                           :disabled="whenDisabledInput"
                            class="form-control max-width-300"
                            :class="{'border-danger':errors.has('signatureName')}"
                            type="text"/>
@@ -115,7 +132,6 @@
                     <input v-model="settings.designation"
                            name="designation"
                            id="designation"
-                           :disabled="whenDisabledInput"
                            class="form-control max-width-300"
                            :class="{'border-danger':errors.has('designation')}"
                            type="text"/>
@@ -126,10 +142,10 @@
               </div>
 
               <!-- ****************************************** -->
-              <!--         Income particular mapping          -->
+              <!--      IR56B Income particular mapping       -->
               <!-- ****************************************** -->
-              <table v-if="activeOptionGroup==='salary_income_mapping'" class="table-striped" style="width: 100%;">
-                <tr v-for="item in settings.inputParticulars"
+              <table v-if="activeOptionGroup==='ir56b_income_mapping'" class="table-striped" style="width: 100%;">
+                <tr v-for="item in settings.ir56bIncomes"
                     :key="item.id">
                   <td class="particular-label salary-item" v-tooltip="$t('tax.'+item.name_tag)">{{ $t('tax.' +
                     item.name_tag) }}
@@ -150,6 +166,48 @@
                         <span>[{{ option.code }}]&nbsp;{{ option.name }}</span>
                       </template>
                     </v-select>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <hr/>
+                    <h6 class="remark">* {{ $t('tax.others_placed_in_salary') }}</h6>
+                  </td>
+                </tr>
+
+              </table>
+
+              <!-- ****************************************** -->
+              <!--      IR56F Income particular mapping       -->
+              <!-- ****************************************** -->
+              <table v-if="activeOptionGroup==='ir56f_income_mapping'" class="table-striped" style="width: 100%;">
+                <tr v-for="item in settings.ir56fIncomes"
+                    :key="item.id">
+                  <td class="particular-label salary-item" v-tooltip="$t('tax.'+item.name_tag)">{{ $t('tax.' +
+                    item.name_tag) }}
+                  </td>
+                  <td>
+                    <input v-if="item.is_default"
+                           type="text"
+                           readonly
+                           class="form-control-plaintext bg-lightgray text-darkgray px-2 border"
+                           :value="$t(item.description_tag)">
+                    <v-select v-else
+                              multiple
+                              label="code"
+                              v-model="item.pay_types"
+                              :options="payTypes">
+                      <template slot="option"
+                                slot-scope="option">
+                        <span>[{{ option.code }}]&nbsp;{{ option.name }}</span>
+                      </template>
+                    </v-select>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <hr/>
+                    <h6 class="remark">* {{ $t('tax.others_placed_in_salary') }}</h6>
                   </td>
                 </tr>
               </table>
@@ -185,7 +243,8 @@ export default {
         lang: 'en-us',
         designation: '',
         signatureName: '',
-        inputParticulars: []
+        ir56bIncomes: [],
+        ir56fIncomes: []
       },
       languageOptions: [
         // {
@@ -216,12 +275,25 @@ export default {
   methods: {
     save () {
       let vm = this
-      let particulars = []
-
+      let ir56bIncomes = []
+      let ir56fIncomes = []
+      let i
       let particular
-      for (var i = 0; i < vm.settings.inputParticulars.length; i++) {
-        particular = vm.settings.inputParticulars[i]
-        particulars.push({
+
+      // IR56B
+      for (i = 0; i < vm.settings.ir56bIncomes.length; i++) {
+        particular = vm.settings.ir56bIncomes[i]
+        ir56bIncomes.push({
+          id: particular.id,
+          name: particular.name,
+          pay_type_ids: particular.pay_types.map(payType => payType.id)
+        })
+      }
+
+      // IR56F
+      for (i = 0; i < vm.settings.ir56fIncomes.length; i++) {
+        particular = vm.settings.ir56fIncomes[i]
+        ir56fIncomes.push({
           id: particular.id,
           name: particular.name,
           pay_type_ids: particular.pay_types.map(payType => payType.id)
@@ -233,7 +305,8 @@ export default {
         lang: vm.settings.lang,
         designation: vm.settings.designation,
         signatureName: vm.settings.signatureName,
-        incomeParticulars: particulars,
+        ir56bIncomes: ir56bIncomes,
+        ir56fIncomes: ir56fIncomes,
         teamId: vm.teamId
       }
       console.log('onOkClicked >> UPDATE_TAX_FORM_SETTINGS  data:', data)
@@ -269,10 +342,10 @@ export default {
     getIconByFileType (fileType) {
       return constants.apiUrl + '/media/icons/defaults/' + fileType
     },
-    setInputParticulars (incomeParticulars) {
+    setIr56bIncomes (incomeParticulars) {
       let vm = this
       if (typeof incomeParticulars === 'undefined') {
-        incomeParticulars = vm.$store.getters.incomeParticulars
+        incomeParticulars = vm.$store.getters.ir56bIncomes
       }
       let userParticulars = []
       if (vm.payTypes) {
@@ -293,10 +366,40 @@ export default {
               : []
           })
         }
-        console.log('computed(incomeParticulars) :: userParticulars: ', userParticulars)
+        console.log('computed(ir56bIncomes) :: userParticulars: ', userParticulars)
       }
-      vm.settings.inputParticulars = userParticulars
+      vm.settings.ir56bIncomes = userParticulars
     },
+
+    setIr56fIncomes (incomeParticulars) {
+      let vm = this
+      if (typeof incomeParticulars === 'undefined') {
+        incomeParticulars = vm.$store.getters.ir56fIncomes
+      }
+      let userParticulars = []
+      if (vm.payTypes) {
+        let data = incomeParticulars
+        for (var i = 0; i < data.length; i++) {
+          var item = data[i]
+          userParticulars.push({
+            id: item.id,
+            is_default: item.is_default,
+            description_tag: item.description_tag,
+            name: item.name,
+            name_tag: item.name_tag,
+            pay_type_ids: item.pay_type_ids,
+            pay_types: vm.payTypes
+              ? vm.payTypes.filter(payType => {
+                return item.pay_type_ids.indexOf(payType.id) >= 0
+              })
+              : []
+          })
+        }
+        console.log('computed(ir56fIncomes) :: userParticulars: ', userParticulars)
+      }
+      vm.settings.ir56fIncomes = userParticulars
+    },
+
     // onSelectPayType (item, payTypes) {
     //   let vm = this
     //   vm.$store.dispatch('UPDATE_INCOME_PARTICULAR_PAYTYPES', {
@@ -309,8 +412,8 @@ export default {
       let particulars = []
 
       let particular
-      for (var i = 0; i < vm.settings.inputParticulars.length; i++) {
-        particular = vm.settings.inputParticulars[i]
+      for (var i = 0; i < vm.settings.ir56bIncomes.length; i++) {
+        particular = vm.settings.ir56bIncomes[i]
         particulars.push({
           id: particular.id,
           name: particular.name,
@@ -321,7 +424,7 @@ export default {
       // save
       let data = {
         lang: vm.settings.lang,
-        incomeParticulars: particulars,
+        ir56bIncomes: particulars,
         teamId: vm.teamId
       }
       console.log('onOkClicked >> UPDATE_TAX_FORM_SETTINGS  data:', data)
@@ -344,20 +447,22 @@ export default {
         vm.$store.dispatch('FETCH_TEAM')
         console.log('loadData after FETCH_PAY_TYPES :: payTypes: ', payTypes)
         vm.$store.dispatch('FETCH_TAX_FORM_SETTINGS').then(function (result) {
-          vm.setInputParticulars(result.income_particulars)
+          vm.setIr56bIncomes(result.ir56b_incomes)
+          vm.setIr56fIncomes(result.ir56f_incomes)
+
           vm.settings.lang = result.lang
           vm.settings.designation = result.designation
           vm.settings.signatureName = result.signatureName
 
           vm.loading = false
 
-          // console.log('loadData after FETCH_INCOME_PARTICULARS :: particulars: ', particulars)
+          // console.log('loadData after FETCH_IR56B_INCOMES :: particulars: ', particulars)
           // let item
           // let payTypeIdArray
           // for (var i = 0; i < particulars.length; i++) {
           //   item = particulars[i]
           //   payTypeIdArray = item.pay_type_ids
-          //   vm.inputParticulars.push({
+          //   vm.ir56bIncomes.push({
           //     id: item.id,
           //     is_default: item.is_default,
           //     description_tag: item.description_tag,
@@ -406,11 +511,11 @@ export default {
       return result
     },
     xxincomeParticulars () {
-      return this.$store.getters.incomeParticulars
+      return this.$store.getters.ir56bIncomes
       // let vm = this
       // let userParticulars = []
       // if (vm.payTypes) {
-      //   let data = this.$store.getters.incomeParticulars
+      //   let data = this.$store.getters.ir56bIncomes
       //   for (var i = 0; i < data.length; i++) {
       //     var item = data[i]
       //     userParticulars.push({
@@ -426,7 +531,7 @@ export default {
       //         : []
       //     })
       //   }
-      //   console.log('computed(incomeParticulars) :: userParticulars: ', userParticulars)
+      //   console.log('computed(ir56bIncomes) :: userParticulars: ', userParticulars)
       // }
       // return userParticulars
     },
@@ -452,8 +557,8 @@ export default {
     }
   },
   watch: {
-    incomeParticulars: function (val) {
-      this.setInputParticulars()
+    ir56bIncomes: function (val) {
+      this.setIr56bIncomes()
     },
     teamId: function (val) {
       alert('watch(teamId)')
@@ -648,5 +753,10 @@ export default {
     font-size: 48px;
     display: inline-block;
     vertical-align: middle;
+  }
+
+  #ird-form-setup .remark {
+    color: darkgray;
+    padding-left: 10px;
   }
 </style>

@@ -19,7 +19,7 @@ import language from './modules/language/language'
 import teams from './modules/teams/teams'
 import groups from './modules/groups/groups'
 import user from './modules/user/user'
-import incomeParticulars from './modules/incomeParticulars/incomeParticulars'
+import incomeMappings from './modules/incomeMappings/incomeMappings'
 import payTypes from './modules_oa/payTypes/payTypes'
 import payrolls from './modules_oa/payrolls/payrolls'
 import taxForms from './modules/taxForms/taxForms'
@@ -61,7 +61,7 @@ export const store = new Vuex.Store({
     teams,
     groups,
     user,
-    incomeParticulars,
+    incomeMappings,
     payTypes,
     payrolls,
     taxForms,

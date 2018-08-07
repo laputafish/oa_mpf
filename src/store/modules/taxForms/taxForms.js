@@ -267,7 +267,7 @@ const actions = {
       Vue.axios.get(url, config).then(function (response) {
         console.log('incomeParticular actions FETCH_TAX_FORM_SETTINGS: resPonse: ', response)
         if (response.data.status) {
-          commit('setIncomeParticulars', response.data.result)
+          commit('setIr56bIncomes', response.data.result)
           resolve(response.data.result)
         }
       })

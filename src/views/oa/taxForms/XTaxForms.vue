@@ -464,7 +464,7 @@ export default {
     },
     showTaxFormSettingsDialog () {
       let vm = this
-      // vm.$store.dispatch('FETCH_INCOME_PARTICULARS').then(function () {
+      // vm.$store.dispatch('FETCH_IR56B_INCOMES').then(function () {
       vm.showingTaxFormSettingsDialog = true
       // })
     },
