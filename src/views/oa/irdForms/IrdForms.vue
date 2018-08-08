@@ -104,7 +104,7 @@ export default {
       pusherSubscribed: false,
       selectedFormId: 0,
       selectedFormEmployeeIds: [],
-      // selectedForm: null,
+      // selectedIrdForm: null,
       mode: 'list', // ['list','record']
       columns: (() => {
         const cols = [
@@ -157,7 +157,7 @@ export default {
     // }
     EventBus.$on('editRecord', function (record) {
       vm.selectedFormId = record.id
-      // vm.selectedForm = record
+      // vm.selectedIrdForm = record
       vm.mode = 'record'
     })
     EventBus.$on('deleteRecord', function (record) {
@@ -177,7 +177,7 @@ export default {
     },
     // selectedFormId () {
     //   return
-    //   selectedForm ? selectedForm.id : 0
+    //   selectedIrdForm ? selectedIrdForm.id : 0
     // },
 
     showingSelectEmployeeDialog () {

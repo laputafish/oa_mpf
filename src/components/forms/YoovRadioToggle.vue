@@ -51,6 +51,8 @@ export default {
   },
   methods: {
     selectOption (optionValue) {
+      console.log('selectOption : optionValue = ' + optionValue)
+      console.log('selectOption : typeof optionValue = ' + (typeof optionValue))
       this.$emit('input', optionValue)
     }
   }

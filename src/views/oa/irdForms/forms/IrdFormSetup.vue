@@ -97,6 +97,7 @@
               <!--               Basic Setting                -->
               <!-- ****************************************** -->
               <div v-if="activeOptionGroup==='basic'" class="table-striped">
+                <!-- Languages -->
                 <div class="form-group row">
                   <label class="text-sm-right col-sm-4 col-form-label" for="signatureName">
                     {{ $t('general.language') }}
@@ -105,10 +106,28 @@
                     <yoov-radio-toggle
                       :options="languageOptions"
                       optionTitleTag="titleTag"
-                      v-model="settings.lang">
+                      v-model="settings.langId">
                     </yoov-radio-toggle>
                   </div>
                 </div>
+
+                <!-- File No -->
+                <div class="form-group row">
+                  <label class="text-sm-right col-sm-4 col-form-label" for="fileNo">{{ $t('tax.employer_file_no')
+                    }}*</label>
+                  <div class="col-sm-8">
+                    <input v-model="settings.fileNo"
+                           name="fileNo"
+                           id="fileNo"
+                           class="form-control max-width-300"
+                           :class="{'border-danger':errors.has('fileNo')}"
+                           type="text"/>
+                    <span class="error"
+                          v-if="errors.has('fileNo')">{{ $t('messages.employer_file_no_is_required') }}</span>
+                  </div>
+                </div>
+
+                <!-- Signature Name -->
                 <div class="form-group row">
                   <label class="text-sm-right col-sm-4 col-form-label" for="signatureName">{{ $t('tax.signature_name')
                     }}</label>
@@ -240,29 +259,31 @@ export default {
       ],
       activeOptionGroup: 'basic',
       settings: {
-        lang: 'en-us',
+        langId: 0,
+        fileNo: '',
         designation: '',
         signatureName: '',
         ir56bIncomes: [],
         ir56fIncomes: []
-      },
-      languageOptions: [
-        // {
-        //   id: 0,
-        //   titleTag: 'general.user_customed',
-        //   value: 'user_customed'
-        // },
-        {
-          id: 1,
-          titleTag: 'general.chinese',
-          value: 'zh-hk'
-        },
-        {
-          id: 2,
-          titleTag: 'general.english',
-          value: 'en-us'
-        }
-      ]
+      }
+      // ,
+      // languageOptions: [
+      //   // {
+      //   //   id: 0,
+      //   //   titleTag: 'general.user_customed',
+      //   //   value: 'user_customed'
+      //   // },
+      //   {
+      //     id: 1,
+      //     titleTag: 'general.chinese',
+      //     value: 'zh-hk'
+      //   },
+      //   {
+      //     id: 2,
+      //     titleTag: 'general.english',
+      //     value: 'en-us'
+      //   }
+      // ]
     }
   },
   components: {
@@ -302,14 +323,15 @@ export default {
 
       // save
       let data = {
-        lang: vm.settings.lang,
+        langId: vm.settings.langId,
+        fileNo: vm.settings.fileNo,
         designation: vm.settings.designation,
         signatureName: vm.settings.signatureName,
         ir56bIncomes: ir56bIncomes,
         ir56fIncomes: ir56fIncomes,
         teamId: vm.teamId
       }
-      console.log('onOkClicked >> UPDATE_TAX_FORM_SETTINGS  data:', data)
+      // console.log('onOkClicked >> UPDATE_TAX_FORM_SETTINGS  data:', data)
       vm.$store.dispatch('UPDATE_TAX_FORM_SETTINGS', data).then(function (response) {
         console.log('UPDATE_INCOME: response: ', response)
         if (response.status) {
@@ -407,39 +429,39 @@ export default {
     //     payTypes: payTypes
     //   })
     // },
-    onOkClicked () {
-      let vm = this
-      let particulars = []
-
-      let particular
-      for (var i = 0; i < vm.settings.ir56bIncomes.length; i++) {
-        particular = vm.settings.ir56bIncomes[i]
-        particulars.push({
-          id: particular.id,
-          name: particular.name,
-          pay_type_ids: particular.pay_types.map(payType => payType.id)
-        })
-      }
-
-      // save
-      let data = {
-        lang: vm.settings.lang,
-        ir56bIncomes: particulars,
-        teamId: vm.teamId
-      }
-      console.log('onOkClicked >> UPDATE_TAX_FORM_SETTINGS  data:', data)
-      vm.$store.dispatch('UPDATE_TAX_FORM_SETTINGS', data).then(function (response) {
-        console.log('UPDATE_INCOME: response: ', response)
-        if (response.status) {
-          vm.$emit('close')
-        } else {
-          vm.$dialog.alert({
-            title: 'Warning',
-            message: response.message
-          })
-        }
-      })
-    },
+    // onOkClicked () {
+    //   let vm = this
+    //   let particulars = []
+    //
+    //   let particular
+    //   for (var i = 0; i < vm.settings.ir56bIncomes.length; i++) {
+    //     particular = vm.settings.ir56bIncomes[i]
+    //     particulars.push({
+    //       id: particular.id,
+    //       name: particular.name,
+    //       pay_type_ids: particular.pay_types.map(payType => payType.id)
+    //     })
+    //   }
+    //
+    //   // save
+    //   let data = {
+    //     langId: vm.settings.langId,
+    //     ir56bIncomes: particulars,
+    //     teamId: vm.teamId
+    //   }
+    //   console.log('onOkClicked >> UPDATE_TAX_FORM_SETTINGS  data:', data)
+    //   vm.$store.dispatch('UPDATE_TAX_FORM_SETTINGS', data).then(function (response) {
+    //     console.log('UPDATE_INCOME: response: ', response)
+    //     if (response.status) {
+    //       vm.$emit('close')
+    //     } else {
+    //       vm.$dialog.alert({
+    //         title: 'Warning',
+    //         message: response.message
+    //       })
+    //     }
+    //   })
+    // },
     loadData () {
       let vm = this
       vm.loading = true
@@ -450,7 +472,8 @@ export default {
           vm.setIr56bIncomes(result.ir56b_incomes)
           vm.setIr56fIncomes(result.ir56f_incomes)
 
-          vm.settings.lang = result.lang
+          vm.settings.langId = result.langId
+          vm.settings.fileNo = result.fileNo
           vm.settings.designation = result.designation
           vm.settings.signatureName = result.signatureName
 
@@ -477,6 +500,11 @@ export default {
     }
   },
   computed: {
+    languageOptions () {
+      let result = this.$store.getters.languageOptions
+      return result
+    },
+
     // 'applySoftcopies': '',
     // 'applyPrintedForms': '',
     selectedSoftcopyItems () {

@@ -59,120 +59,11 @@
     <hr/>
     <div class="row">
       <div class="col-sm-7">
-        <div class="form-group row">
-          <label class="text-sm-right col-sm-3 col-form-label" for="formNo">{{ $t('tax.form_no') }}*</label>
-          <div class="col-sm-9">
-            <input v-model="form.form_no"
-                   v-validate="'required'"
-                   name="formNo"
-                   :disabled="whenDisabledInput"
-                   class="form-control"
-                   :class="{'border-danger':errors.has('formNo')}"
-                   id="formNo"
-                   type="text"/>
-            <span class="error" v-if="errors.has('formNo')">{{ $t('message.form_no_is_required') }}</span>
-          </div>
-        </div>
-        <div class="form-group row">
-          <label class="text-sm-right col-sm-3 col-form-label" for="formDate">{{ $t('tax.form_date') }}*</label>
-          <div class="col-sm-9">
-            <date-picker v-model="form.form_date"
-                         :disabled="whenDisabledInput"
-                         id="formDate"
-                         type="date"
-                         format="YYYY-MM-DD"></date-picker>
-          </div>
-        </div>
-
-        <!-- Form Type Selection -->
-        <div class="form-group row">
-          <label class="text-sm-right col-sm-3 col-form-label" for="irdFormTypeId">{{ $t('tax.form_type') }}</label>
-          <div class="col-sm-9">
-            <yoov-radio-toggle
-              id="irdFormTypeId"
-              :disabled="whenDisabledInput"
-              :options="formTypeOptions"
-              optionTitleTag="titleTag"
-              :value="form.ird_form_type_id"
-              @input="(value) => {form.ird_form_type_id=value}"
-            ></yoov-radio-toggle>
-          </div>
-        </div>
-
-        <!-- Form Selection -->
-        <div class="form-group row">
-          <label class="text-sm-right col-sm-3 col-form-label" for="irdFormId">{{ $t('tax.form_template') }}</label>
-          <div class="col-sm-9">
-            <yoov-radio-toggle
-              id="irdFormId"
-              :disabled="whenDisabledInput"
-              :options="formOptions"
-              optionTitle="title"
-              :value="form.ird_form_id"
-              @input="(value) => {form.ird_form_id=value}"
-            ></yoov-radio-toggle>
-          </div>
-        </div>
-
-        <!-- fiscal year -->
-        <div class="form-group row" v-show="selectedForm && selectedForm.requires_fiscal_year">
-          <label class="text-sm-right col-sm-3 col-form-label" for="fiscalStartYear">{{ $t('tax.fiscal_years') }}</label>
-          <div class="col-sm-9">
-            <yoov-radio-toggle
-              id="fiscalStartYear"
-              :disabled="whenDisabledInput"
-              :options="availableFiscalStartYears"
-              optionTitle="title"
-              :value="form.fiscal_start_year"
-              @input="(value) => {form.fiscal_start_year=value}"
-            ></yoov-radio-toggle>
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <label class="text-sm-right col-sm-3 col-form-label" for="formRemark">{{ $t('tax.remark') }}</label>
-          <div class="col-sm-9">
-            <textarea v-model="form.remark"
-                      :disabled="whenDisabledInput"
-                      class="form-control"
-                      rows="2"
-                      id="formRemark"></textarea>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-5">
-        <div class="form-group row">
-          <label class="text-sm-right col-sm-4 col-form-label" for="formDate">{{ $t('general.form_status') }}</label>
-          <div class="col-sm-4">
-            <input type="text" v-if="form" readonly class="form-control" id="status" :value="form.status ? $t('general.' + form.status) : ''">
-          </div>
-        </div>
-        <div class="form-group row" v-show="selectedForm && selectedForm.requires_fiscal_year">
-          <label class="text-sm-right col-sm-4 col-form-label" for="formDate">{{ $t('tax.published') }}</label>
-          <div class="col-sm-4">
-            <yoov-radio-toggle
-              :disabled="whenDisabledInput"
-              :options="yesNoOptions"
-              :value="form.published"
-              :optionTitleTag="'titleTag'"
-              @input="(value) => {form.published=value}"></yoov-radio-toggle>
-          </div>
-        </div>
-        <div class="form-group row">
-          <label class="text-sm-right col-sm-4 col-form-label" for="submittedOn">{{ $t('tax.submitted_on') }}</label>
-          <div class="col-sm-4">
-            <date-picker v-model="form.submitted_on"
-                         :disabled="whenDisabledInput"
-                         id="submittedOn"
-                         type="date"
-                         format="YYYY-MM-DD"></date-picker>
-          </div>
-        </div>
 
         <!-- Signature Name -->
         <div class="form-group row">
-          <label class="text-sm-right col-sm-4 col-form-label" for="signatureName">{{ $t('tax.signature_name') }}</label>
-          <div class="col-sm-8">
+          <label class="text-sm-right col-sm-3 col-form-label" for="signatureName">{{ $t('tax.signature_name') }}</label>
+          <div class="col-sm-9">
             <input v-model="form.signature_name"
                    name="signatureName"
                    id="signatureName"
@@ -187,8 +78,8 @@
 
         <!-- Designation -->
         <div class="form-group row">
-          <label class="text-sm-right col-sm-4 col-form-label" for="designation">{{ $t('tax.signature_designation') }}*</label>
-          <div class="col-sm-8 co-md-7 co-lg-6">
+          <label class="text-sm-right col-sm-3 col-form-label" for="designation">{{ $t('tax.signature_designation') }}*</label>
+          <div class="col-sm-9 co-md-7 co-lg-6">
             <input v-model="form.designation"
                    name="designation"
                    id="designation"
@@ -198,6 +89,139 @@
                    :class="{'border-danger':errors.has('designation')}"
                    type="text"/>
             <span class="error" v-if="errors.has('designation')">{{ $t('messages.designation_is_required') }}</span>
+          </div>
+        </div>
+
+        <!-- IRD Form Type Selection -->
+        <div class="form-group row">
+          <label class="text-sm-right col-sm-3 col-form-label" for="irdFormTypeId">{{ $t('tax.form_type') }}</label>
+          <div class="col-sm-9">
+            <yoov-radio-toggle
+              id="irdFormTypeId"
+              :disabled="whenDisabledInput"
+              :options="irdFormTypeOptions"
+              optionTitleTag="titleTag"
+              :value="form.ird_form_type_id"
+              @input="(value) => {onIrdFormTypeSelected(value)}"
+            ></yoov-radio-toggle>
+          </div>
+        </div>
+
+        <!-- IRD Form Selection -->
+        <div class="form-group row">
+          <label class="text-sm-right col-sm-3 col-form-label" for="irdFormId">{{ $t('tax.form_template') }}</label>
+          <div class="col-sm-9">
+            <yoov-radio-toggle
+              id="irdFormId"
+              :disabled="whenDisabledInput"
+              :options="irdFormOptions"
+              optionTitle="title"
+              :value="form.ird_form_id"
+              @input="(value) => {form.ird_form_id=value}"
+            ></yoov-radio-toggle>
+          </div>
+        </div>
+
+        <!-- fiscal year -->
+        <div class="form-group row" v-show="selectedIrdForm && selectedIrdForm.requires_fiscal_year">
+          <label class="text-sm-right col-sm-3 col-form-label" for="fiscalStartYear">{{ $t('tax.fiscal_years') }}</label>
+          <div class="col-sm-9">
+            <yoov-radio-toggle
+              id="fiscalStartYear"
+              :disabled="whenDisabledInput"
+              :options="availableFiscalStartYears"
+              optionTitle="title"
+              :value="form.fiscal_start_year"
+              @input="(value) => {form.fiscal_start_year=value}"
+            ></yoov-radio-toggle>
+          </div>
+        </div>
+
+        <!-- Remark -->
+        <div class="form-group row">
+          <label class="text-sm-right col-sm-3 col-form-label" for="formRemark">{{ $t('tax.remark') }}</label>
+          <div class="col-sm-9">
+            <textarea v-model="form.remark"
+                      :disabled="whenDisabledInput"
+                      class="form-control"
+                      rows="1"
+                      id="formRemark"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-5">
+        <!-- Status -->
+        <div class="form-group row">
+          <label class="text-sm-right col-sm-4 col-form-label" for="formDate">{{ $t('general.form_status') }}</label>
+          <div class="col-sm-4">
+            <input type="text" v-if="form" readonly class="form-control" id="status" :value="form.status ? $t('general.' + form.status) : ''">
+          </div>
+        </div>
+
+        <div class="form-group row" v-show="selectedIrdForm && selectedIrdForm.requires_fiscal_year">
+          <label class="text-sm-right col-sm-4 col-form-label" for="formDate">{{ $t('tax.published') }}</label>
+          <div class="col-sm-4">
+            <yoov-radio-toggle
+              :disabled="whenDisabledInput"
+              :options="yesNoOptions"
+              :value="form.published"
+              :optionTitleTag="'titleTag'"
+              @input="(value) => {form.published=value}"></yoov-radio-toggle>
+          </div>
+        </div>
+
+        <!-- Form No. -->
+        <div class="form-group row">
+          <label class="text-sm-right col-sm-4 col-form-label" for="formNo">{{ $t('tax.form_no') }}*</label>
+          <div class="col-sm-8">
+            <input v-model="form.form_no"
+                   v-validate="'required'"
+                   name="formNo"
+                   :disabled="whenDisabledInput"
+                   class="form-control"
+                   :class="{'border-danger':errors.has('formNo')}"
+                   id="formNo"
+                   type="text"/>
+            <span class="error" v-if="errors.has('formNo')">{{ $t('message.form_no_is_required') }}</span>
+          </div>
+        </div>
+
+        <!-- Form Date -->
+        <div class="form-group row">
+          <label class="text-sm-right col-sm-4 col-form-label" for="formDate">{{ $t('tax.form_date') }}*</label>
+          <div class="col-sm-8">
+            <date-picker v-model="form.form_date"
+                         :disabled="whenDisabledInput"
+                         id="formDate"
+                         type="date"
+                         format="YYYY-MM-DD"></date-picker>
+          </div>
+        </div>
+
+        <!-- Submission Date -->
+        <div class="form-group row">
+          <label class="text-sm-right col-sm-4 col-form-label" for="submittedOn">{{ $t('tax.submitted_on') }}</label>
+          <div class="col-sm-4">
+            <date-picker v-model="form.submitted_on"
+                         :disabled="whenDisabledInput"
+                         id="submittedOn"
+                         type="date"
+                         format="YYYY-MM-DD"></date-picker>
+          </div>
+        </div>
+
+        <!-- Languages -->
+        <div class="form-group row">
+          <label class="text-sm-right col-sm-4 col-form-label" for="langId">
+            {{ $t('general.language') }}
+          </label>
+          <div class="col-sm-8">
+            <yoov-radio-toggle
+              id="langId"
+              :options="languageOptions"
+              optionTitleTag="titleTag"
+              v-model="form.lang_id">
+            </yoov-radio-toggle>
           </div>
         </div>
 
@@ -257,6 +281,7 @@ export default {
           'form_date': '',
           'subject': '',
           'remark': '',
+          'lang_id': 0,
           'status': 'pending',
           'submitted_on': '',
           'employees': []
@@ -275,6 +300,9 @@ export default {
     }
   },
   computed: {
+    languageOptions () {
+      return this.$store.getters.languageOptions
+    },
     availableFiscalStartYears () {
       return this.$store.getters.availableFiscalStartYears
     },
@@ -294,14 +322,14 @@ export default {
     irdFormTypes () {
       return this.$store.getters.irdFormTypes
     },
-    formTypeOptions () {
+    irdFormTypeOptions () {
       return this.getFormTypeOptions()
     },
-    selectedForm () {
+    selectedIrdForm () {
       let vm = this
       let result = null
-      if (vm.form.ird_form_id && vm.form.ird_form_id !== 0 && vm.selectedFormType) {
-        var forms = vm.selectedFormType.forms
+      if (vm.form.ird_form_id && vm.form.ird_form_id !== 0 && vm.selectedIrdFormType) {
+        var forms = vm.selectedIrdFormType.forms
         for (var i = 0; i < forms.length; i++) {
           let form = forms[i]
           if (form.id === vm.form.ird_form_id) {
@@ -312,10 +340,10 @@ export default {
       }
       return result
     },
-    selectedFormType () {
+    selectedIrdFormType () {
       let vm = this
-      console.log('computed: selectedFormType: vm.formTypeOptions.length = ' + vm.irdFormTypes.length)
-      console.log('computed: selectedFormType :: form.ird_form_type_id = ' + vm.form.ird_form_type_id)
+      console.log('computed: selectedIrdFormType: vm.irdFormTypeOptions.length = ' + vm.irdFormTypes.length)
+      console.log('computed: selectedIrdFormType :: form.ird_form_type_id = ' + vm.form.ird_form_type_id)
       let result = null
       for (var i = 0; i < vm.irdFormTypes.length; i++) {
         let irdFormType = vm.irdFormTypes[i]
@@ -324,16 +352,18 @@ export default {
           break
         }
       }
-      console.log('computed: selectedFormType :: result: ', result)
+      console.log('computed: selectedIrdFormType :: result: ', result)
       return result
     },
-    formOptions () {
+    irdFormOptions () {
+      console.log('irdFormOptions')
       let vm = this
       let irdFormOptions = []
-
+      let irdFormIds = []
       let irdForms = []
-      if (vm.selectedFormType) {
-        irdForms = vm.selectedFormType.forms
+
+      if (vm.selectedIrdFormType) {
+        irdForms = vm.selectedIrdFormType.forms
       }
       // for (var i = 0; i < vm.irdFormTypes.length; i++) {
       //   let irdFormType = vm.irdFormTypes[i]
@@ -349,19 +379,29 @@ export default {
           title: form.ird_code + (form.version ? ' ' + vm.$t('tax.' + form.version) : ''),
           value: form.id
         }
+        irdFormIds.push(form.id)
         irdFormOptions.push(formOption)
         if (irdForms[j].is_default) {
           defaultId = irdForms[j].id
         }
       }
+      console.log('irdFormOptions :: if there is any default predefined: ' + defaultId)
       if (defaultId === 0) {
         if (irdForms.length > 0) {
           defaultId = irdForms[0].id
         }
       }
+      console.log('irdFormOptions :: if there is one irdForm :  defaultId = ' + defaultId)
 
       if (defaultId > 0) {
-        if (vm.form.ird_form_id === 0) {
+        console.log('irdFormOptions :: defaultId > 0 => vm.form.ird_form_id = defaultId')
+        console.log('irdFormOptions :: defaultId > 0 => vm.form.ird_form_id = ' + vm.form.ird_form_id)
+        console.log('irdFormOptions :: defaultId > 0 => vm.form: ', vm.form)
+        if (vm.form.ird_form_id) {
+          if (irdFormIds.indexOf(vm.form.ird_form_id) === -1) {
+            vm.form.ird_form_id = defaultId
+          }
+        } else {
           vm.form.ird_form_id = defaultId
         }
       }
@@ -393,7 +433,7 @@ export default {
       this.refresh()
     },
     activeForm: function (value) {
-      // console.log('CommencementForm :: watch(activeForm) value: ', value)
+      console.log('CommencementForm :: watch(activeForm) value: ', value)
       let vm = this
       vm.linkupOAEmployee(value)
     },
@@ -415,34 +455,50 @@ export default {
     // }
   },
   methods: {
+    onIrdFormTypeSelected (value) {
+      let vm = this
+      if (vm.form.ird_form_type_id !== value) {
+        vm.form.ird_form_type_id = value
+        // vm.form.ird_form_id = vm.getDefaultIrdFormIdOfType(value)
+      }
+    },
+    // getDefaultIrdFormIdOfType (irdFormType) {
+    //   let vm = this
+    //   let defaultId = 0
+    //   for (var i = 0; i < vm.irdForms.length; i++) {
+    //     let irdForm = vm.irdForms[i]
+    //     if (irdForm.is_default) {
+    //       defaultId = irdForm.id
+    //     }
+    //   }
+    // },
     getFormOptions () {
       let vm = this
       let result = []
-      if (vm.irdForms) {
-        let irdForms = vm.irdForms
-        let defaultId = 0
-        for (var i = 0; i < irdForms.length; i++) {
-          let irdForm = irdForms[i]
-          let formOption = {
-            titleTag: 'tax.' + irdForm.form_code.toLowerCase(),
-            value: irdForm.id
+      if (vm.form.ird_form_id === 0) {
+        if (vm.irdForms) {
+          let irdForms = vm.irdForms
+          let defaultId = 0
+          for (var i = 0; i < irdForms.length; i++) {
+            let irdForm = irdForms[i]
+            let formOption = {
+              titleTag: 'tax.' + irdForm.form_code.toLowerCase(),
+              value: irdForm.id
+            }
+            if (irdForm.is_default) {
+              defaultId = irdForm.id
+            }
+            result.push(formOption)
           }
-          if (irdForm.is_default) {
-            defaultId = irdForm.id
+          //
+          // console.log('vm.form.ird_form_type_id = ' + vm.form.ird_form_type_id)
+          // console.log('vm.defaultIrdFormTypeId = ' + vm.defaultIrdFormTypeId)
+          // console.log('defaultId = ' + defaultId)
+          //
+          if (defaultId === 0) {
+            defaultId = vm.irdForms[0].id
           }
-          result.push(formOption)
-        }
-        //
-        // console.log('vm.form.ird_form_type_id = ' + vm.form.ird_form_type_id)
-        // console.log('vm.defaultIrdFormTypeId = ' + vm.defaultIrdFormTypeId)
-        // console.log('defaultId = ' + defaultId)
-        //
-        if (vm.form.ird_form_type_id === 0) {
-          if (vm.defaultIrdFormTypeId === 0) {
-            vm.form.ird_form_type_id = defaultId
-          } else {
-            vm.form.ird_form_type_id = vm.defaultIrdFormTypeId
-          }
+          vm.form.ird_form_id = defaultId
         }
       }
       return result
@@ -543,14 +599,14 @@ export default {
       }
     },
     linkupOAEmployee (record) {
-      console.log('IrdFormRecord.vue :: linkupOAEmployee :: record: ', record)
-      console.log('IrdFormRecord.vue :: linkupOAEmployee :: record.ird_form_id = ' + record.ird_form.id)
+      // console.log('IrdFormRecord.vue :: linkupOAEmployee :: record: ', record)
+      // console.log('IrdFormRecord.vue :: linkupOAEmployee :: record.ird_form_id = ' + record.ird_form.id)
       let vm = this
       if (record) {
-        console.log('IrdFormRecord.vue :: linkupOAEmployee :: record exists')
+        // console.log('IrdFormRecord.vue :: linkupOAEmployee :: record exists')
         vm.form = JSON.parse(JSON.stringify(record))
-        console.log('IrdFormRecord.vue :: linkupOAEmployee :: record.ird_form_id = ' + record.ird_form.id)
-        console.log('IrdFormRecord.vue :: linkupOAEmployee :: form.ird_form_id = ' + vm.form.ird_form.id)
+        // console.log('IrdFormRecord.vue :: linkupOAEmployee :: record.ird_form_id = ' + record.ird_form.id)
+        // console.log('IrdFormRecord.vue :: linkupOAEmployee :: form.ird_form_id = ' + vm.form.ird_form.id)
         for (var i = 0; i < vm.form.employees.length; i++) {
           var formEmployee = vm.form.employees[i]
           let oaEmployee = vm.employees.find(employee => employee.id === formEmployee.employee_id.toString())
@@ -567,11 +623,10 @@ export default {
           vm.form.ird_form_type_id = vm.defaultIrdFormTypeId
           vm.form.ird_form_id = vm.getDefaultFormId
         } else {
-          console.log('IrdFormRecord.vue :: linkupOAEmployee :: (vm.form.id !== 0)')
+          // console.log('IrdFormRecord.vue :: linkupOAEmployee :: (vm.form.id !== 0)')
         }
-        console.log('IrdFormRecord.vue :: linkupOAEmployee :: form.ird_form_id = ' + vm.form.ird_form.id)
-
-        console.log('IrdFormRecord.vue :: linkupOAEmployee :: record => form (after): ', vm.form)
+        // console.log('IrdFormRecord.vue :: linkupOAEmployee :: form.ird_form_id = ' + vm.form.ird_form.id)
+        // console.log('IrdFormRecord.vue :: linkupOAEmployee :: record => form (after): ', vm.form)
       }
     },
 

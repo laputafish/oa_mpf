@@ -146,7 +146,8 @@
     "related_files": "有關檔案",
     "control_list": "核對表",
     "xml_data_file": "XML資料檔",
-    "xsd_file": "資料結構描述檔"
+    "xsd_file": "資料結構描述檔",
+    "employer_file_no": "僱主檔案號碼"
   },
   "mpf": {
     "mpf_management": "MPF 管理"
@@ -175,7 +176,8 @@
     "designation_is_required": "簽署人職位必須填寫.",
     "signature_name_is_required": "簽署人姓名必須填寫.",
     "are_you_sure": "是否確定",
-    "generation_will_be_ready_soon": "有關文件準備中"
+    "generation_will_be_ready_soon": "有關文件準備中",
+    "employee_file_no_is_necessary": "僱主檔案編號必須填寫."
   },
   "database": {
     "items_per_page": "項 / 頁",

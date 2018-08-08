@@ -232,14 +232,14 @@ export default {
     irdFormTypes () {
       return this.$store.getters.irdFormTypes
     },
-    formTypeOptions () {
+    irdFormTypeOptions () {
       return this.getFormTypeOptions()
     },
-    selectedForm () {
+    selectedIrdForm () {
       let vm = this
       let result = null
-      if (vm.form.ird_form_id && vm.form.ird_form_id !== 0 && vm.selectedFormType) {
-        var forms = vm.selectedFormType.forms
+      if (vm.form.ird_form_id && vm.form.ird_form_id !== 0 && vm.selectedIrdFormType) {
+        var forms = vm.selectedIrdFormType.forms
         for (var i = 0; i < forms.length; i++) {
           let form = forms[i]
           if (form.id === vm.form.ird_form_id) {
@@ -250,10 +250,10 @@ export default {
       }
       return result
     },
-    selectedFormType () {
+    selectedIrdFormType () {
       let vm = this
-      console.log('computed: selectedFormType: vm.formTypeOptions.length = ' + vm.irdFormTypes.length)
-      console.log('computed: selectedFormType :: form.ird_form_type_id = ' + vm.form.ird_form_type_id)
+      console.log('computed: selectedIrdFormType: vm.irdFormTypeOptions.length = ' + vm.irdFormTypes.length)
+      console.log('computed: selectedIrdFormType :: form.ird_form_type_id = ' + vm.form.ird_form_type_id)
       let result = null
       for (var i = 0; i < vm.irdFormTypes.length; i++) {
         let irdFormType = vm.irdFormTypes[i]
@@ -262,16 +262,16 @@ export default {
           break
         }
       }
-      console.log('computed: selectedFormType :: result: ', result)
+      console.log('computed: selectedIrdFormType :: result: ', result)
       return result
     },
-    formOptions () {
+    irdFormOptions () {
       let vm = this
       let formOptions = []
 
       let forms = []
-      if (vm.selectedFormType) {
-        forms = vm.selectedFormType.forms
+      if (vm.selectedIrdFormType) {
+        forms = vm.selectedIrdFormType.forms
       }
       // for (var i = 0; i < vm.irdFormTypes.length; i++) {
       //   let irdFormType = vm.irdFormTypes[i]

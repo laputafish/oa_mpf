@@ -28,7 +28,8 @@ const state = {
   isSupervisor: false,
   activeMenu: '',
   publicFolder: null,
-  availableFiscalStartYears: []
+  availableFiscalStartYears: [],
+  languages: []
 }
 
 const transformFolders = folders => {
@@ -151,6 +152,18 @@ const getters = {
   },
   categoryTree: (state) => {
     return state.categoryRoot
+  },
+  languageOptions: (state) => {
+    let result = []
+    for (var i = 0; i < state.languages.length; i++) {
+      var language = state.languages[i]
+      result.push({
+        id: language.id,
+        titleTag: 'general.' + language.label_tag,
+        value: language.id
+      })
+    }
+    return result
   }
 }
 
@@ -235,6 +248,10 @@ function getFiscalYearOfDate (theDate) {
 }
 
 const mutations = {
+
+  setLanguages (state, payload) {
+    state.languages = payload
+  },
 
   setLang (state, payload) {
     app.$i18n.locale = payload
@@ -519,6 +536,17 @@ const actions = {
     commit('setActiveTeam', payload)
   },
 
+  async [types.FETCH_LANGUAGES] ({getters, state, commit}) {
+    return new Promise((resolve, reject) => {
+      let url = constants.apiUrl + '/langs'
+      Vue.axios.get(url).then(function (response) {
+        if (response.data.status) {
+          commit('setLanguages', response.data.result)
+        }
+      })
+    })
+  },
+
   async [types.FETCH_USER_BY_TOKEN] ({getters, state, commit, dispatch}, callback) {
     console.log('system.js :: FETCH_USER_BY_TOKEN')
     return new Promise((resolve, reject) => {
@@ -534,6 +562,8 @@ const actions = {
           user: response.data
         }).then(function (user) {
           dispatch('FETCH_OA_USER_EMPLOYEE').then(function (userEmployee) {
+            dispatch('FETCH_LANGUAGES').then(function (response) {
+            })
             console.log('FETCH_OA_USER_EMPLOYEE.then:: userEmployee: ', userEmployee)
             resolve(user)
           }).catch(function (error) {

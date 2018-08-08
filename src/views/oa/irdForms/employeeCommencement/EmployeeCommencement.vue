@@ -44,7 +44,7 @@ export default {
       pusherSubscribed: false,
       selectedFormId: 0,
       selectedFormEmployeeIds: [],
-      // selectedForm: null,
+      // selectedIrdForm: null,
       mode: 'list', // ['list','record']
       columns: (() => {
         const cols = [
@@ -70,7 +70,7 @@ export default {
     let vm = this
     EventBus.$on('editRecord', function (record) {
       vm.selectedFormId = record.id
-      // vm.selectedForm = record
+      // vm.selectedIrdForm = record
       vm.mode = 'record'
     })
     EventBus.$on('showSelectEmployeeDialog', function (selectedFormEmployeeIds) {
@@ -82,7 +82,7 @@ export default {
   computed: {
     // selectedFormId () {
     //   return
-    //   selectedForm ? selectedForm.id : 0
+    //   selectedIrdForm ? selectedIrdForm.id : 0
     // },
 
     showingSelectEmployeeDialog () {
