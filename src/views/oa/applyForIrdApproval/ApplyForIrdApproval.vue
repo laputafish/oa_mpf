@@ -369,12 +369,13 @@ export default {
   },
   methods: {
     onFormStatusUpdated (data) {
+      let vm = this
       let statusInfo = data.statusInfo
       let formId = statusInfo.formId.toString()
       let status = statusInfo.status
+      vm.sample.status = status
 
       console.log('Pusher (onFormStatusUpdated):: received: form#' + formId + ' (status=' + status + ')')
-      this.updateFormStatus(formId, status)
     },
     onFormItemStatusUpdated (data) {
       let statusInfo = data.statusInfo
@@ -392,7 +393,19 @@ export default {
       let vm = this
       helpers.subscribe(vm, vm.teamId, [
         {channel: 'ird_request_form_status_updated', handler: vm.onFormStatusUpdated},
+        // {
+        //    team
+        //    formId
+        //    status
+        // }
         {channel: 'ird_request_form_item_status_updated', handler: vm.onFormItemStatusUpdated}
+        // {
+        //    team
+        //    formId
+        //    processed_printed_forms
+        //    processed_softcopies
+        //    status
+        // }
       ])
     },
     fiscalYears (startYear) {
@@ -522,7 +535,14 @@ export default {
     selectedSoftcopyItems () {
       let vm = this
       let result = []
-      if (vm.sample.apply_softcopies) {
+      if (vm.sample) {
+        if (vm.sample.apply_softcopies === null) {
+          vm.sample.apply_softcopies = ''
+        }
+        console.log('selectedSoftcopyItems :: sample: ', vm.sample)
+        console.log('selectedSoftcopyItems :: apply_softcopies: ', vm.sample.apply_softcopies)
+        console.log('selectedSoftcopyItems :: apply_softcopies: ', vm.sample.apply_softcopies)
+        console.log('selectedPrintedFormItems :: apply_softcopies not null')
         let selectedItems = vm.sample.apply_softcopies.split(',')
         if (vm.softcopyItems) {
           for (var i = 0; i < vm.softcopyItems.length; i++) {
@@ -539,7 +559,18 @@ export default {
     selectedPrintedFormItems () {
       let vm = this
       let result = []
-      if (vm.sample.apply_softcopies) {
+      if (vm.sample) {
+        if (!vm.sample.apply_softcopies === null) {
+          vm.sample.apply_softcopies = ''
+        }
+        if (vm.sample.apply_printed_forms === null) {
+          vm.sample.apply_printed_forms = ''
+        }
+        console.log('selectedPrintedFormItems :: sample: ', vm.sample)
+        console.log('selectedPrintedFormItems :: apply_softcopies: ', vm.sample.apply_softcopies)
+        console.log('selectedPrintedFormItems :: apply_printed_forms: ', vm.sample.apply_printed_forms)
+        console.log('selectedPrintedFormItems :: apply_printed_forms && apply_softcopies not null')
+
         let selectedSoftcopyItems = vm.sample.apply_softcopies.split(',')
         let selectedPrintedFormItems = vm.sample.apply_printed_forms.split(',')
         if (vm.printedFormItems) {

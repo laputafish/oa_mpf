@@ -67,7 +67,10 @@ export default {
       } else {
         vm.selectedValues.push(optionValue)
       }
-      this.$emit('input', vm.selectedValues.join(','))
+      let value = vm.selectedValues.length === 0 ? '' : vm.selectedValues.join(',')
+      console.log('YoovCheckboxToggle :: selectOption :: selectedValues: ', vm.selectedValues)
+      console.log('YoovCheckboxToggle :: selectOption :: value = ' + value)
+      vm.$emit('input', value)
     }
   }
 }
