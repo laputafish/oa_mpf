@@ -226,10 +226,11 @@
                   <tr v-for="(item,index) in selectedSoftcopyItems"
                       :key="index">
                     <td>
-                      <img v-if="sample.status !== 'ready'"
+                      <img v-if="processedSoftcopies.indexOf(item.value)===-1"
                            class="form-icon" :src="getIconByFileType('unknown')">
                       <a v-else
-                         href="http://yoovapi/apiv2/media/sample_forms/3/239" target="_blank">
+                         :href="getFileUrl(item)"
+                         target="_blank">
                         <img :src="getIconByFileType('pdf')" class="form-icon">
                       </a>
                     </td>
@@ -260,10 +261,11 @@
                   <tr v-for="(item,index) in selectedPrintedFormItems"
                       :key="index">
                     <td>
-                      <img v-if="sample.status !== 'ready'"
+                      <img v-if="processedPrintedForms.indexOf(item.value)===-1"
                            class="form-icon" :src="getIconByFileType('unknown')">
                       <a v-else
-                         href="http://yoovapi/apiv2/media/sample_forms/3/239" target="_blank">
+                         :href="getFileUrl(item)"
+                         target="_blank">
                         <img :src="getIconByFileType('pdf')" class="form-icon">
                       </a>
                     </td>
@@ -336,6 +338,10 @@ export default {
 
         'apply_softcopies': '',
         'apply_printed_forms': '',
+
+        'processed_softcopies': '',
+        'processed_printed_forms': '',
+
         'fiscal_start_year': 2017
       },
       softcopyOptions: [
@@ -349,25 +355,71 @@ export default {
         {label: 'IR56M', value: 'ir56m'}
       ],
       softcopyItems: [
-        {label: 'IR56B 測試數據', value: 'ir56b', processing: true},
-        {label: 'IR56M 測試數據', value: 'ir56m', processing: false}
+        {label: 'IR56B 測試數據',
+          value: 'ir56b',
+          processing: false,
+          url: '/media/ird_forms/{sampleFormId}/ir56b/data_file'},
+        {label: 'IR56M 測試數據',
+          value: 'ir56m',
+          processing: false,
+          url: '/media/ird_forms/{sampleFormId}/ir56m/data_file'}
       ],
       printedFormItems: [
-        {label: '申請書', value: '0', essential: true, processing: false},
+        {label: '申請書',
+          value: 'letter',
+          essential: true,
+          processing: false,
+          url: '/media/ird_forms/{sampleFormId}/letter'},
         // Soft
-        {label: 'IR56B 測試數據紙張印本其中三份', value: 'ir56b', type: 'soft', processing: false},
-        {label: 'IR56B 測試數據核對表 (所有測試數據)', value: 'ir56b', type: 'soft', processing: false},
-        {label: 'IR56M 測試數據紙張印本其中三份', value: 'ir56m', type: 'soft', processing: false},
-        {label: 'IR56M 測試數據核對表 (所有測試數據)', value: 'ir56m', type: 'soft', processing: false},
+        {label: 'IR56B 測試數據紙張印本其中三份',
+          value: 'ir56b',
+          type: 'soft',
+          processing: false,
+          url: '/media/ird_forms/{sampleFormId}/ir56b/sample'},
+        {label: 'IR56B 測試數據核對表 (所有測試數據)',
+          value: 'ir56b',
+          type: 'soft',
+          processing: false,
+          url: '/media/ird_forms/{sampleFormId}/ir56b/control_list'},
+        {label: 'IR56M 測試數據紙張印本其中三份',
+          value: 'ir56m',
+          type: 'soft',
+          processing: false,
+          url: '/media/ird_forms/{sampleFormId}/ir56m/sample'},
+        {label: 'IR56M 測試數據核對表 (所有測試數據)',
+          value: 'ir56m',
+          type: 'soft',
+          processing: false,
+          url: '/media/ird_forms/{sampleFormId}/ir56m/control_list'},
         // Print
-        {label: 'IR56E 測試數據紙張印本三份', value: 'ir56e', type: 'print', processing: false},
-        {label: 'IR56F 測試數據紙張印本三份', value: 'ir56f', type: 'print', processing: false},
-        {label: 'IR56G 測試數據紙張印本三份', value: 'ir56g', type: 'print', processing: false},
-        {label: 'IR56M 測試數據紙張印本三份', value: 'ir56m', type: 'print', processing: false}
+        {label: 'IR56E 測試數據紙張印本三份',
+          value: 'ir56e',
+          type: 'print',
+          processing: false,
+          url: '/media/Ird_forms/{sampleFormId}/ir56e/sample'},
+        {label: 'IR56F 測試數據紙張印本三份',
+          value: 'ir56f',
+          type: 'print',
+          processing: false,
+          url: '/media/Ird_forms/{sampleFormId}/ir56f/sample'},
+        {label: 'IR56G 測試數據紙張印本三份',
+          value: 'ir56g',
+          type: 'print',
+          processing: false,
+          url: '/media/Ird_forms/{sampleFormId}/ir56g/sample'},
+        {label: 'IR56M 測試數據紙張印本三份',
+          value: 'ir56m',
+          type: 'print',
+          processing: false,
+          url: '/media/Ird_forms/{sampleFormId}/ir56m/sample'}
       ]
     }
   },
   methods: {
+    getFileUrl (item) {
+      let vm = this
+      return constants.apiUrl + item.url.replace('{sampleFormId}', vm.sample.id)
+    },
     onFormStatusUpdated (data) {
       let vm = this
       let statusInfo = data.statusInfo
@@ -425,6 +477,8 @@ export default {
           let config = vm.sample
           vm.$store.dispatch('GENERATE_IRD_REQUEST_FORM', config).then(function (response) {
             vm.sample.status = 'ready_for_processing'
+            vm.sample.processed_printed_forms = ''
+            vm.sample.processed_softcopies = ''
           }).catch(function (error) {
             console.log('TaxFormSettingsDialog :: generate :: error: ', error)
           })
@@ -531,6 +585,14 @@ export default {
     // 'apply_printed_forms': '',
     languages () {
       return this.$store.getters.languages
+    },
+    processedSoftcopies () {
+      let vm = this
+      return vm.sample.processed_softcopies.split(',')
+    },
+    processedPrintedForms () {
+      let vm = this
+      return vm.sample.processed_printed_forms.split(',')
     },
     selectedSoftcopyItems () {
       let vm = this
