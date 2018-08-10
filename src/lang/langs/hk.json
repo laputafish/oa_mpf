@@ -63,7 +63,8 @@
     "build_necessary_documents": "建立所需文件",
     "back": "返回",
     "clear_all": "清除所有",
-    "quick_add": "快速加入"
+    "quick_add": "快速加入",
+    "download_all": "全部下載"
   },
   "login": {
     "login": "登入",

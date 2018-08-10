@@ -202,6 +202,9 @@
                   <!--@click="generate">-->
             <!--{{ $t('buttons.build_necessary_documents') }}-->
           <!--</button>-->
+          <a :href="getDownloadUrl()" class="download-all-button pull-right btn btn-primary" target="_self">
+            {{ $t('buttons.download_all') }}
+          </a>
           <h4 class="text-center">
             {{ $t('tax.required_items_for_submission') }}
           </h4>
@@ -222,19 +225,21 @@
             <td class="col-50 softcopy-col">
               <div class="badge badge-primary">需要儲存在可攜儲存裝置 (一隻磁碟/唯讀光碟(CD-ROM/DVD-ROM)/USB儲存裝置，並在其貼上標籤，註明偏主名稱，偏主檔案號碼及有關的課稅年度，以便記認。</div>
               <div  class="item-list-table rounded-2 border-1 border-info">
-                <table>
+                <table style="width:100%;">
                   <tr v-for="(item,index) in selectedSoftcopyItems"
-                      :key="index">
-                    <td>
-                      <img v-if="processedSoftcopies.indexOf(item.value)===-1"
-                           class="form-icon" :src="getIconByFileType('unknown')">
+                      :key="index" class="item-row">
+                    <td style="vertical-align:middle;">
+                      <div v-if="processedSoftcopies.indexOf(item.value)===-1">
+                        <img class="form-icon pull-left" :src="getIconByFileType('unknown')">
+                        <div class="item-label">{{ item['label'] }}</div>
+                      </div>
                       <a v-else
                          :href="getFileUrl(item)"
-                         target="_blank">
-                        <img :src="getIconByFileType('pdf')" class="form-icon">
+                         target="_self">
+                        <img :src="getIconByFileType(item.fileType)" class="form-icon pull-left">
+                        <div class="item-label">{{ item['label'] }}</div>
                       </a>
                     </td>
-                    <td>{{ item['label'] }}</td>
                   </tr>
                 </table>
               </div>
@@ -257,19 +262,22 @@
             </td>
             <td class="col-50 printed-form-col">
               <div class="item-list-table rounded-2 border-1 border-info flex-grow-1">
-                <table>
+                <table style="width: 100%;">
                   <tr v-for="(item,index) in selectedPrintedFormItems"
-                      :key="index">
+                      :key="index"
+                    class="item-row">
                     <td>
-                      <img v-if="processedPrintedForms.indexOf(item.value)===-1"
-                           class="form-icon" :src="getIconByFileType('unknown')">
+                      <div v-if="processedPrintedForms.indexOf(item.value)===-1 && processedSoftcopies.indexOf(item.value)===-1">
+                        <img class="form-icon pull-left" :src="getIconByFileType('unknown')">
+                        <div class="item-label">{{ item['label'] }}</div>
+                      </div>
                       <a v-else
                          :href="getFileUrl(item)"
                          target="_blank">
-                        <img :src="getIconByFileType('pdf')" class="form-icon">
+                        <img class="form-icon pull-left" :src="getIconByFileType('pdf')">
+                        <div class="item-label">{{ item['label'] }}</div>
                       </a>
                     </td>
-                    <td>{{ item['label'] }}</td>
                   </tr>
                   <tr v-if="!selectedPrintedFormItems || selectedPrintedFormItems.length === 0">
                     <td class="text-center">
@@ -358,11 +366,23 @@ export default {
         {label: 'IR56B 測試數據',
           value: 'ir56b',
           processing: false,
+          fileType: 'xml',
           url: '/media/ird_forms/{sampleFormId}/ir56b/data_file'},
+        {label: 'IR56B 核對檔',
+          value: 'ir56b',
+          processing: false,
+          fileType: 'xsd',
+          url: '/media/ird_forms/{sampleFormId}/ir56b/scheme_file'},
         {label: 'IR56M 測試數據',
           value: 'ir56m',
           processing: false,
-          url: '/media/ird_forms/{sampleFormId}/ir56m/data_file'}
+          fileType: 'xml',
+          url: '/media/ird_forms/{sampleFormId}/ir56m/data_file'},
+        {label: 'IR56M 核對檔',
+          value: 'ir56m',
+          processing: false,
+          fileType: 'xsd',
+          url: '/media/ird_forms/{sampleFormId}/ir56m/scheme_file'}
       ],
       printedFormItems: [
         {label: '申請書',
@@ -416,30 +436,40 @@ export default {
     }
   },
   methods: {
+    getDownloadUrl () {
+      let vm = this
+      return constants.apiUrl + '/media/ird_forms/' + vm.sample.id + '/download_all'
+    },
     getFileUrl (item) {
       let vm = this
       return constants.apiUrl + item.url.replace('{sampleFormId}', vm.sample.id)
     },
     onFormStatusUpdated (data) {
+      let statusInfo = data.statusInfo
+      let formId = statusInfo.formId.toString()
+      let status = statusInfo.status
+      this.sample.status = status
+      console.log('Pusher (onFormStatusUpdated):: received: form #' + formId + ' (status=' + status + ')')
+    },
+    onFormItemStatusUpdated (data) {
+      // data.statusInfo = {
+      //    'team',
+      //    'formId',
+      //    'processed_printed_forms',
+      //    'processed_softcopies',
+      //    'status'
       let vm = this
       let statusInfo = data.statusInfo
       let formId = statusInfo.formId.toString()
       let status = statusInfo.status
-      vm.sample.status = status
-
-      console.log('Pusher (onFormStatusUpdated):: received: form#' + formId + ' (status=' + status + ')')
-    },
-    onFormItemStatusUpdated (data) {
-      let statusInfo = data.statusInfo
-      let formId = statusInfo.formId.toString()
-      let employeeId = statusInfo.employeeId.toString()
-      let status = statusInfo.status
-      this.updateFormEmployeeStatus(formId, employeeId, status)
-      console.log('Pusher (onFormItemStatusUpdated) :: form#' + formId + ' employee#' + employeeId + ' (status=' + status + ')')
-      // let formId = statusInfo.formId.toString()
-      // let status = statusInfo.status
+      vm.sample.processed_printed_forms = statusInfo.processed_printed_forms
+      vm.sample.processed_softcopies = statusInfo.processed_softcopies
+      console.log('Pusher (onFormItemStatusUpdated):: received: form #' + formId + ' (status=' + status + ')')
       //
-      // console.log('onEmployeeStatusUpdated :: data: ', data)
+      // let employeeId = statusInfo.employeeId.toString()
+      // let status = statusInfo.status
+      // this.updateFormEmployeeStatus(formId, employeeId, status)
+      // console.log('Pusher (onFormItemStatusUpdated) :: form#' + formId + ' employee#' + employeeId + ' (status=' + status + ')')
     },
     subscribe () {
       let vm = this
@@ -911,5 +941,39 @@ export default {
   #apply-for-ird-approval .item-list-table .form-icon {
     width: 24px;
     height: 24px;
+  }
+
+  #apply-for-ird-approval .printed-form-col .item-row .form-icon,
+  #apply-for-ird-approval .softcopy-col .item-row .form-icon {
+    margin-right: 5px;
+  }
+
+  #apply-for-ird-approval .printed-form-col .item-row a,
+  #apply-for-ird-approval .softcopy-col .item-row a {
+    color: black;
+  }
+
+  #apply-for-ird-approval .printed-form-col .item-row td,
+  #apply-for-ird-approval .softcopy-col .item-row td {
+    padding: 3px 5px;
+  }
+
+  #apply-for-ird-approval .printed-form-col .item-row:hover,
+  #apply-for-ird-approval .softcopy-col .item-row:hover {
+    background-color: #28ada7;
+  }
+  #apply-for-ird-approval .printed-form-col .item-row:hover a,
+  #apply-for-ird-approval .softcopy-col .item-row:hover a {
+    color: white;
+    text-decoration: none;
+  }
+
+  #apply-for-ird-approval .printed-form-col .item-row .form-icon,
+  #apply-for-ird-approval .softcopy-col .item-row .form-icon {
+
+  }
+
+  #apply-for-ird-approval .download-all-button {
+    margin-top: -0.3rem;
   }
 </style>
