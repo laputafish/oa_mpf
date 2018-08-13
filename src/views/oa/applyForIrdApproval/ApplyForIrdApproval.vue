@@ -24,7 +24,7 @@
                     v-else
                     @click="generate"
                     class="pull-right btn btn-outline-primary min-width-100">
-              <i class="fa fa-bolt"></i>&nbsp;{{ $t('buttons.generate_necessary_documents') }}
+              <i class="fa fa-bolt"></i>&nbsp;{{ $t('buttons.generate_documents') }}
             </button>
             <button type="button"
                     @click="save"
@@ -203,6 +203,7 @@
             <!--{{ $t('buttons.build_necessary_documents') }}-->
           <!--</button>-->
           <a :href="getDownloadUrl()" class="download-all-button pull-right btn btn-primary" target="_self">
+            <i class="fa fa-download"></i>&nbsp;
             {{ $t('buttons.download_all') }}
           </a>
           <h4 class="text-center">

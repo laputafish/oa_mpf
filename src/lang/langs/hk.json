@@ -57,6 +57,7 @@
     "edit": "編輯",
     "generate_ir56e": "創建IR56E表格",
     "generate_necessary_documents": "建立所需文件",
+    "generate_documents": "建立文件",
     "generate_forms": "建立表格",
     "terminate": "終止",
     "add_all_employees": "添加所有員工",
@@ -64,7 +65,8 @@
     "back": "返回",
     "clear_all": "清除所有",
     "quick_add": "快速加入",
-    "download_all": "全部下載"
+    "download_all": "全部下載",
+    "download": "下載"
   },
   "login": {
     "login": "登入",

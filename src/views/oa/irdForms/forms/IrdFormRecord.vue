@@ -16,24 +16,33 @@
               <i class="fa fa-spinner fa-spin"></i>
               {{ $t('general.' + form.status) }}
             </span>
-          </h4><div class="col-sm text-right">
+          </h4>
+          <div class="col-sm text-right btn-stackable-group">
             <button type="button"
                     v-if="form.status==='processing'||form.status==='ready_for_processing'"
                     :disabled="form.status!=='processing' && form.status!=='ready_for_processing'"
                     @click="terminateGeneration"
                     class="btn min-width-80 btn-danger min-width-100">
               <i class="fa fa-hand-stop-o"></i>
-              {{ $t('buttons.terminate') }}</button>
+              {{ $t('buttons.terminate') }}
+            </button>
             <button type="button"
                     v-else
                     @click="startGeneration"
                     :disabled="whenDisabledInput||form.employees.length===0"
                     class="btn btn-outline-success min-width-100">
               <i class="fa fa-bolt"></i>
-              {{ $t('buttons.generate_forms') }}
+              {{ $t('buttons.generate_documents') }}
               <span v-if="loadingCommand==='generate'">
                 &nbsp;<i class="fa fa-spinner fa-spin"></i>
               </span>
+            </button>
+            <button type="button"
+                    :disabled="form.status!=='ready'"
+                    @click="download"
+                    class="btn min-width-80 btn-danger min-width-100">
+              <i class="fa fa-download"></i>
+              {{ $t('buttons.download') }}
             </button>
             <button type="button"
                     :disabled="form.status==='processing'||form.status==='ready_for_processing'"
@@ -49,7 +58,8 @@
                     class="btn btn-width-80 btn-outline-default"
                     @click="cancel">
               <i class="fa fa-close"></i>
-              {{ $t('buttons.cancel') }}</button>
+              {{ $t('buttons.cancel') }}
+            </button>
           </div>
         </div>
       </div>
@@ -62,7 +72,8 @@
 
         <!-- Signature Name -->
         <div class="form-group row">
-          <label class="text-sm-right col-sm-3 col-form-label" for="signatureName">{{ $t('tax.signature_name') }}</label>
+          <label class="text-sm-right col-sm-3 col-form-label" for="signatureName">{{ $t('tax.signature_name')
+            }}</label>
           <div class="col-sm-9">
             <input v-model="form.signature_name"
                    name="signatureName"
@@ -78,7 +89,8 @@
 
         <!-- Designation -->
         <div class="form-group row">
-          <label class="text-sm-right col-sm-3 col-form-label" for="designation">{{ $t('tax.signature_designation') }}*</label>
+          <label class="text-sm-right col-sm-3 col-form-label" for="designation">{{ $t('tax.signature_designation')
+            }}*</label>
           <div class="col-sm-9 co-md-7 co-lg-6">
             <input v-model="form.designation"
                    name="designation"
@@ -124,7 +136,8 @@
 
         <!-- fiscal year -->
         <div class="form-group row" v-show="selectedIrdForm && selectedIrdForm.requires_fiscal_year">
-          <label class="text-sm-right col-sm-3 col-form-label" for="fiscalStartYear">{{ $t('tax.fiscal_years') }}</label>
+          <label class="text-sm-right col-sm-3 col-form-label" for="fiscalStartYear">{{ $t('tax.fiscal_years')
+            }}</label>
           <div class="col-sm-9">
             <yoov-radio-toggle
               id="fiscalStartYear"
@@ -154,7 +167,8 @@
         <div class="form-group row">
           <label class="text-sm-right col-sm-4 col-form-label" for="formDate">{{ $t('general.form_status') }}</label>
           <div class="col-sm-4">
-            <input type="text" v-if="form" readonly class="form-control" id="status" :value="form.status ? $t('general.' + form.status) : ''">
+            <input type="text" v-if="form" readonly class="form-control" id="status"
+                   :value="form.status ? $t('general.' + form.status) : ''">
           </div>
         </div>
 
@@ -455,6 +469,17 @@ export default {
     // }
   },
   methods: {
+    download () {
+      let vm = this
+      let url = constants.apiUrl + '/forms/' + vm.form.id + '/prepare_download'
+      vm.axios.post(url).then(function (response) {
+        if (response.data.status) {
+          let key = response.data.key
+          let downloadUrl = constants.apiUrl + '/temp/' + key + '/download'
+          window.open( downloadUrl, '_self')
+        }
+      })
+    },
     onIrdFormTypeSelected (value) {
       let vm = this
       if (vm.form.ird_form_type_id !== value) {
@@ -775,7 +800,8 @@ export default {
   #ird-form-record button[disabled=disabled]:hover {
     cursor: default;
   }
-  @media(min-width: 768px) {
+
+  @media (min-width: 768px) {
     .text-sm-right {
       text-align: right;
     }
