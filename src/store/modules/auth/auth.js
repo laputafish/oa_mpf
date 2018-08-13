@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import {app} from '@/main'
+// import {app} from '@/main'
 import * as constants from '../../constants'
 import * as types from './auth_types'
 
@@ -40,8 +40,10 @@ const actions = {
         password: credentials.password,
         teamId: state.teamId
       }
+      alert('credentials.password = ' + credentials.password)
       let config = getters.apiHeaderConfig
       Vue.axios.post(url, data, config).then(response => {
+        console.log('post(yoovapi/apiv2/auth/login_oa :: response.data: ', response.data)
         if (response.data.status) {
           const token = response.data.token
           localStorage.setItem('accessToken', token)
@@ -51,10 +53,10 @@ const actions = {
             resolve(result)
           })
         } else {
-          commit('showModal', {
-            title: app.$t('general.warning'),
-            message: app.$t('messages.access_denied')
-          }, {root: true})
+          // commit('showModal', {
+          //   title: app.$t('general.warning'),
+          //   message: app.$t('messages.access_denied')
+          // }, {root: true})
           resolve({
             'valid': false,
             'isSupervisor': false
@@ -78,6 +80,7 @@ const actions = {
         client_id: constants.CLIENT_ID,
         client_secret: constants.CLIENT_SECRET
       }
+      console.log('post(http://yoovapi/oauth/token)')
       Vue.axios.post(url, data).then(function (response) {
         let authorized = true
         dispatch(types.AUTH_REQUEST_OA, {credentials, authorized}).then(

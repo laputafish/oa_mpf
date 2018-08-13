@@ -1,9 +1,7 @@
 <template>
   <div class="form-file-item">
-    <div class="text-center d-flex flex-column">
-      <a :href="documentUrl" :target="targetPage">
-        <img :src="imgSrc" class="form-file-item-icon"/>
-      </a>
+    <div class="text-center d-flex flex-column align-items-center" @click="showFileItem(documentUrl)">
+      <img :src="imgSrc" class="form-file-item-icon"/>
       <small>{{ $t('tax.'+file.labelTag) }}</small>
     </div>
   </div>
@@ -31,6 +29,19 @@ export default {
       let vm = this
       return (vm.file.iconType === 'xml' || vm.file.iconType === 'xsd') ? '_self' : '_blank'
     }
+  },
+  methods: {
+    showFileItem (documentUrl) {
+      let vm = this
+      vm.axios.post(documentUrl).then(function (response) {
+        if (response.data.status) {
+          // download => attachment
+          // open in tab => inline
+          let fetchType = (vm.file.iconType === 'xml' || vm.file.iconType === 'xsd') ? 'download' : 'show'
+          window.open(constants.apiUrl + '/temp/' + response.data.key + '/' + fetchType, vm.targetPage)
+        }
+      })
+    }
   }
 }
 </script>
@@ -45,5 +56,9 @@ export default {
     width: 24px;
     height: 24px;
     object-fit: contain;
+  }
+
+  .form-file-item:hover {
+    cursor: pointer;
   }
 </style>

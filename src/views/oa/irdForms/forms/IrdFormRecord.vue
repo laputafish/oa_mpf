@@ -471,12 +471,12 @@ export default {
   methods: {
     download () {
       let vm = this
-      let url = constants.apiUrl + '/forms/' + vm.form.id + '/prepare_download'
+      let url = constants.apiUrl + '/forms/' + vm.form.id + '/prepare'
       vm.axios.post(url).then(function (response) {
         if (response.data.status) {
           let key = response.data.key
           let downloadUrl = constants.apiUrl + '/temp/' + key + '/download'
-          window.open( downloadUrl, '_self')
+          window.open(downloadUrl, '_self')
         }
       })
     },

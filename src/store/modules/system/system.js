@@ -561,14 +561,15 @@ const actions = {
         dispatch(types.SET_USER, {
           user: response.data
         }).then(function (user) {
-          dispatch('FETCH_OA_USER_EMPLOYEE').then(function (userEmployee) {
-            dispatch('FETCH_LANGUAGES').then(function (response) {
-            })
-            console.log('FETCH_OA_USER_EMPLOYEE.then:: userEmployee: ', userEmployee)
-            resolve(user)
-          }).catch(function (error) {
-            reject(error)
-          })
+          resolve(user)
+          // dispatch('FETCH_OA_USER_EMPLOYEE').then(function (userEmployee) {
+          //   dispatch('FETCH_LANGUAGES').then(function (response) {
+          //   })
+          //   console.log('FETCH_OA_USER_EMPLOYEE.then:: userEmployee: ', userEmployee)
+          //   resolve(user)
+          // }).catch(function (error) {
+          //   reject(error)
+          // })
         }).catch(function (error) {
           reject(error)
         })
@@ -684,10 +685,10 @@ const actions = {
           commit('setToken', response.data.token)
           dispatch('FETCH_USER_BY_TOKEN', callback)
         } else {
-          commit('showModal', {
-            title: app.$t('general.warning'),
-            message: app.$t('messages.access_denied')
-          }, {root: true})
+          // commit('showModal', {
+          //   title: app.$t('general.warning'),
+          //   message: app.$t('messages.access_denied')
+          // }, {root: true})
         }
       }, function (error) {
         console.log('login :: error: ', error)

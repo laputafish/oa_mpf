@@ -155,7 +155,7 @@ export default {
               }
             }
           } else {
-            vm.$dialog.alert('Access Denied!')
+            vm.$dialog.alert(vm.$t('messages.access_denied'))
           }
         })
     },
