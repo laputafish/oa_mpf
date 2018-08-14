@@ -17,14 +17,18 @@
       <div class="row form-group">
         <div class="col-sm-12 col-md-8">
           <div class="input-group">
-            <input class="form-control" type="text" :placeholder="$t('general.search_in_name_order')">
+            <input class="form-control" type="text"
+                   v-model="search"
+                   :placeholder="$t('general.search_in_name_order')">
             <div class="input-group-append">
+              <!-- Clear All Selection -->
               <button type="button" class="btn btn-outline-primary">
                 <i class="fa fa-close"></i></button>
             </div>
           </div>
         </div>
         <div class="col-sm-4 col-md-4">
+          <!-- Select All -->
           <button type="button"
                   @click="onAllSelected"
                   class="pull-right btn btn-outline-primary">
@@ -149,11 +153,21 @@ export default {
       type: Boolean,
       default: false
     },
+    defaultSelectedGroupIds: {
+      type: Array,
+      default: () => {
+        return []
+      }
+    },
     defaultSelectedEmployeeIds: {
       type: Array,
       default: () => {
         return []
       }
+    },
+    employeeStatus: {
+      type: String,
+      default: 'active'
     }
   },
   mounted () {
@@ -167,6 +181,7 @@ export default {
     //       vm.$refs.selectEmployeeDialog.hide()
     //     }
     vm.selectedEmployeeIds = JSON.parse(JSON.stringify(vm.defaultSelectedEmployeeIds))
+    vm.selectedGroupIds = []
   },
   watch: {
     //     showingDialog: function (value) {
@@ -213,13 +228,20 @@ export default {
         for (i = 0; i < vm.selectedEmployees.length; i++) {
           employees.push(vm.selectedEmployees[i])
         }
+        console.log('SelectEmployeeDialog :: employees: ', employees)
         let selectedEmployeeIds = employees.map(employee => employee.id)
+        console.log('SelectEmployeeDialog :: selectedEmployeeIds: ', selectedEmployeeIds)
+        console.log('SelectEmployeeDialog :: selectedGroups.length = ' + vm.selectedGroups.length)
         for (i = 0; i < vm.selectedGroups.length; i++) {
           selectedGroup = vm.selectedGroups[i]
+          console.log('SelectEmployeeDialog i=' + i + ':: selectedGroup.employees: ', selectedGroup.employees)
           for (j = 0; j < selectedGroup.employees.length; j++) {
-            groupEmployee = selectedGroup.employees[i]
-            if (selectedEmployeeIds.indexOf(groupEmployee.id) === -1) {
-              employees.push(groupEmployee)
+            groupEmployee = selectedGroup.employees[j]
+            if (groupEmployee.status === vm.employeeStatus) {
+              console.log('SelectEmployeeDialog i=' + i + '  j=' + j + ': groupEmployee: ', groupEmployee)
+              if (selectedEmployeeIds.indexOf(groupEmployee.id) === -1) {
+                employees.push(groupEmployee)
+              }
             }
           }
         }
@@ -290,7 +312,8 @@ export default {
     availableEmployees () {
       let vm = this
       return this.employees.filter(employee => {
-        return vm.selectedEmployeeIds.indexOf(employee.id) === -1
+        let name = employee.displayName.toLowerCase()
+        return (vm.selectedEmployeeIds.indexOf(employee.id) === -1 && name.indexOf(vm.search.toLowerCase()) >= 0)
       })
     },
     selectedEmployees () {

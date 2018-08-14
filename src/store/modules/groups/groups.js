@@ -322,9 +322,15 @@ const actions = {
   async [types.FETCH_EMPLOYEES] ({rootGetters, state, commit, dispatch, getters}, payload) {
     let vm = this
     let url = constants.oaApiUrl + '/admin/employees'
+    let status = 'active'
+
+    if (payload && payload['status']) {
+      status = payload['status']
+    }
+
     let config = {
       'params': {
-        status: 'active',
+        status: status,
         include: 'groups,workingGroups,permissions',
         teamId: rootGetters.user.oa_last_team_id
       }

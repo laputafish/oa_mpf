@@ -71,6 +71,8 @@
       ref="selectEmployeeDialog"
       v-model="showingSelectEmployeeDialog"
       :defaultSelectedEmployeeIds="selectedFormEmployeeIds"
+      :employeeStatus="employeeStatus"
+      :defaultSelectedGroupIds="[]"
       @close="$store.commit('hideSelectEmployeeDialog')"></select-employee-dialog>
   </div>
 </template>
@@ -104,7 +106,11 @@ export default {
       pusher: null,
       pusherSubscribed: false,
       selectedFormId: 0,
+
+      // For employee selection
       selectedFormEmployeeIds: [],
+      employeeStatus: 'active',
+
       // selectedIrdForm: null,
       mode: 'list', // ['list','record']
       columns: (() => {
@@ -182,9 +188,10 @@ export default {
         vm.onQueryChangedHandler(vm.query)
       })
     })
-    EventBus.$on('showSelectEmployeeDialog', function (selectedFormEmployeeIds) {
+    EventBus.$on('showSelectEmployeeDialog', function (payload) {
       console.log('EventBus.on(showSelectEmployeeDialog)')
-      vm.selectedFormEmployeeIds = selectedFormEmployeeIds
+      vm.selectedFormEmployeeIds = payload.selectedFormEmployeeIds
+      vm.employeeStatus = payload.employeeStatus
       vm.$refs.selectEmployeeDialog.show()
     })
   },

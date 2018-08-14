@@ -271,6 +271,7 @@ import EmployeeTable from './EmployeeTable'
 import * as constants from '@/store/constants.json'
 import YoovRadioToggle from '@/components/forms/YoovRadioToggle'
 import FormFileItem from './comps/FormFileItem'
+import {EventBus} from '@/event-bus'
 
 export default {
   components: {
@@ -447,8 +448,14 @@ export default {
       this.refresh()
     },
     activeForm: function (value) {
-      console.log('CommencementForm :: watch(activeForm) value: ', value)
       let vm = this
+      console.log('watch(activeForm) :: watch(activeForm) value: ', value)
+      let ids = []
+      for (var i = 0; i < value.employees.length; i++) {
+        ids.push(value.employees[i].employee_id + ': ' + value.employees[i].name)
+      }
+      console.log('watch(activeForm) :: employeeIds: ' + ids.join(', '))
+      // console.log('watch(activeForm) :: watch(activeForm) value: ', value)
       vm.linkupOAEmployee(value)
     },
     form: {
@@ -484,6 +491,13 @@ export default {
       let vm = this
       if (vm.form.ird_form_type_id !== value) {
         vm.form.ird_form_type_id = value
+        if (value === 2) {
+          vm.$store.dispatch('FETCH_EMPLOYEES', {status: 'resigned'})
+          console.log('FETCH_EMPLOYEES: resigned')
+        } else {
+          vm.$store.dispatch('FETCH_EMPLOYEES', {status: 'active'})
+          console.log('FETCH_EMPLOYEES: active')
+        }
         // vm.form.ird_form_id = vm.getDefaultIrdFormIdOfType(value)
       }
     },
@@ -624,14 +638,22 @@ export default {
       }
     },
     linkupOAEmployee (record) {
+      let vm = this
+      console.log('linkupOAEmployee :: vm.employees: ', vm.employees)
       // console.log('IrdFormRecord.vue :: linkupOAEmployee :: record: ', record)
       // console.log('IrdFormRecord.vue :: linkupOAEmployee :: record.ird_form_id = ' + record.ird_form.id)
-      let vm = this
       if (record) {
         // console.log('IrdFormRecord.vue :: linkupOAEmployee :: record exists')
         vm.form = JSON.parse(JSON.stringify(record))
         // console.log('IrdFormRecord.vue :: linkupOAEmployee :: record.ird_form_id = ' + record.ird_form.id)
         // console.log('IrdFormRecord.vue :: linkupOAEmployee :: form.ird_form_id = ' + vm.form.ird_form.id)
+
+        let employeeIds = []
+        for (var j = 0; j < vm.employees.length; j++) {
+          employeeIds.push(vm.employees[j].id)
+        }
+        console.log('linkupOAEmployee :: ids = ' + employeeIds.join(','))
+
         for (var i = 0; i < vm.form.employees.length; i++) {
           var formEmployee = vm.form.employees[i]
           let oaEmployee = vm.employees.find(employee => employee.id === formEmployee.employee_id.toString())
@@ -756,9 +778,15 @@ export default {
       let vm = this
 
       vm.loadingCommand = command
-
-      // let options = commandOptions.options
       switch (command) {
+        case 'selectEmployee':
+          let employeeStatus = vm.form.ird_form_type_id === 2 ? 'resigned' : 'active'
+          EventBus.$emit('showSelectEmployeeDialog', {
+            ...commandOptions,
+            employeeStatus: employeeStatus
+          })
+          vm.loadingCommand = ''
+          break
         case 'generate':
           vm.saveRecord((result) => {
             vm.$store.dispatch('FETCH_ACTIVE_FORM', {id: result.id}).then(function (response) {
@@ -772,12 +800,6 @@ export default {
             })
           })
           break
-        // case 'generate':
-        //   vm.$store.dispatch('START_FORM_GENERATION', {
-        //     'formId': vm.form.id,
-        //     'formType': vm.formType
-        //   })
-        //   break
         case 'terminate':
           vm.$store.dispatch('TERMINATE_FORM_GENERATION', {
             'formId': vm.form.id,

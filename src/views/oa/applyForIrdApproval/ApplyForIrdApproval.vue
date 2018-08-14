@@ -202,10 +202,16 @@
                   <!--@click="generate">-->
             <!--{{ $t('buttons.build_necessary_documents') }}-->
           <!--</button>-->
-          <a :href="getDownloadUrl()" class="download-all-button pull-right btn btn-primary" target="_self">
+
+          <!--<a :href="getDownloadUrl()" class="download-all-button pull-right btn btn-primary" target="_self">-->
+            <!--<i class="fa fa-download"></i>&nbsp;-->
+            <!--{{ $t('buttons.download_all') }}-->
+          <!--</a>-->
+          <button class="download-all-button pull-right btn btn-primary"
+                  @click="downloadAll()">
             <i class="fa fa-download"></i>&nbsp;
             {{ $t('buttons.download_all') }}
-          </a>
+          </button>
           <h4 class="text-center">
             {{ $t('tax.required_items_for_submission') }}
           </h4>
@@ -440,18 +446,22 @@ export default {
     }
   },
   methods: {
-    fetchTeam (teamId) {
+    downloadAll () {
       let vm = this
-      let url = constants.apiUrl + '/teams/' + teamId
-      let data = {
-        params: {
-          includes: 'settings'
-        }
-      }
-      this.axios.get(url, data).then(function (response) {
+      let url = constants.apiUrl + '/sample_forms/' + vm.sample.id + '/prepare'
+      vm.axios.post(url).then(function (response) {
         if (response.data.status) {
-          vm.companySetting = response.data.result
+          let key = response.data.key
+          let downloadUrl = constants.apiUrl + '/temp/' + key + '/download'
+          window.open(downloadUrl, '_self')
         }
+      })
+    },
+    fetchTaxFormSettings () {
+      let vm = this
+      vm.$store.dispatch('FETCH_TAX_FORM_SETTINGS').then(function (result) {
+        console.log('FETCH_TAX_FORM_SETTINGS :: result: ', result)
+        vm.companySetting.fileNo = result.fileNo
       })
     },
     getDownloadUrl () {
@@ -771,7 +781,7 @@ export default {
   created () {
     let vm = this
     vm.$store.dispatch('FETCH_LANGUAGES')
-    vm.fetchTeam(vm.teamId)
+    vm.fetchTaxFormSettings()
   },
   beforeDestroy () {
     helpers.unSubscribe(this)

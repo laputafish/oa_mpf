@@ -93,10 +93,12 @@ export default {
     let vm = this
     EventBus.$on('onEmployeesSelected', vm.onEmployeesSelected)
     EventBus.$on('onEmployeeDeleted', vm.onEmployeeDeleted)
+    EventBus.$on('onEmployeeDocumentRequested', vm.onEmployeeDocumentRequested)
   },
   beforeDestroy () {
     EventBus.$off('onEmployeesSelected')
     EventBus.$off('onEmployeeDeleted')
+    EventBus.$off('onEmployeeDocumentRequested')
   },
   computed: {
     getFormId () {
@@ -107,6 +109,18 @@ export default {
     }
   },
   methods: {
+    onEmployeeDocumentRequested (employee) {
+      let vm = this
+      let employeeId = employee.employee_id
+      let url = constants.apiUrl + '/forms/' + vm.formId + '/employee/' + employeeId + '/prepare'
+      vm.axios.post(url).then(function (response) {
+        if (response.data.status) {
+          let key = response.data.key
+          let downloadUrl = constants.apiUrl + '/temp/' + key + '/show'
+          window.open(downloadUrl, '_blank')
+        }
+      })
+    },
     onEmployeeDeleted (employee) {
       let vm = this
       // console.log('EmployeeTable :: onEmployeeDeleted')
@@ -143,7 +157,11 @@ export default {
     selectEmployees () {
       let vm = this
       let selectedEmployeeIds = vm.employees.map(formEmployee => formEmployee.employee_id.toString())
-      EventBus.$emit('showSelectEmployeeDialog', selectedEmployeeIds)
+      // EventBus.$emit('showSelectEmployeeDialog', selectedEmployeeIds)
+      vm.$emit('onCommand', {
+        command: 'selectEmployee',
+        selectedEmployeeIds: selectedEmployeeIds
+      })
     },
     updateData (query) {
       let vm = this
@@ -193,6 +211,7 @@ export default {
       vm.total = vm.tableEmployees.length
     },
     loadTableEmployees (value) {
+      console.log('EmployeeTable :: loadTableEmployees :: value: ', value)
       this.tableEmployees = []
       for (var i = 0; i < value.length; i++) {
         this.tableEmployees.push(value[i])
