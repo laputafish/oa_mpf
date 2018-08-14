@@ -61,7 +61,7 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch('FETCH_TEAMS')
+    // this.$store.dispatch('FETCH_TEAMS')
   }
 }
 </script>

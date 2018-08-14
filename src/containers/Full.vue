@@ -54,6 +54,12 @@ export default {
     }
   },
   computed: {
+    isPayrollAdmin () {
+      return this.$store.getters.isPayrollAdmin
+    },
+    isOwner () {
+      return this.$store.getters.isOwner
+    },
     roles () {
       let vm = this
       return vm.$store.getters.roles.map(item => item.name)
@@ -65,8 +71,14 @@ export default {
         var item = nav.items[i]
         if (Object.keys(item).indexOf('authRole') >= 0) {
           let authRole = item['authRole']
-          if (vm.roles.indexOf(authRole) >= 0) {
-            result.push(item)
+          switch (authRole) {
+            case 'Payroll Management':
+              if (vm.isPayrollAdmin || vm.isOwner) {
+                result.push(item)
+              }
+          // }
+          // if (vm.roles.indexOf(authRole) >= 0) {
+          //   result.push(item)
           }
         } else {
           result.push(item)
@@ -102,10 +114,11 @@ export default {
     teams () {
       console.log('Full.vue :: computed(teams)')
       return this.$store.getters.teams
-    },
-    isPayrollAdmin () {
-      return this.$store.getters.isPayrollAdmin
     }
+    // ,
+    // isPayrollAdmin () {
+    //   return this.$store.getters.isPayrollAdmin
+    // }
   },
   created () {
     // let vm = this
@@ -128,6 +141,7 @@ export default {
     //   return
     // }
     console.log('Full.vue mounted user: ', vm.user)
+    vm.$store.dispatch('FETCH_LANGUAGES')
     vm.$store.dispatch('GET_EQUIPMENTS').then(function () {
       console.log('finished: get equipments')
     })

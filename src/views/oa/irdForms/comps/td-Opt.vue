@@ -10,15 +10,23 @@
       <!--@click="toggleNestedComp('DisplayRow')">-->
       <!--<i class="fa fa-list-ul"></i>-->
     </button>
+    <button class="btn btn-secondary"
+            :disabled="row.status!=='ready'"
+            @click="downloadRecord">
+      <i class="fa fa-fw fa-download"></i>
+      <!--<button class="btn btn-danger"-->
+      <!--:class="{ '-nested-comp-open-btn': isDisplayRowVisible }"-->
+      <!--@click="toggleNestedComp('DisplayRow')">-->
+      <!--<i class="fa fa-fw fa-close"></i>-->
+    </button>
     <button class="btn btn-danger"
             @click="deleteRecord">
       <i class="fa fa-fw fa-close"></i>
-    <!--<button class="btn btn-danger"-->
-            <!--:class="{ '-nested-comp-open-btn': isDisplayRowVisible }"-->
-            <!--@click="toggleNestedComp('DisplayRow')">-->
+      <!--<button class="btn btn-danger"-->
+      <!--:class="{ '-nested-comp-open-btn': isDisplayRowVisible }"-->
+      <!--@click="toggleNestedComp('DisplayRow')">-->
       <!--<i class="fa fa-fw fa-close"></i>-->
     </button>
-
   </div>
 </template>
 <script>
@@ -40,6 +48,9 @@ export default {
     // }
   },
   methods: {
+    downloadRecord () {
+      EventBus.$emit('downloadRecord', this.row)
+    },
     deleteRecord () {
       let vm = this
       let options = {

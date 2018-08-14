@@ -22,7 +22,8 @@
                   <div class="col-6">
                     <button type="button"
                             @click="login"
-                            class="btn btn-primary px-4">{{ $t('login.login') }}
+                            class="btn btn-primary px-4">
+                      <span v-show="loading"><i class="fa fa-spinner fa-spin"></i>&nbsp;</span>{{ $t('login.login') }}
                     </button>
                   </div>
                   <div class="col-6 text-right">
@@ -67,6 +68,7 @@ export default {
   },
   data () {
     return {
+      loading: false,
       titleClicked: 0,
       showingTeamSelectionDialog: false,
       credentials: {
@@ -108,7 +110,6 @@ export default {
       }
     },
     onTeamSelectedHandler (team) {
-      alert('onTeamSelectedHandler')
       let vm = this
       vm.$store.dispatch('SET_DB_TEAM', team).then(function () {
         let promises = [
@@ -133,6 +134,7 @@ export default {
     },
     login () {
       let vm = this
+      vm.loading = true
       // console.log('Login => vm.$store.dispatch(login)')
       vm.$store.dispatch('AUTH_REQUEST', {credentials: vm.credentials})
         .then(function (response) {
@@ -156,6 +158,7 @@ export default {
             }
           } else {
             vm.$dialog.alert(vm.$t('messages.access_denied'))
+            vm.loading = false
           }
         })
     },
@@ -182,11 +185,28 @@ export default {
           if (selectedTeam === null) {
             vm.showingTeamSelectionDialog = true
           } else {
+            vm.$store.dispatch('FETCH_OA_USER_EMPLOYEE', selectedTeam.id).then(function (oaEmployee) {
+              if (vm.$store.getters.isPayrollAdmin || vm.$store.getters.isOwner) {
+                vm.$router.push({name: 'tax.tax_form_management'})
+              } else {
+                vm.loading = false
+                // vm.$dialog.alert(vm.$t('messages.access_denied'), {
+                //   okText: vm.$t('buttons.close')
+                // })
+                vm.$dialog.alert({
+                  title: vm.$t('general.warning'),
+                  body: vm.$t('messages.access_denied')
+                }, {
+                  okText: vm.$t('buttons.close'),
+                  customClass: 'custom-dialog'
+                })
+              }
+            })
             console.log('Login.vue => push(tax.tax_form_management)')
-            vm.$router.push({name: 'tax.tax_form_management'})
           }
         })
       } else {
+        vm.loading = false
         vm.$store.dispatch('FETCH_TEAMS').then(function () {
           vm.showingTeamSelectionDialog = true
         })

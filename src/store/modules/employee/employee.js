@@ -14,6 +14,13 @@ const getters = {
   roles: (state) => {
     return state.roles
   },
+  isOwner: (state) => {
+    let result = false
+    if (state.userEmployee) {
+      result = state.userEmployee.isOwner
+    }
+    return result
+  },
   isPayrollAdmin: (state) => {
     let result = false
     for (var i = 0; i < state.roles.length; i++) {
@@ -65,14 +72,14 @@ const actions = {
       Vue.axios.get(url, config).then(function (response) {
         console.log('FETCH_OA_USER_EMPLOYEE :: response: ', response)
         if (response.data.status) {
-          let userEmployee = response.data.result
-          let groups = userEmployee.groups
+          let oaEmployee = response.data.result
+          let groups = oaEmployee.groups
           let employeeId = groups[0]['groupEmployee']['employeeId']
-          let roles = userEmployee.roles
+          let roles = oaEmployee.roles
           dispatch('UPDATE_EMPLOYEE_ID', employeeId)
-          commit('setUserEmployee', userEmployee)
+          commit('setUserEmployee', oaEmployee)
           commit('setRoles', roles)
-          resolve(userEmployee)
+          resolve(oaEmployee)
         }
       })
     })

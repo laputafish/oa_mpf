@@ -180,7 +180,8 @@
     "signature_name_is_required": "簽署人姓名必須填寫.",
     "are_you_sure": "是否確定",
     "generation_will_be_ready_soon": "有關文件準備中",
-    "employee_file_no_is_necessary": "僱主檔案編號必須填寫."
+    "employee_file_no_is_necessary": "僱主檔案編號必須填寫.",
+    "internal_error_please_regenerate": "系統錯誤，請重新建立本件!"
   },
   "database": {
     "items_per_page": "項 / 頁",

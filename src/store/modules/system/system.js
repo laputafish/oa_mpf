@@ -379,6 +379,7 @@ const mutations = {
 
 const actions = {
   async [types.CHECK_TOKEN] ({commit, getters, dispatch}, payload) {
+    console.log('action(CHECK_TOKEN)')
     // let token = localStorage.getItem('token')
     if (getters.token) {
       if (typeof payload.callback === 'function') {
@@ -415,10 +416,12 @@ const actions = {
   },
 
   [types.SET_LANG] ({commit}, payload) {
+    console.log('action(SET_LANG)')
     commit('setLang', payload)
   },
 
   [types.SET_TOKEN] ({commit}, token) {
+    console.log('action(SET_TOKEN)')
     commit('setToken', token)
     // if (!token) {
     //   Vue.axios.defaults.headers.common['Authorization'] = ''
@@ -516,6 +519,7 @@ const actions = {
   },
 
   [types.SET_DB_TEAM] ({rootGetters, getters, commit}, payload) {
+    console.log('action(SET_DB_TEAM)')
     return new Promise((resolve, reject) => {
       // payload = team
       let team = payload
@@ -533,10 +537,12 @@ const actions = {
   },
 
   async [types.SET_ACTIVE_TEAM] ({commit}, payload) {
+    console.log('action(SET_ACTIVE_TEAM)')
     commit('setActiveTeam', payload)
   },
 
   async [types.FETCH_LANGUAGES] ({getters, state, commit}) {
+    console.log('action(FETCH_LANGUAGES)')
     return new Promise((resolve, reject) => {
       let url = constants.apiUrl + '/langs'
       Vue.axios.get(url).then(function (response) {
@@ -548,7 +554,7 @@ const actions = {
   },
 
   async [types.FETCH_USER_BY_TOKEN] ({getters, state, commit, dispatch}, callback) {
-    console.log('system.js :: FETCH_USER_BY_TOKEN')
+    console.log('action(FETCH_USER_BY_TOKEN) system.js ::')
     return new Promise((resolve, reject) => {
       // let token = getters.token
       let url = constants.apiUrl + '/user'
@@ -598,7 +604,7 @@ const actions = {
   },
 
   [types.SET_USER] ({commit, state}, payload) {
-    console.log('system.js SET_USER')
+    console.log('action(SET_USER) system.js')
     return new Promise((resolve, reject) => {
       commit('setUser', payload)
       resolve({
@@ -662,6 +668,7 @@ const actions = {
 
   // use email and password
   async loginOA ({commit, dispatch, getters, state}, {credentials, authorized, callback}) {
+    console.log('action(loginOA)')
     try {
       let url = constants.apiUrl + '/auth/login_oa'
       let data = {
@@ -703,7 +710,7 @@ const actions = {
   },
 
   async login ({commit, dispatch, getters}, {credentials, callback}) {
-    console.log('store :: login starts :: credentials: ', credentials)
+    console.log('action(login) :: credentials: ', credentials)
     try {
       let url = constants.url + '/oauth/token'
       let data = {
@@ -778,6 +785,7 @@ const actions = {
 
   // Logout
   async logout ({dispatch, state}) {
+    console.log('action(logout)')
     try {
       await dispatch('reset')
     } catch (e) {
@@ -861,7 +869,7 @@ const actions = {
   },
 
   async [types.FETCH_TEAM_SETTINGS] ({rootGetters, state, commit}) {
-    console.log('active team: ', state.activeTeam)
+    console.log('action(FETCH_TEAM_SETTINGS) active team: ', state.activeTeam)
     // let url = constants.apiUrl + '/teams/' + state.activeTeamt/teams?include=currency'
     // let config = rootGetters.oaApiHeaderConfig
     // console.log('fetch teams: config: ', config)
@@ -875,6 +883,7 @@ const actions = {
   },
 
   async [types.FETCH_AVAILABLE_FISCAL_YEARS] ({rootGetters, getters, state, commit}, payload) {
+    console.log('action(FETCH_AVAILABLE_FISCAL_YEARS)')
     let vm = this
     let teamId = getters.teamId
     if (teamId) {
@@ -913,6 +922,7 @@ const actions = {
   },
 
   refreshOAToken ({rootGetters, commit}) {
+    console.log('action(refreshOAToken)')
     return new Promise((resolve, reject) => {
       console.log('refreshOAToken')
       let url = constants.apiUrl + '/oa_token'

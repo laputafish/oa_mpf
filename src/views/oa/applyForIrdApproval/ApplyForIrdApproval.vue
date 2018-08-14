@@ -252,7 +252,7 @@
                   </tr>
                   <tr>
                     <td class="label-in-badge">{{ $t('tax.company_file_no') }}</td>
-                    <td>{{ oaTeam ? oaTeam.setting.registrationNumber : ''}}</td>
+                    <td>{{ companySetting.fileNo }}</td>
                   </tr>
                   <tr>
                     <td class="label-in-badge">{{ $t('tax.fiscal_years') }}</td>
@@ -317,6 +317,9 @@ export default {
   mixins: [myMixin],
   data () {
     return {
+      companySetting: {
+        fileNo: ''
+      },
       necessaryDocuments: [],
       // languageOptions: [
       //   // {
@@ -437,6 +440,20 @@ export default {
     }
   },
   methods: {
+    fetchTeam (teamId) {
+      let vm = this
+      let url = constants.apiUrl + '/teams/' + teamId
+      let data = {
+        params: {
+          includes: 'settings'
+        }
+      }
+      this.axios.get(url, data).then(function (response) {
+        if (response.data.status) {
+          vm.companySetting = response.data.result
+        }
+      })
+    },
     getDownloadUrl () {
       let vm = this
       return constants.apiUrl + '/media/ird_forms/' + vm.sample.id + '/download_all'
@@ -752,7 +769,9 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('FETCH_LANGUAGES')
+    let vm = this
+    vm.$store.dispatch('FETCH_LANGUAGES')
+    vm.fetchTeam(vm.teamId)
   },
   beforeDestroy () {
     helpers.unSubscribe(this)

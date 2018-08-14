@@ -53,6 +53,7 @@ const mutations = {
 
 const actions = {
   async [types.FETCH_TEAMS] ({rootGetters, state, commit}) {
+    console.log('action(FETCH_TEAMS)')
     let url = constants.oaApiUrl + '/t/teams?include=currency'
     let config = {}
     await Vue.axios.get(url, config).then(response => {
@@ -65,6 +66,7 @@ const actions = {
   },
 
   async [types.FETCH_TEAM] ({rootGetters, state, commit}) {
+    console.log('action(FETCH_TEAM)')
     let url = constants.oaApiUrl + '/t/teams/' + rootGetters.teamId
     await Vue.axios.get(url).then(response => {
       if (response.data.status) {
@@ -76,6 +78,7 @@ const actions = {
   },
 
   async [types.FETCH_TEAM_INFO] ({rootGetters, state, commit}) {
+    console.log('action(FETCH_TEAM_INFO)')
     let url = constants.oaApiUrl + '/t/teams?include=currency'
     await Vue.axios.get(url).then(response => {
       if (response.data.status) {

@@ -125,16 +125,16 @@ const adminModules = [
   '/ird_forms', '/ird_forms/setup'
 ]
 
-const checkRole = (roles, targetRole) => {
-  let result = false
-  for (var i = 0; i < roles.length; i++) {
-    if (roles[i].name === targetRole) {
-      result = true
-      break
-    }
-  }
-  return result
-}
+// const checkRole = (roles, targetRole) => {
+//   let result = false
+//   for (var i = 0; i < roles.length; i++) {
+//     if (roles[i].name === targetRole) {
+//       result = true
+//       break
+//     }
+//   }
+//   return result
+// }
 
 const ifAuthenticated = (to, from, next) => {
   if (store.getters.user) {
@@ -143,12 +143,19 @@ const ifAuthenticated = (to, from, next) => {
       console.log('ifAuthenticated :: is Authenicated')
       if (adminModules.indexOf(to.path) >= 0) {
         console.log('ifAuthenticated :: modules requires checking')
-        let roles = store.getters.roles
-        if (checkRole(roles, 'Payroll Management')) {
+        let isPayrollAdmin = store.getters.isPayrollAdmin
+        let isOwner = store.getters.isOwner
+        if (isPayrollAdmin || isOwner) {
           next()
         } else {
-          next('/my_ird_forms')
+          next('/login')
         }
+        // let roles = store.getters.roles
+        // if (checkRole(roles, 'Payroll Management')) {
+        //   next()
+        // } else {
+        //   next('/my_ird_forms')
+        // }
       } else {
         next()
       }
@@ -159,15 +166,25 @@ const ifAuthenticated = (to, from, next) => {
       callback: function (status) {
         console.log('CHECK_TOKEN :: callback :: status = ' + (status ? 'yes' : ' no'))
         if (status) {
-          if (adminModules.indexOf(to.path) >= 0) {
-            let roles = store.getters.roles
-            console.log('router/index.js/roles: ', roles)
-            if (checkRole(roles, 'Payroll Management')) {
-              next()
-            } else {
-              console.log('ifAuthenticated :; next(my_ird_forms)')
-              next('/my_ird_forms')
-            }
+          store.dispatch('FETCH_OA_USER_EMPLOYEE', 'x').then(function (oaEmployee) {
+            if (adminModules.indexOf(to.path) >= 0) {
+              let roles = store.getters.roles
+              console.log('router/index.js/roles: ', roles)
+              let isPayrollAdmin = store.getters.isPayrollAdmin
+              let isOwner = store.getters.isOwner
+              if (isPayrollAdmin || isOwner) {
+                next()
+              } else {
+                next('/login')
+              }
+
+            // if (checkRole(roles, 'Payroll Management')) {
+            //   next()
+            // } else {
+            //   console.log('ifAuthenticated :; next(my_ird_forms)')
+            //   next('/my_ird_forms')
+            // }
+
             // store.dispatch('FETCH_OA_PERMISSIONS').then((roles) => {
             //   console.log('FETCH OA PERMISSIONS: roles: ', roles)
             //   if (checkRole(roles, 'Payroll Management')) {
@@ -176,9 +193,10 @@ const ifAuthenticated = (to, from, next) => {
             //     next('/my_ird_forms')
             //   }
             // })
-          } else {
-            next()
-          }
+            } else {
+              next()
+            }
+          })
         } else {
           next('/login')
         }
@@ -642,6 +660,10 @@ export default new VueRouter({
     {
       path: '/login',
       name: 'Login',
+      beforeEnter: function (to, from, next) {
+        console.log('Logon beforeEnter')
+        next()
+      },
       component: Login
     },
     {

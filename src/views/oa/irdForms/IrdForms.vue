@@ -76,6 +76,7 @@
 </template>
 <script>
 // import mockData from './_mockData'
+import * as constants from '@/store/constants'
 import {EventBus} from '@/event-bus'
 import components from './comps'
 import IrdFormRecord from './forms/IrdFormRecord'
@@ -112,7 +113,7 @@ export default {
           {title: vm.$t('tax.form_no'), field: 'form_no', sortable: true},
           {title: vm.$t('tax.form_type'), field: 'form_type', thClass: 'text-center', tdClass: 'text-center', tdComp: 'FormType'},
           {title: vm.$t('tax.no_of_employee'), field: 'employee_count', tdClass: 'text-center', thClass: 'text-center'},
-          {title: vm.$t('tax.employees'), field: 'id', tdComp: 'Employees', sortable: false},
+          // {title: vm.$t('tax.employees'), field: 'id', tdComp: 'Employees', sortable: false},
           {title: vm.$t('tax.published'), field: 'published', thClass: 'text-center', tdComp: 'Published', tdClass: 'text-center'},
           {title: vm.$t('general.status'), field: 'status', tdComp: 'Status', thClass: 'text-center', tdClass: 'text-center'},
           {title: vm.$t('tax.submitted_on'), field: 'submitted_on', sortable: true},
@@ -160,6 +161,22 @@ export default {
       // vm.selectedIrdForm = record
       vm.mode = 'record'
     })
+    EventBus.$on('downloadRecord', function (record) {
+      let url = constants.apiUrl + '/forms/' + record.id + '/prepare'
+      vm.axios.post(url).then(function (response) {
+        if (response.data.status) {
+          let key = response.data.key
+          let downloadUrl = constants.apiUrl + '/temp/' + key + '/download'
+          window.open(downloadUrl, '_self')
+        } else {
+          console.log('EventBus vm: ', vm)
+          vm.$dialog.alert({
+            title: vm.$t('general.warning'),
+            body: vm.$t('messages.internal_error_please_regenerate')
+          })
+        }
+      })
+    })
     EventBus.$on('deleteRecord', function (record) {
       vm.$store.dispatch('REMOVE_FORM_RECORD', record.id).then(function (response) {
         vm.onQueryChangedHandler(vm.query)
@@ -190,10 +207,11 @@ export default {
     // },
     teamId () {
       return this.$store.getters.teamId
-    },
-    isPayrollAdmin () {
-      return this.$store.getters.isPayrollAdmin
     }
+    // ,
+    // isPayrollAdmin () {
+    //   return this.$store.getters.isPayrollAdmin
+    // }
   },
   watch: {
     query: {
@@ -304,6 +322,7 @@ export default {
       let vm = this
       console.log('onQueryChangedHandler :: query: ', query)
       vm.$store.dispatch('FETCH_FORMS', query).then(function (response) {
+        console.log('FETCH FORMS :: total = ' + response.total)
         vm.data = response.data
         vm.total = response.total
       })
@@ -333,6 +352,8 @@ export default {
   beforeDestroy () {
     EventBus.$off('editRecord')
     EventBus.$off('deleteRecord')
+    EventBus.$off('downloadRecord')
+    EventBus.$off('showSelectEmployeeDialog')
     helpers.unSubscribe(this)
   }
 }

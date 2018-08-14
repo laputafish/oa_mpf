@@ -32,6 +32,7 @@ const mutations = {
 
 const actions = {
   [types.AUTH_REQUEST_OA]: ({commit, dispatch, state}, {credentials, authorized}) => {
+    console.log('action(AUTH_REQUEST_OA)')
     return new Promise((resolve, reject) => {
       let url = constants.apiUrl + '/auth/login_oa'
       let data = {
@@ -40,7 +41,7 @@ const actions = {
         password: credentials.password,
         teamId: state.teamId
       }
-      alert('credentials.password = ' + credentials.password)
+      // alert('credentials.password = ' + credentials.password)
       let config = getters.apiHeaderConfig
       Vue.axios.post(url, data, config).then(response => {
         console.log('post(yoovapi/apiv2/auth/login_oa :: response.data: ', response.data)
@@ -69,7 +70,7 @@ const actions = {
   },
 
   [types.AUTH_REQUEST]: ({commit, dispatch}, {credentials}) => {
-    console.log('AUTH_REQUEST')
+    console.log('action(AUTH_REQUEST)')
     return new Promise((resolve, reject) => { // The Promise used for router redirect in login
       commit('setAuthRequest')
       let url = constants.url + '/oauth/token'
@@ -102,6 +103,7 @@ const actions = {
   },
 
   [types.AUTH_LOGOUT]: ({commit, dispatch}) => {
+    console.log('action(AUTH_LOGOUT)')
     return new Promise((resolve, reject) => {
       commit(types.AUTH_LOGOUT)
       localStorage.removeItem('accessToken') // clear your user's token from localstorage

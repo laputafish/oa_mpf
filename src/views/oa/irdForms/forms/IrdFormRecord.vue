@@ -40,7 +40,7 @@
             <button type="button"
                     :disabled="form.status!=='ready'"
                     @click="download"
-                    class="btn min-width-80 btn-danger min-width-100">
+                    class="btn min-width-80 btn-outline-primary min-width-100">
               <i class="fa fa-download"></i>
               {{ $t('buttons.download') }}
             </button>

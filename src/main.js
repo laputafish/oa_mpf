@@ -115,7 +115,7 @@ Vue.mixin({
 Vue.use(vSelect)
 
 Vue.axios.interceptors.request.use(function (config) {
-  // console.log('axios :: interceptors :: url = ' + config.url + ' headers: ', config.headers)
+  console.log('axios :: interceptors :: url = ' + config.url + ' headers: ', config.headers)
   // alert(JSON.stringify(config))
   // console.log('axios.interceptors: config: ', JSON.stringify(config))
   // console.log('axios :: store.getters.apiHeaderConfig: ',

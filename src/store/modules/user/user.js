@@ -42,6 +42,7 @@ const actions = {
   // }
 
   [types.FETCH_SELF] ({rootDispatch, rootGetters, state, commit, dispatch}, payload) {
+    console.log('action(FETCH_SELF)')
     let vm = this
     let url = constants.oaApiUrl + '/t/users/self'
     let config = {}
