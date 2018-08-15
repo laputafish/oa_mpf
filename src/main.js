@@ -62,7 +62,7 @@ import 'simple-line-icons/scss/simple-line-icons.scss'
 
 // window.jQuery = jQuery
 // window.$ = jQuery
-import {i18n} from '@/lang/lang.js'
+import i18n from '@/lang/lang.js'
 import vSelect from 'vue-select'
 
 window.$ = $

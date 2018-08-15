@@ -232,7 +232,7 @@
           <div class="col-sm-8">
             <yoov-radio-toggle
               id="langId"
-              :options="languageOptions"
+              :options="taxLanguageOptions"
               optionTitleTag="titleTag"
               v-model="form.lang_id">
             </yoov-radio-toggle>
@@ -315,8 +315,8 @@ export default {
     }
   },
   computed: {
-    languageOptions () {
-      return this.$store.getters.languageOptions
+    taxLanguageOptions () {
+      return this.$store.getters.taxLanguageOptions
     },
     availableFiscalStartYears () {
       return this.$store.getters.availableFiscalStartYears

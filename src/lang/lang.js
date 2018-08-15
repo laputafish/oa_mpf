@@ -12,8 +12,20 @@ const messages = {
   hk: hk,
   en: en
 }
-export const i18n = new VueI18n({
+const i18n = new VueI18n({
   /** 默认值 */
   locale,
+  fallBackLocale: 'hk',
   messages
 })
+
+Vue.prototype.$locale = {
+  change (lang) {
+    i18n.locale = lang
+  },
+  current () {
+    return i18n.locale
+  }
+}
+
+export default i18n

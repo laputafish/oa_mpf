@@ -1,6 +1,6 @@
 <template>
   <b-dropdown-header v-if="menuItem.type==='header'" tag="div" class="text-center">
-    <strong>{{ menuItem.title }}</strong>
+    <strong>{{ $t('general.account') }}</strong>
   </b-dropdown-header>
 
   <b-dropdown-item v-else-if="menuItem.link" :to="menuItem.link">

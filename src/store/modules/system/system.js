@@ -29,7 +29,8 @@ const state = {
   activeMenu: '',
   publicFolder: null,
   availableFiscalStartYears: [],
-  languages: []
+  languages: [],
+  languageChanged: false
 }
 
 const transformFolders = folders => {
@@ -160,8 +161,24 @@ const getters = {
       result.push({
         id: language.id,
         titleTag: 'general.' + language.label_tag,
-        value: language.id
+        value: language.id,
+        locale: language.locale
       })
+    }
+    return result
+  },
+  taxLanguageOptions: (state) => {
+    let result = []
+    for (var i = 0; i < state.languages.length; i++) {
+      var language = state.languages[i]
+      if (language.for_irdforms) {
+        result.push({
+          id: language.id,
+          titleTag: 'general.' + language.label_tag,
+          value: language.id,
+          locale: language.locale
+        })
+      }
     }
     return result
   }
@@ -374,7 +391,35 @@ const mutations = {
     state.user.oa_token_type = payload.oaTokenType
     state.user.oa_access_token = payload.oaCccessToken
     state.user.oa_expires_in = payload.oaExpiresIn
+  },
+
+  clearLanguageChanged: (state) => {
+    state.languageChanged = false
+  },
+
+  setLanguageChanged: (state) => {
+    state.languageChanged = true
+  },
+
+  updateUserLangId: (state, payload) => {
+    state.user.lang_id = payload
   }
+  //
+  // changeUILang: (state) => {
+  //   console.log('mutation(changeUILang) state.user: ', state.user)
+  //   console.log('mutation(changeUILang) state.languages: ', state.languages)
+  //
+  //   if (state.user && state.languages) {
+  //     let language = state.languages.find(function (item) {
+  //       return item.id === state.user.lang_id
+  //     })
+  //     if (language) {
+  //       console.log('mutation(changeUILang) :: language: ', language)
+  //       Vue.$locale.change(language.locale)
+  //     }
+  //   }
+  // }
+
 }
 
 const actions = {
@@ -548,7 +593,28 @@ const actions = {
       Vue.axios.get(url).then(function (response) {
         if (response.data.status) {
           commit('setLanguages', response.data.result)
+          // commit('changeUILang')
         }
+      })
+    })
+  },
+
+  [types.UPDATE_USER_LANGUAGE] ({getters, commit}, payload) {
+    return new Promise((resolve, reject) => {
+      let url = constants.apiUrl + '/users/' + getters.user.id
+      let langId = payload
+      let data = {
+        lang_id: langId
+      }
+      Vue.axios.put(url, data).then(function (response) {
+        if (response.data.status) {
+          commit('updateUserLangId', langId)
+          resolve(response.data.result)
+        } else {
+          reject(response.data.result)
+        }
+      }, function (error) {
+        reject(error)
       })
     })
   },
@@ -563,7 +629,6 @@ const actions = {
       Vue.axios.get(url, config).then(function (response) {
         console.log('system.js FETCH_USER_BY_TOKEN: response: ', response.data)
         console.log('system.js FETCH_USER_BY_TOKEN ready to call SET_USER')
-
         dispatch(types.SET_USER, {
           user: response.data
         }).then(function (user) {

@@ -31,9 +31,14 @@
       <!--<b-nav-item class="d-md-down-none">-->
         <!--<i class="icon-location-pin"></i>-->
       <!--</b-nav-item>-->
-      <nav-user-menu right
-        :user="user">
-      </nav-user-menu>
+      <nav-user-menu :user="user"></nav-user-menu>
+      &nbsp;&nbsp;
+      <yoov-radio-toggle
+        :options="languageOptions"
+        optionTitleTag="titleTag"
+        :buttonClass="'btn-sm'"
+        v-model="langId">
+      </yoov-radio-toggle>
       <button disabled class="navbar-toggler aside-menu-toggler d-md-down-none" type="button" @click="asideToggle">&#9776;</button>
     </b-nav>
   </header>
@@ -41,12 +46,14 @@
 
 <script>
 import NavUserMenu from '@/components/NavUserMenu'
+import YoovRadioToggle from '@/components/forms/YoovRadioToggle'
 import topMenu from '@/_top_menu.js'
 
 // import MyDropdownItem from './MyDropdownItem.vue'
 export default {
   components: {
-    navUserMenu: NavUserMenu
+    navUserMenu: NavUserMenu,
+    yoovRadioToggle: YoovRadioToggle
   },
   name: 'app-header',
   methods: {
@@ -67,10 +74,35 @@ export default {
       document.body.classList.toggle('aside-menu-hidden')
     }
   },
+  computed: {
+    languageOptions () {
+      let result = this.$store.getters.languageOptions
+      return result || []
+    }
+  },
+  watch: {
+    langId: function (val) {
+      let vm = this
+      console.log('watch(langId) :: languageOptions: ', vm.languageOptions)
+      let language = vm.languageOptions.find(function (item) {
+        return item.id === val
+      })
+      if (language) {
+        console.log('watch(langId) : language: ', language)
+        console.log('watch(langId) : langId = ' + val)
+
+        vm.$store.dispatch('UPDATE_USER_LANGUAGE', val).then(function (response) {
+          vm.$locale.change(language.locale)
+          console.log('i18n locale = ' + vm.$locale.current())
+          console.log('language locale = ' + language.locale)
+        })
+      }
+    }
+  },
   data () {
     return {
-      topMenuItems: topMenu.items
-
+      topMenuItems: topMenu.items,
+      langId: 0
     }
   },
   props: {
@@ -80,6 +112,10 @@ export default {
         return null
       }
     }
+  },
+  mounted () {
+    let vm = this
+    vm.langId = vm.user.lang_id
   }
 }
 </script>

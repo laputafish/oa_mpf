@@ -137,6 +137,10 @@ const adminModules = [
 // }
 
 const ifAuthenticated = (to, from, next) => {
+  if (store.getters.languageOptions.length === 0) {
+    store.dispatch('FETCH_LANGUAGES')
+  }
+
   if (store.getters.user) {
     console.log('ifAuthenticated :: user is defined.')
     if (store.getters.isAuthenticated) {
@@ -285,7 +289,7 @@ export default new VueRouter({
         },
         {
           path: 'ird_forms',
-          name: 'tax.tax_form_management',
+          name: 'tax.ird_forms_management',
           component: IrdForms,
           children: [
             {

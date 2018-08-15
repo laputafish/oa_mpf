@@ -34,9 +34,13 @@
 import {EventBus} from '@/event-bus'
 import components from './comps'
 import * as constants from '@/store/constants'
+import ThHeader from '@/components/datatable/ThHeader'
 
 export default {
-  components,
+  components: {
+    ...components,
+    ThHeader
+  },
   props: {
     status: {
       type: String,
@@ -64,20 +68,19 @@ export default {
     // @ onEmployeesRemove(employees)
   },
   data () {
-    let vm = this
     return {
       tableEmployees: [],
       selectedRecord: null,
       mode: 'list',
       columns: (() => {
         const cols = [
-          {title: vm.$t('general.number'), field: 'recordNo', tdClass: 'text-center', thClass: 'text-center'},
-          {title: vm.$t('tax.sheet_no'), tdComp: 'SheetNo', field: 'sheet_no', tdClass: 'text-center', thClass: 'text-center'},
-          {title: vm.$t('general.name'), field: 'name', sortable: true, tdClass: 'text-left', thClass: 'text-left'},
-          {title: vm.$t('tax.joined_date'), field: 'joinedDate', tdComp: 'JoinedDate', sortable: true, thClass: 'text-center', tdClass: 'text-center'},
-          {title: vm.$t('general.status'), field: 'status', sortable: true, tdComp: 'Status'},
-          {title: vm.$t('general.form'), field: 'form', tdComp: 'Form', tdClass: 'text-center', thClass: 'text-center'},
-          {title: vm.$t('tax.operation'), tdComp: 'Opt'}
+          {title: 'general.number', thComp: ThHeader, field: 'recordNo', tdClass: 'text-center', thClass: 'text-center'},
+          {title: 'tax.sheet_no', thComp: ThHeader, tdComp: 'SheetNo', field: 'sheet_no', tdClass: 'text-center', thClass: 'text-center'},
+          {title: 'general.name', thComp: ThHeader, field: 'name', sortable: true, tdClass: 'text-left', thClass: 'text-left'},
+          {title: 'tax.joined_date', thComp: ThHeader, field: 'joinedDate', tdComp: 'JoinedDate', sortable: true, thClass: 'text-center', tdClass: 'text-center'},
+          {title: 'general.status', thComp: ThHeader, field: 'status', sortable: true, tdComp: 'Status'},
+          {title: 'general.form', thComp: ThHeader, field: 'form', tdComp: 'Form', tdClass: 'text-center', thClass: 'text-center'},
+          {title: 'tax.operation', thComp: ThHeader, tdComp: 'Opt'}
         ]
         return cols
       })(),

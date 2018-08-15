@@ -5,7 +5,7 @@
             class="btn btn-min-width-80"
             v-for="(option) in options"
             :key="option[optionValueField]"
-            :class="{'btn-primary':value===option[optionValueField],'btn-default':value!==option[optionValueField]}"
+            :class="getButtonClass(option)"
             @click="selectOption(option[optionValueField])">
       {{ optionTitleTag != '' ? $t(option[optionTitleTag]) : option[optionTitle] }}
     </button>
@@ -37,6 +37,10 @@ export default {
     },
     value: {
       type: [String, Number]
+    },
+    buttonClass: {
+      type: String,
+      default: ''
     }
   },
   created () {
@@ -50,6 +54,18 @@ export default {
     }
   },
   methods: {
+    getButtonClass (option) {
+      let vm = this
+      let classes = [
+        option[vm.optionValueField] === vm.value
+          ? 'btn-primary'
+          : 'btn-default'
+      ]
+      if (vm.buttonClass !== '') {
+        classes.push(vm.buttonClass)
+      }
+      return classes
+    },
     selectOption (optionValue) {
       console.log('selectOption : optionValue = ' + optionValue)
       console.log('selectOption : typeof optionValue = ' + (typeof optionValue))

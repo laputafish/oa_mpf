@@ -104,7 +104,7 @@
                   </label>
                   <div class="col-sm-8">
                     <yoov-radio-toggle
-                      :options="languageOptions"
+                      :options="taxLanguageOptions"
                       optionTitleTag="titleTag"
                       v-model="settings.langId">
                     </yoov-radio-toggle>
@@ -500,8 +500,8 @@ export default {
     }
   },
   computed: {
-    languageOptions () {
-      let result = this.$store.getters.languageOptions
+    taxLanguageOptions () {
+      let result = this.$store.getters.taxLanguageOptions
       return result
     },
 

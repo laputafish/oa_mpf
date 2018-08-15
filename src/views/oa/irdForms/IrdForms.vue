@@ -58,7 +58,7 @@
             <!--<button type="button" class="btn-width-80 btn btn-default">{{ $t('buttons.export') }}</button>-->
           </div>
         </div>
-        <datatable v-cloak v-bind="$data"></datatable>
+        <datatable v-cloak v-bind="$data" ></datatable>
       </div>
       <ird-form-record v-if="mode=='record'"
                        ref="currentForm"
@@ -86,6 +86,7 @@ import IrdFormSetup from './forms/IrdFormSetup'
 import SelectEmployeeDialog from '@/dialogs/SelectEmployeeDialog'
 import helpers from '@/helpers.js'
 import YoovRadioToggle from '@/components/forms/YoovRadioToggle'
+import ThHeader from '@/components/datatable/ThHeader'
 
 export default {
   components: {
@@ -93,10 +94,10 @@ export default {
     'ird-form-record': IrdFormRecord,
     'ird-form-setup': IrdFormSetup,
     'select-employee-dialog': SelectEmployeeDialog,
-    'yoov-radio-toggle': YoovRadioToggle
+    'yoov-radio-toggle': YoovRadioToggle,
+    'ThHeader': ThHeader
   },
   data () {
-    let vm = this
     return {
       lastMode: 'list',
       irdFormTypeFilters: [],
@@ -115,15 +116,16 @@ export default {
       mode: 'list', // ['list','record']
       columns: (() => {
         const cols = [
-          {title: vm.$t('tax.form_date'), field: 'form_date', sortable: true},
-          {title: vm.$t('tax.form_no'), field: 'form_no', sortable: true},
-          {title: vm.$t('tax.form_type'), field: 'form_type', thClass: 'text-center', tdClass: 'text-center', tdComp: 'FormType'},
-          {title: vm.$t('tax.no_of_employee'), field: 'employee_count', tdClass: 'text-center', thClass: 'text-center'},
+          // {title: vm.$t('tax.form_date'), field: 'form_date', sortable: true},
+          {title: 'tax.form_date', thComp: 'ThHeader', field: 'form_date', sortable: true},
+          {title: 'tax.form_no', thComp: 'ThHeader', field: 'form_no', sortable: true},
+          {title: 'tax.form_type', thComp: 'ThHeader', field: 'form_type', thClass: 'text-center', tdClass: 'text-center', tdComp: 'FormType'},
+          {title: 'tax.no_of_employee', thComp: 'ThHeader', field: 'employee_count', tdClass: 'text-center', thClass: 'text-center'},
           // {title: vm.$t('tax.employees'), field: 'id', tdComp: 'Employees', sortable: false},
-          {title: vm.$t('tax.published'), field: 'published', thClass: 'text-center', tdComp: 'Published', tdClass: 'text-center'},
-          {title: vm.$t('general.status'), field: 'status', tdComp: 'Status', thClass: 'text-center', tdClass: 'text-center'},
-          {title: vm.$t('tax.submitted_on'), field: 'submitted_on', sortable: true},
-          {title: vm.$t('tax.operation'), tdComp: 'Opt'}
+          {title: 'tax.published', thComp: 'ThHeader', field: 'published', thClass: 'text-center', tdComp: 'Published', tdClass: 'text-center'},
+          {title: 'general.status', thComp: 'ThHeader', field: 'status', tdComp: 'Status', thClass: 'text-center', tdClass: 'text-center'},
+          {title: 'tax.submitted_on', thComp: 'ThHeader', field: 'submitted_on', sortable: true},
+          {title: 'tax.operation', thComp: 'ThHeader', tdComp: 'Opt'}
         ]
         return cols
       })(),
@@ -214,6 +216,9 @@ export default {
     // },
     teamId () {
       return this.$store.getters.teamId
+    },
+    languageChanged () {
+      return this.$store.getters.languageChanged
     }
     // ,
     // isPayrollAdmin () {
@@ -221,6 +226,13 @@ export default {
     // }
   },
   watch: {
+    // languageChanged: function (value) {
+    //   let vm = this
+    //   if (value) {
+    //     vm.$store.commit('clearLanguageChanged')
+    //     vm.onQueryChangedHandler(vm.query)
+    //   }
+    // },
     query: {
       handler (query) {
         this.onQueryChangedHandler(query)

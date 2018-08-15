@@ -10,7 +10,7 @@ export default {
       }
     },
     {
-      name: 'tax.tax_form_management',
+      name: 'tax.ird_forms_management',
       url: '/ird_forms',
       icon: 'fa fa-file-text',
       authRole: 'Payroll Management'

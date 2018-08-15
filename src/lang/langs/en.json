@@ -12,11 +12,14 @@
     "profile": "My Profile",
     "home": "Home",
     "user_customed": "User Customed",
+    "traditional_chinese": "繁中",
+    "simplified_chinese": "簡中",
     "chinese": "中文",
-    "english": "English",
+    "english": "ENG",
     "status": "Status",
     "form_status": "Form Status",
-
+    "account": "Account",
+    
     "generating_": "Processing ...",
     "pending": "Idle",
     "ready_for_processing": "Pending",
@@ -38,22 +41,35 @@
     "language": "Language",
 
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "no_data": "No Data",
+
+    "save_successfully": "Save Successfully"
   },
   "buttons": {
-    "close": "Close",
-    "settings": "Settings",
-    "ok": "OK",
-    "cancel": "Cancel",
     "add": "Add",
-    "new": "New",
-    "export": "Export",
-    "submit": "Submit",
+    "add_all_employees": "Add All Employees",
+    "back": "Back",
+    "build_necessary_documents": "Build Documents",
+    "cancel": "Cancel",
+    "clear_all": "Clear All",
+    "close": "Close",
+    "download": "Download",
+    "download_all": "Download All",
     "edit": "Edit",
+    "export": "Export",
     "generate_ir56e": "Generate IR56E Forms",
+    "generate_necessary_documents": "Generate Necessary Documents",
+    "generate_documents": "Generate Documents",
     "generate_forms": "Generate Forms",
-    "terminate": "Terminate",
-    "add_all_employees": "Add All Employees"
+    "new": "New",
+    "ok": "OK",
+    "quick_add": "Quick Add",
+    "save": "Save",
+    "settings": "Settings",
+    "stop": "Stop",
+    "submit": "Submit",
+    "terminate": "Terminate"
   },
   "login": {
     "login": "Login",
@@ -64,6 +80,8 @@
   "tax": {
     "tax_forms": "Tax Forms",
     "tax_form_settings": "Tax Form Settings",
+    "ird_forms_management": "IRD Forms Management",
+
     "notification_to_ird": "Notification for IRD",
     "employee_commencement": "Commencement (IR56E)",
     "employee_termination": "Termination (IR56F)",
@@ -73,7 +91,8 @@
     "termination": "Termination",
     "departure": "Departure",
     "salary": "Salary",
-    "salary_form": "Salary Form",
+    "salary_form_ir56b": "Salary Form (IR56B)",
+    "salary_form_ir56f": "Salary Form (IR56F)",
     "form_date": "Form Date",
     "no_of_employee": "No. of Employees",
     "employees": "Employees",
@@ -82,7 +101,6 @@
     "form_no": "Form No.",
     "remark": "Remark",
     "submitted_on": "Submission Date",
-    "tax_form_management": "Tax Form Management",
     "form_type": "Form Type",
     "form_template": "Form Template",
     "hand_writing": "Hand Writing",
@@ -103,11 +121,40 @@
     "any_other_rewards_": "任何其他報酬, 津貼或額外賞賜",
     "pensions": "Pensions",
     "salary_tax_records": "Salary Tax Records",
+    "payments_not_declared_above_": "Payments not declared above but paid to employee after resignation.",
 
     "published": "Published",
     "sheet_no": "Sheet No.",
     "signature_designation": "Designation",
-    "record_verification_form": "Record Verification"
+    "record_verification_form": "Record Verification",
+    "income_field_mapping": "Income Field Mapping",
+    "apply_for_computerized_form_approval": "Apply for Computerized Form Approval",
+    "required_items_for_submission": "Required Items for Submission",
+    "_necessary_documents_item_1_": "application_letter",
+    "_necessary_documents_item_2_": "A removable storage device containing 20 to 30 testing data records of the IR56 Form complying with the current data requirement specifications.",
+    "_necessary_documents_item_3_": "Three sample sheets of the IR56 Form printed from the testing data records.",
+    "_necessary_documents_item_4_": "A copy of the Control List using the testing data records in the removable storage device.",
+
+    "apply_for_approval_of_softcopy": "Apply for approval of softcopy submission",
+    "apply_for_approval_of_printed_forms": "Apply for approval of printed forms submission",
+    "update_previously_approval": "Enhancement to previously approved software to comply with latest specifications.",
+
+    "others_placed_in_salary": "All payment not belongs to any pay types will be taken as salary.",
+    "setup": "Setup",
+
+    "employer_name": "Employer Name",
+    "fiscal_years": "Fiscal Years",
+    "company_file_no": "Company File No.",
+    "application_date": "Application Date",
+    "company_name": "Company Name",
+    "tel_no": "Tel. No.",
+    "signature_name": "Signature Name",
+
+    "related_files": "Related Files",
+    "control_list": "Control List",
+    "xml_data_file": "XML Data File",
+    "xsd_file": "XSD File",
+    "employer_file_no": "Employer File No."
   },
   "mpf": {
     "mpf_management": "MPF Management"
@@ -132,8 +179,15 @@
     "please_select_department_employee": "Please select department/employee",
     "access_denied": "Access Denied!",
     "are_you_sure": "Are you sure",
-    "form_no_is_required": "Form no. is required.",
-    "designation_is_required": "Designation is required."
+    "form_no_is_required": "Form no. is necessary.",
+    "designation_is_required": "Designation is necessary.",
+    "signature_name_is_required": "Signature Name is necessary.",
+    "generation_will_be_ready_soon": "Documents will be ready soon.",
+    "employer_file_no_is_necessary": "Employer File No. is necessary.",
+    "internal_error_please_regenerate": "系統錯誤，請重新建立本件!"
+  },
+  "database": {
+    "items_per_page": "record / page",
+    "total": "Total"
   }
-
 }

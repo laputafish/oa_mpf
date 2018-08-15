@@ -69,7 +69,7 @@
                 </td>
                 <td>
                   <yoov-radio-toggle
-                    :options="languageOptions"
+                    :options="taxLanguageOptions"
                     optionTitleTag="titleTag"
                     v-model="settings.language">
                   </yoov-radio-toggle>
@@ -109,7 +109,7 @@
                   </td>
                   <td>
                     <yoov-radio-toggle
-                      :options="languageOptions"
+                      :options="taxLanguageOptions"
                       optionTitleTag="titleTag"
                       v-model="sample.language">
 
@@ -208,23 +208,23 @@ export default {
         ir56bIncomes: [],
         ir56fIncomes: []
       },
-      languageOptions: [
-        // {
-        //   id: 0,
-        //   titleTag: 'general.user_customed',
-        //   value: 'user_customed'
-        // },
-        {
-          id: 1,
-          titleTag: 'general.chinese',
-          value: 'zh-hk'
-        },
-        {
-          id: 2,
-          titleTag: 'general.english',
-          value: 'en-us'
-        }
-      ],
+      // taxLanguageOptions: [
+      //   // {
+      //   //   id: 0,
+      //   //   titleTag: 'general.user_customed',
+      //   //   value: 'user_customed'
+      //   // },
+      //   {
+      //     id: 1,
+      //     titleTag: 'general.chinese',
+      //     value: 'zh-hk'
+      //   },
+      //   {
+      //     id: 2,
+      //     titleTag: 'general.english',
+      //     value: 'en-us'
+      //   }
+      // ],
       sample: {
         'language': 'en-us',
         'formDate': ''
@@ -376,6 +376,9 @@ export default {
     }
   },
   computed: {
+    taxLanguageOptions () {
+      return this.$store.getters.taxLanguageOptions
+    },
     teamId () {
       return this.$store.getters.teamId
     },

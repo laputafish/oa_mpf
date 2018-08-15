@@ -780,7 +780,6 @@ export default {
   },
   created () {
     let vm = this
-    vm.$store.dispatch('FETCH_LANGUAGES')
     vm.fetchTaxFormSettings()
   },
   beforeDestroy () {
