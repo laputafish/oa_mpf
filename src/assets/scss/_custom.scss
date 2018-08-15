@@ -257,8 +257,9 @@ sidebar-fixed .main, .sidebar-fixed .app-footer {
 }
 
 .app-header.navbar .navbar-brand {
-  display: inline-block;
-  width: 205px !important;
+  //display: inline-block;
+  //width: 205px !important;
+  border-bottom: 1px solid #28ada7 !important;
 }
 
 @media (max-width: 991px) {

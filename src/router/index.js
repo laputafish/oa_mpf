@@ -293,7 +293,7 @@ export default new VueRouter({
           component: IrdForms,
           children: [
             {
-              path: 'setup',
+              path: 'setupx',
               name: 'tax.setup'
             }
           ]

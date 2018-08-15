@@ -276,9 +276,12 @@ export default {
   methods: {
     returnLastMode () {
       let vm = this
-      vm.mode = vm.lastMode
-      vm.lastMode = 'list'
-      vm.$router.go(-1)
+      if (vm.lastMode === '') {
+        vm.$router.go(-1)
+      } else {
+        vm.mode = vm.lastMode
+        vm.lastMode = 'list'
+      }
     },
     changeMode (mode) {
       let vm = this

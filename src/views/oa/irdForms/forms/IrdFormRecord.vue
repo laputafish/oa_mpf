@@ -11,13 +11,14 @@
       </div>
       <div v-if="form.employees" class="col-sm-8">
         <div class="row">
-          <h4 class="pt-1 text-danger col-sm text-center">
-            <span v-show="form.status==='processing'||form.status==='ready_for_processing'">
-              <i class="fa fa-spinner fa-spin"></i>
-              {{ $t('general.' + form.status) }}
-            </span>
-          </h4>
           <div class="col-sm text-right btn-stackable-group">
+            <h4 class="d-inline text-danger pull-left">
+              <span v-show="form.status==='processing'||form.status==='ready_for_processing'">
+                <i class="fa fa-spinner fa-spin"></i>
+                {{ $t('general.' + form.status) }}
+              </span>
+            </h4>
+
             <button type="button"
                     v-if="form.status==='processing'||form.status==='ready_for_processing'"
                     :disabled="form.status!=='processing' && form.status!=='ready_for_processing'"
@@ -55,7 +56,7 @@
               </span>
             </button>
             <button type="button"
-                    class="btn btn-width-80 btn-outline-default"
+                    class="btn min-width-80 btn-outline-default"
                     @click="cancel">
               <i class="fa fa-close"></i>
               {{ $t('buttons.cancel') }}

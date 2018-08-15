@@ -7,7 +7,7 @@
     </button>
     <b-link class="navbar-brand" to="#"></b-link>
     <button
-      class="navbar-toggler sidebar-toggler d-md-down-none"
+      class="text-white navbar-toggler sidebar-toggler d-md-down-none"
       type="button"
       @click="sidebarMinimize">&#9776;
     </button>
@@ -34,12 +34,18 @@
       <nav-user-menu :user="user"></nav-user-menu>
       &nbsp;&nbsp;
       <yoov-radio-toggle
+        style="margin-right:10px;"
         :options="languageOptions"
         optionTitleTag="titleTag"
         :buttonClass="'btn-sm'"
         v-model="langId">
       </yoov-radio-toggle>
-      <button disabled class="navbar-toggler aside-menu-toggler d-md-down-none" type="button" @click="asideToggle">&#9776;</button>
+      <!--<router-link-->
+        <!--:to="'/setup'"-->
+        <!--class="btn border-0 bg-transparent">-->
+        <!--<i class="fa fa-gear"></i>-->
+      <!--</router-link>-->
+      <button v-show="false" disabled class="navbar-toggler aside-menu-toggler d-md-down-none" type="button" @click="asideToggle">&#9776;</button>
     </b-nav>
   </header>
 </template>
@@ -48,10 +54,12 @@
 import NavUserMenu from '@/components/NavUserMenu'
 import YoovRadioToggle from '@/components/forms/YoovRadioToggle'
 import topMenu from '@/_top_menu.js'
+import Buttons from '@/views/components/Buttons'
 
 // import MyDropdownItem from './MyDropdownItem.vue'
 export default {
   components: {
+    Buttons,
     navUserMenu: NavUserMenu,
     yoovRadioToggle: YoovRadioToggle
   },

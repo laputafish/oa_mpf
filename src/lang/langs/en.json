@@ -19,7 +19,7 @@
     "status": "Status",
     "form_status": "Form Status",
     "account": "Account",
-    
+
     "generating_": "Processing ...",
     "pending": "Idle",
     "ready_for_processing": "Pending",
@@ -113,12 +113,12 @@
     "directors_fee": "Director's Fee",
     "commission_fees": "Commission Fees",
     "bonus": "Bonus",
-    "back_pay_": "補發薪金, 代通知金, 退休或終止服務的獎賞或酬金",
-    "certain_payments_": "從退休計劃支付的若干款項",
-    "salaries_tax_": "僱主代付的薪俸稅",
+    "back_pay_": "Back Pay, Payment in Lieu in Notice, Terminal Awards or Gratuities",
+    "certain_payments_": "Certain Payments from Retirement Schemes",
+    "salaries_tax_": "Salaries Tax Paid by Employer",
     "education_benefits": "Education Benefits",
-    "gain_realized_": "在股份認購計劃中賺取的收益",
-    "any_other_rewards_": "任何其他報酬, 津貼或額外賞賜",
+    "gain_realized_": "Gain Realized under Share Option Scheme",
+    "any_other_rewards_": "Any other Rewards, Allowances or Perquisties",
     "pensions": "Pensions",
     "salary_tax_records": "Salary Tax Records",
     "payments_not_declared_above_": "Payments not declared above but paid to employee after resignation.",
@@ -184,7 +184,7 @@
     "signature_name_is_required": "Signature Name is necessary.",
     "generation_will_be_ready_soon": "Documents will be ready soon.",
     "employer_file_no_is_necessary": "Employer File No. is necessary.",
-    "internal_error_please_regenerate": "系統錯誤，請重新建立本件!"
+    "internal_error_please_regenerate": "System Error, Please rebuild documents!"
   },
   "database": {
     "items_per_page": "record / page",
