@@ -12,6 +12,7 @@
         </div>
       </main>
       <app-aside/>
+      <app-aside2/>
     </div>
     <app-footer/>
     <team-selection-dialog
@@ -31,7 +32,9 @@ import nav from '../_nav'
 import {
   AppHeader as appHeader,
   AppSidebar as sidebar,
-  AppAside as appAside,
+  AppAsideSettings as appAside,
+  // AppAsideSettings as appAsideSettings,
+  // AppAside2 as appAside2,
   AppFooter as appFooter} from '../components/index.js'
 import Breadcrumb from '../components/Breadcrumb.vue'
 import TeamSelectionDialog from '@/dialogs/TeamSelectionDialog'
@@ -42,7 +45,7 @@ export default {
   components: {
     appHeader,
     sidebar,
-    appAside,
+    appAside: appAside,
     appFooter,
     breadcrumb: Breadcrumb,
     teamSelectionDialog: TeamSelectionDialog,

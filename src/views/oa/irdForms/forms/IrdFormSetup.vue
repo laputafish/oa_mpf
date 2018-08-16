@@ -163,6 +163,12 @@
               <!-- ****************************************** -->
               <!--      IR56B Income particular mapping       -->
               <!-- ****************************************** -->
+              <ir56-income-mapping-table
+                v-if="activeOptionGroup==='ir56b_income_mapping'"
+                style="width: 100%;"
+                :payTypes="payTypes"
+                :incomeTypes="settings.ir56bIncomes"
+                @input="value=>{settings.ir56bIncomes=value}"></ir56-income-mapping-table>
               <table v-if="activeOptionGroup==='ir56b_income_mapping'" class="table-striped" style="width: 100%;">
                 <tr v-for="item in settings.ir56bIncomes"
                     :key="item.id">
@@ -185,6 +191,8 @@
                         <span>[{{ option.code }}]&nbsp;{{ option.name }}</span>
                       </template>
                     </v-select>
+                    <!--item.pay_type_ids: {{ item.pay_Type_ids}}<br/>-->
+                    <!--item.pay_types: {{ item.pay_types }}-->
                   </td>
                 </tr>
                 <tr>
@@ -246,6 +254,7 @@ import YoovCheckboxToggle from '@/components/forms/YoovCheckboxToggle'
 import vSelect from 'vue-select'
 import DatePicker from 'vue2-datepicker'
 import myMixin from '@/appHelpers'
+import Ir56IncomeMappingTable from './comps/Ir56IncomeMappingTable'
 
 export default {
   name: 'ird-form-setup',
@@ -291,7 +300,8 @@ export default {
     'yoov-checkbox-toggle': YoovCheckboxToggle,
     'v-select': vSelect,
     'date-picker': DatePicker,
-    'update': 0
+    'update': 0,
+    'ir56-income-mapping-table': Ir56IncomeMappingTable
   },
   methods: {
     save () {

@@ -42,7 +42,8 @@ $navbar-height:                       55px !default;
 $navbar-bg:                           #37d1ca !default;
 $navbar-border: (
   bottom: (
-    size:                             1px,
+    //size:                             1px,
+    size:                             0,
     style:                            solid,
     color:                            $border-color
   )
@@ -51,10 +52,11 @@ $navbar-border: (
 $navbar-brand-width:                  250px !default;
 //$navbar-brand-bg:                     #fff !default;
 $navbar-brand-bg:                     #28ada7 !default;
-$navbar-brand-logo:                   url('/static/img/logo.png') !default;
+// $navbar-brand-logo:                   url('/static/img/logo.png') !default;
 // $navbar-brand-logo:                   url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKIAAAAdCAYAAAApbre7AAAAGXRFW…cZJeM42XVxSmEqdS0OMdOVXjuLlfZYd9rG3uGh7Yv6nwADAGZfO5iLYJIeAAAAAElFTkSuQmCC)
+$navbar-brand-logo:                   url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKIAAAAdCAYAAAApbre7AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTUgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OEYxQUJFNzkyMEVFMTFFODhENjRCQjQwQ0JFMEE2N0UiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OEYxQUJFN0EyMEVFMTFFODhENjRCQjQwQ0JFMEE2N0UiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4RjFBQkU3NzIwRUUxMUU4OEQ2NEJCNDBDQkUwQTY3RSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4RjFBQkU3ODIwRUUxMUU4OEQ2NEJCNDBDQkUwQTY3RSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PpDIXwoAAAXOSURBVHja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);
 // !default;
-$navbar-brand-logo-size:              140px auto !default;
+$navbar-brand-logo-size:              162px auto !default;
 //$navbar-brand-logo-size:              70px auto !default;
 $navbar-brand-border: (
   bottom: (
@@ -64,7 +66,8 @@ $navbar-brand-border: (
   )
 ) !default;
 
-$navbar-color:                        $gray-600 !default;
+$navbar-color:                        white !default;
+//$navbar-color:                        $gray-600 !default;
 $navbar-hover-color:                  $gray-800 !default;
 $navbar-active-color:                 $gray-800 !default;
 $navbar-disabled-color:               $gray-300 !default;

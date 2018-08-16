@@ -19,6 +19,7 @@
     "status": "狀態",
     "form_status": "表格狀態",
     "account": "帳戶",
+    "system": "系統",
 
     "generating_": "處理中...",
     "pending": "閒置中",

@@ -263,6 +263,9 @@ sidebar-fixed .main, .sidebar-fixed .app-footer {
 }
 
 @media (max-width: 991px) {
+  .app-header.navbar {
+    background-color: #28ada7;
+  }
   .sidebar {
     position: fixed;
     width: 250px;

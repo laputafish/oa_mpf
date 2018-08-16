@@ -34,7 +34,7 @@
       <nav-user-menu :user="user"></nav-user-menu>
       &nbsp;&nbsp;
       <yoov-radio-toggle
-        style="margin-right:10px;"
+        style="margin-right:5px;"
         :options="languageOptions"
         optionTitleTag="titleTag"
         :buttonClass="'btn-sm'"
@@ -45,7 +45,11 @@
         <!--class="btn border-0 bg-transparent">-->
         <!--<i class="fa fa-gear"></i>-->
       <!--</router-link>-->
-      <button v-show="false" disabled class="navbar-toggler aside-menu-toggler d-md-down-none" type="button" @click="asideToggle">&#9776;</button>
+      <!--<button v-show="false" disabled class="navbar-toggler aside-menu-toggler d-md-down-none" type="button" @click="asideToggle">&#9776;</button>-->
+      <button class="navbar-toggler aside-menu-toggler d-md-down-none"
+              style="margin-left:5px;"
+              type="button"
+              @click="asideToggle('main', $event)">&#9776;</button>
     </b-nav>
   </header>
 </template>
@@ -77,7 +81,7 @@ export default {
       e.preventDefault()
       document.body.classList.toggle('sidebar-mobile-show')
     },
-    asideToggle (e) {
+    asideToggle (name, e) {
       e.preventDefault()
       document.body.classList.toggle('aside-menu-hidden')
     }
