@@ -184,6 +184,8 @@ Vue.axios.interceptors.request.use(function (config) {
     //   }
     // }
     // console.log('axios :: using oaApiUrl')
+  } else {
+    promiseConfig = config
   }
   return promiseConfig
 })

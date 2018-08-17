@@ -170,7 +170,7 @@
     "others_copyright_royalties": "Others: (b) Copyright / Royalties",
     "others_consultancy_management_fees": "Others: (c) Consultancy / Management Fees",
     "others_service_fees": "Others: (d) Service Fees",
-    "others_other_nature": "Others: (e) Nature ____"
+    "others_other_nature": "Others: (e) Nature ....."
   },
   "mpf": {
     "mpf_management": "MPF Management"
@@ -206,5 +206,8 @@
   "database": {
     "items_per_page": "record / page",
     "total": "Total"
+  },
+  "super": {
+    "super_dashboard": "Super Dashboard"
   }
 }

@@ -45,6 +45,7 @@
             <yoov-radio-toggle
               :options="irdFormTypeFilters"
               optionTitleTag="titleTag"
+              buttonClass="min-width-80"
               v-model="selectedIrdFormTypeId"></yoov-radio-toggle>
           </div>
         </div>
@@ -324,6 +325,7 @@ export default {
       this.updateFormStatus(formId, status)
     },
     onEmployeeStatusUpdated (data) {
+      console.log('onEmployeeStatusUpdated :: data: ', data)
       let statusInfo = data.statusInfo
       let formId = statusInfo.formId.toString()
       let employeeId = statusInfo.employeeId.toString()

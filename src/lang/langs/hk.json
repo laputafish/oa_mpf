@@ -170,7 +170,7 @@
     "others_copyright_royalties": "其他: (b) 版權費/專利費",
     "others_consultancy_management_fees": "其他: (c) 顧問費",
     "others_service_fees": "其他: (d) 服務費",
-    "others_other_nature": "其他: (e) 性質: __________"
+    "others_other_nature": "其他: (e) 性質: ....."
   },
   "mpf": {
     "mpf_management": "MPF 管理"
@@ -206,5 +206,8 @@
   "database": {
     "items_per_page": "項 / 頁",
     "total": "總數量"
+  },
+  "super": {
+    "super_dashboard": "管理員控制台"
   }
 }

@@ -102,6 +102,8 @@ import ApplyForIrdApproval from '@/views/oa/applyForIrdApproval/ApplyForIrdAppro
 import IrdFormSetup from '@/views/oa/irdFormSetup/IrdFormSetup'
 import MyIrdForms from '@/views/oa/myIrdForms/MyIrdForms'
 
+import SuperDashboard from '@/views/oa/superDashboard/SuperDashboard'
+
 // import jQuery from 'jquery'
 // window.jQuery = jQuery
 // window.$ = jQuery
@@ -272,6 +274,11 @@ export default new VueRouter({
       //   }
       // },
       children: [
+        {
+          path: '/super_dashboard',
+          name: 'super.super_dashboard',
+          component: SuperDashboard
+        },
         {
           path: '/ird_form_setup',
           name: 'tax.ird_form_setup',

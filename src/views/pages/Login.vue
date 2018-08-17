@@ -146,7 +146,7 @@ export default {
           // console.log('Login :: $cookie.get(teamId): ' + vm.$cookie.get('teamId'))
           if (valid) {
             if (isSupervisor) {
-              vm.$router.push({name: 'SuperDashboard'})
+              vm.$router.push({name: 'super.super_dashboard'})
             } else {
               if (vm.user.employee_id === 0) {
                 vm.$store.dispatch('FETCH_SELF').then(function (response) {
@@ -187,7 +187,7 @@ export default {
           } else {
             vm.$store.dispatch('FETCH_OA_USER_EMPLOYEE', selectedTeam.id).then(function (oaEmployee) {
               if (vm.$store.getters.isPayrollAdmin || vm.$store.getters.isOwner) {
-                vm.$router.push({name: 'tax.tax_form_management'})
+                vm.$router.push({name: 'tax.ird_forms_management'})
               } else {
                 vm.loading = false
                 // vm.$dialog.alert(vm.$t('messages.access_denied'), {

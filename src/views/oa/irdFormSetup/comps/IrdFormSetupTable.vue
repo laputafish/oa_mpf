@@ -47,7 +47,7 @@
                   <!--</li>-->
                   <li>
                     <div key="salary">
-                      <div class="border-0 rounded-2 title-container form-control text-nowrap">
+                      <div class="border-0 rounded-2 title-container form-control text-nowrap text-muted">
                         {{ $t('tax.income_field_mapping') }}
                       </div>
                     </div>
@@ -84,44 +84,44 @@
                       </li>
                     </ul>
                   </li>
-                  <li>
-                    <div key="salary">
-                      <div class="border-0 rounded-2 title-container form-control text-nowrap">
-                        {{ $t('tax.salary_form_ir56b')}}
-                      </div>
-                    </div>
-                    <ul style="padding-left: 40px;">
-                      <li>
-                        <div key="salary"
-                             @click="activeOptionGroup='ir56b_income_mapping'"
-                             :class="{'active':activeOptionGroup==='ir56b_income_mapping'}"
-                             class="option-group-button">
-                          <div class="border-0 rounded-2 title-container form-control ">
-                            {{ $t('tax.income_field_mapping') }}
-                          </div>
-                        </div>
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    <div key="salary">
-                      <div class="border-0 rounded-2 title-container form-control text-nowrap">
-                        {{ $t('tax.salary_form_ir56f_g')}}
-                      </div>
-                    </div>
-                    <ul style="padding-left: 40px;">
-                      <li>
-                        <div key="salary"
-                             @click="activeOptionGroup='ir56f_income_mapping'"
-                             :class="{'active':activeOptionGroup==='ir56f_income_mapping'}"
-                             class="option-group-button">
-                          <div class="border-0 rounded-2 title-container form-control ">
-                            {{ $t('tax.income_field_mapping') }}
-                          </div>
-                        </div>
-                      </li>
-                    </ul>
-                  </li>
+                  <!--<li>-->
+                    <!--<div key="salary">-->
+                      <!--<div class="border-0 rounded-2 title-container form-control text-nowrap">-->
+                        <!--{{ $t('tax.salary_form_ir56b')}}-->
+                      <!--</div>-->
+                    <!--</div>-->
+                    <!--<ul style="padding-left: 40px;">-->
+                      <!--<li>-->
+                        <!--<div key="salary"-->
+                             <!--@click="activeOptionGroup='ir56b_income_mapping'"-->
+                             <!--:class="{'active':activeOptionGroup==='ir56b_income_mapping'}"-->
+                             <!--class="option-group-button">-->
+                          <!--<div class="border-0 rounded-2 title-container form-control ">-->
+                            <!--{{ $t('tax.income_field_mapping') }}-->
+                          <!--</div>-->
+                        <!--</div>-->
+                      <!--</li>-->
+                    <!--</ul>-->
+                  <!--</li>-->
+                  <!--<li>-->
+                    <!--<div key="salary">-->
+                      <!--<div class="border-0 rounded-2 title-container form-control text-nowrap">-->
+                        <!--{{ $t('tax.salary_form_ir56f_g')}}-->
+                      <!--</div>-->
+                    <!--</div>-->
+                    <!--<ul style="padding-left: 40px;">-->
+                      <!--<li>-->
+                        <!--<div key="salary"-->
+                             <!--@click="activeOptionGroup='ir56f_income_mapping'"-->
+                             <!--:class="{'active':activeOptionGroup==='ir56f_income_mapping'}"-->
+                             <!--class="option-group-button">-->
+                          <!--<div class="border-0 rounded-2 title-container form-control ">-->
+                            <!--{{ $t('tax.income_field_mapping') }}-->
+                          <!--</div>-->
+                        <!--</div>-->
+                      <!--</li>-->
+                    <!--</ul>-->
+                  <!--</li>-->
                 </ul>
                 <!--<div v-for="button in optionGroupButtons"-->
                 <!--:key="button.value"-->

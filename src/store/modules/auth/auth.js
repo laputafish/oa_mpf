@@ -6,7 +6,8 @@ import * as types from './auth_types'
 const state = {
   token: localStorage.getItem('accessToken') || '',
   teamId: localStorage.getItem('teamId') || '',
-  status: ''
+  status: '',
+  isSupervisor: false
 }
 
 const getters = {
@@ -27,6 +28,9 @@ const mutations = {
   },
   [types.AUTH_ERROR]: (state) => {
     state.status = 'error'
+  },
+  setIsSupervisor: (state, payload) => {
+    state.isSupervisor = payload
   }
 }
 
@@ -46,12 +50,18 @@ const actions = {
       Vue.axios.post(url, data, config).then(response => {
         console.log('post(yoovapi/apiv2/auth/login_oa :: response.data: ', response.data)
         if (response.data.status) {
+          let loginOAResponse = {
+            isSupervisor: response.data.isSupervisor,
+            valid: false
+          }
+          commit('setIsSupervisor', response.data.isSupervisor)
           const token = response.data.token
           localStorage.setItem('accessToken', token)
           commit('setToken', token)
           dispatch('FETCH_USER_BY_TOKEN').then(function (result) {
             console.log('AUTH_REQUEST_OA > FETCH_USER_BY_TOKEN > resolve(result): ', result)
-            resolve(result)
+            loginOAResponse['valid'] = result['valid']
+            resolve(loginOAResponse)
           })
         } else {
           // commit('showModal', {
@@ -81,20 +91,22 @@ const actions = {
         client_id: constants.CLIENT_ID,
         client_secret: constants.CLIENT_SECRET
       }
-      console.log('post(http://yoovapi/oauth/token)')
+      console.log('action(AUTH_REQUEST) :: URL = ' + url + ' :: data: ', data)
       Vue.axios.post(url, data).then(function (response) {
+        console.log('action(AUTH_REQUEST) :: post ok :: response: ', response)
         let authorized = true
         dispatch(types.AUTH_REQUEST_OA, {credentials, authorized}).then(
           function (response) {
-            console.log('AUTH_REQUEST > AUTH_REQUEST_OA (authorized=true)')
+            console.log('AUTH_REQUEST > AUTH_REQUEST_OA (authorized=true) :: response: ', response)
             resolve(response)
           }
         )
-      }, function (errpr) {
+      }, function (error) {
+        console.log('action(AUTH_REQUEST) :: post fails :: error: ', error)
         let authorized = false
         dispatch(types.AUTH_REQUEST_OA, {credentials, authorized}).then(
           function (response) {
-            console.log('AUTH_REQUEST > AUTH_REQUEST_OA (authorized=false)')
+            console.log('AUTH_REQUEST > AUTH_REQUEST_OA (authorized=false) :: response: ', response)
             resolve(response)
           }
         )

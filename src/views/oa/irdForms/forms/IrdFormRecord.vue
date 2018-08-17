@@ -261,7 +261,7 @@
       @onEmployeesAllRemoved="onEmployeesAllRemovedHandler"
       @onCommand="onCommandHandler"
       :status="form ? form.status : 'disabled'"
-      :employees="form ? form.employees : []"></employee-table>
+      :employees="formEmployees"></employee-table>
   </div>
 </template>
 
@@ -315,6 +315,9 @@ export default {
     }
   },
   computed: {
+    formEmployees () {
+      return this.form.employees
+    },
     taxLanguageOptions () {
       return this.$store.getters.taxLanguageOptions
     },
@@ -596,7 +599,7 @@ export default {
         if (vm.form.employees[i].employee_id === parseInt(employeeId)) {
           vm.form.employees[i].status = status
           if (typeof sheetNo !== 'undefined') {
-            vm.form.employees[i].sheetNo = sheetNo
+            vm.form.employees[i].sheet_no = sheetNo
           }
           break
         }
