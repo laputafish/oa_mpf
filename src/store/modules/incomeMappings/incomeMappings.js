@@ -4,7 +4,8 @@
 
 const state = {
   ir56bIncomes: [],
-  ir56fIncomes: []
+  ir56fIncomes: [],
+  ir56mIncomes: []
 }
 
 const getters = {
@@ -13,6 +14,9 @@ const getters = {
   },
   ir56fIncomes: (state) => {
     return state.ir56fIncomes
+  },
+  ir56mIncomes: (state) => {
+    return state.ir56mIncomes
   }
 }
 
@@ -34,6 +38,16 @@ const mutations = {
     for (var i = 0; i < state.ir56fIncomes.length; i++) {
       if (state.ir56fIncomes[i].id === payload.id) {
         state.ir56fIncomes[i].pay_type_ids = payload.payTypes.map(payType => payType.id)
+      }
+    }
+  },
+  setIr56mIncomes: (state, payload) => {
+    state.ir56mIncomes = payload
+  },
+  setIr56mIncomePayTypes: (state, payload) => {
+    for (var i = 0; i < state.ir56mIncomes.length; i++) {
+      if (state.ir56mIncomes[i].id === payload.id) {
+        state.ir56mIncomes[i].pay_type_ids = payload.payTypes.map(payType => payType.id)
       }
     }
   }

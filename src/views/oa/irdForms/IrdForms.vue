@@ -17,19 +17,19 @@
         </div>
         {{ $t('tax.setup') }}
       </div>
-      <ird-form-setup
+      <ird-form-setup-table
         @close="returnLastMode"
-        ref="setupForm"></ird-form-setup>
+        ref="setupForm"></ird-form-setup-table>
     </b-card>
     <b-card v-else>
       <div slot="header" >
         <div class="btn-group btn-group-gap card-header-toolbar">
           <!-- Button: Settings -->
-          <button type="button"
-                  @click="changeMode('setup')"
-                  class="pull-right btn btn-outline-primary">
-            <i class="fa fa-gear"></i>&nbsp;{{ $t('buttons.settings') }}
-          </button>
+          <!--<button type="button"-->
+                  <!--@click="changeMode('setup')"-->
+                  <!--class="pull-right btn btn-outline-primary">-->
+            <!--<i class="fa fa-gear"></i>&nbsp;{{ $t('buttons.settings') }}-->
+          <!--</button>-->
           <!--<button type="button"-->
                   <!--@click="showSettings"-->
                   <!--class="pull-right btn btn-outline-primary">-->
@@ -82,7 +82,7 @@ import * as constants from '@/store/constants'
 import {EventBus} from '@/event-bus'
 import components from './comps'
 import IrdFormRecord from './forms/IrdFormRecord'
-import IrdFormSetup from './forms/IrdFormSetup'
+import IrdFormSetupTable from '@/views/oa/irdFormSetup/comps/IrdFormSetupTable'
 import SelectEmployeeDialog from '@/dialogs/SelectEmployeeDialog'
 import helpers from '@/helpers.js'
 import YoovRadioToggle from '@/components/forms/YoovRadioToggle'
@@ -92,7 +92,7 @@ export default {
   components: {
     ...components,
     'ird-form-record': IrdFormRecord,
-    'ird-form-setup': IrdFormSetup,
+    'ird-form-setup-table': IrdFormSetupTable,
     'select-employee-dialog': SelectEmployeeDialog,
     'yoov-radio-toggle': YoovRadioToggle,
     'ThHeader': ThHeader
@@ -194,6 +194,8 @@ export default {
       console.log('EventBus.on(showSelectEmployeeDialog)')
       vm.selectedFormEmployeeIds = payload.selectedFormEmployeeIds
       vm.employeeStatus = payload.employeeStatus
+      console.log('showSelectEmployeeDialog :: selectedFormEmployeeIds: ', vm.selectedFormEmployeeIds)
+      console.log('showSelectEmployeeDialog :; employeeStatus = ' + vm.employeeStatus)
       vm.$refs.selectEmployeeDialog.show()
     })
   },

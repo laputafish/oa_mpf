@@ -99,7 +99,7 @@ import EmployeeSalary from '@/views/oa/irdForms/employeeSalary/EmployeeSalary'
 import IrdForms from '@/views/oa/irdForms/IrdForms'
 import ApplyForIrdApproval from '@/views/oa/applyForIrdApproval/ApplyForIrdApproval'
 
-// import IrdFormSetup from '@/views/oa/irdFormSetup/IrdFormSetup'
+import IrdFormSetup from '@/views/oa/irdFormSetup/IrdFormSetup'
 import MyIrdForms from '@/views/oa/myIrdForms/MyIrdForms'
 
 // import jQuery from 'jquery'
@@ -272,6 +272,11 @@ export default new VueRouter({
       //   }
       // },
       children: [
+        {
+          path: '/ird_form_setup',
+          name: 'tax.ird_form_setup',
+          component: IrdFormSetup
+        },
         {
           path: 'profile',
           name: 'general.profile',

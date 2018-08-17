@@ -553,7 +553,7 @@ export default {
         if (!vm.errors.any()) {
           let config = vm.sample
           vm.$store.dispatch('UPDATE_APPROVAL_REQUEST_FORM', config).then(function (response) {
-            vm.$dialog.alert(vm.$t('general.save_successfully') + '!', {
+            vm.$dialog.alert(vm.$t('messages.save_successfully') + '!', {
               okText: vm.$t('buttons.close')
             })
           }).catch(function (error) {

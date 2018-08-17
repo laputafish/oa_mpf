@@ -79,6 +79,7 @@ export default {
   .yoov-radio-toggle button {
     border-radius: 0;
     margin-right: 1px;
+    margin-bottom: 4px;
   }
   .yoov-radio-toggle button[disabled=disabled] {
     cursor: not-allowed

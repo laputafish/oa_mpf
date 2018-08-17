@@ -47,7 +47,46 @@
                   <!--</li>-->
                   <li>
                     <div key="salary">
-                      <div class="border-0 rounded-2 title-container form-control ">
+                      <div class="border-0 rounded-2 title-container form-control text-nowrap">
+                        {{ $t('tax.income_field_mapping') }}
+                      </div>
+                    </div>
+                    <ul style="padding-left: 40px;">
+                      <li>
+                        <div key="salary"
+                             @click="activeOptionGroup='ir56b_income_mapping'"
+                             :class="{'active':activeOptionGroup==='ir56b_income_mapping'}"
+                             class="option-group-button">
+                          <div class="border-0 rounded-2 title-container form-control ">
+                            {{ $t('tax.salary_form_ir56b')}}
+                          </div>
+                        </div>
+                      </li>
+                      <li>
+                        <div key="salary"
+                             @click="activeOptionGroup='ir56f_income_mapping'"
+                             :class="{'active':activeOptionGroup==='ir56f_income_mapping'}"
+                             class="option-group-button">
+                          <div class="border-0 rounded-2 title-container form-control ">
+                            {{ $t('tax.salary_form_ir56f_g')}}
+                          </div>
+                        </div>
+                      </li>
+                      <li>
+                        <div key="salary"
+                             @click="activeOptionGroup='ir56m_income_mapping'"
+                             :class="{'active':activeOptionGroup==='ir56m_income_mapping'}"
+                             class="option-group-button">
+                          <div class="border-0 rounded-2 title-container form-control ">
+                            {{ $t('tax.salary_form_ir56m')}}
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    <div key="salary">
+                      <div class="border-0 rounded-2 title-container form-control text-nowrap">
                         {{ $t('tax.salary_form_ir56b')}}
                       </div>
                     </div>
@@ -63,25 +102,26 @@
                         </div>
                       </li>
                     </ul>
-                  </li>                  <li>
-                  <div key="salary">
-                    <div class="border-0 rounded-2 title-container form-control ">
-                      {{ $t('tax.salary_form_ir56f')}}
-                    </div>
-                  </div>
-                  <ul style="padding-left: 40px;">
-                    <li>
-                      <div key="salary"
-                           @click="activeOptionGroup='ir56f_income_mapping'"
-                           :class="{'active':activeOptionGroup==='ir56f_income_mapping'}"
-                           class="option-group-button">
-                        <div class="border-0 rounded-2 title-container form-control ">
-                          {{ $t('tax.income_field_mapping') }}
-                        </div>
+                  </li>
+                  <li>
+                    <div key="salary">
+                      <div class="border-0 rounded-2 title-container form-control text-nowrap">
+                        {{ $t('tax.salary_form_ir56f_g')}}
                       </div>
-                    </li>
-                  </ul>
-                </li>
+                    </div>
+                    <ul style="padding-left: 40px;">
+                      <li>
+                        <div key="salary"
+                             @click="activeOptionGroup='ir56f_income_mapping'"
+                             :class="{'active':activeOptionGroup==='ir56f_income_mapping'}"
+                             class="option-group-button">
+                          <div class="border-0 rounded-2 title-container form-control ">
+                            {{ $t('tax.income_field_mapping') }}
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </li>
                 </ul>
                 <!--<div v-for="button in optionGroupButtons"-->
                 <!--:key="button.value"-->
@@ -169,75 +209,91 @@
                 :payTypes="payTypes"
                 :incomeTypes="settings.ir56bIncomes"
                 @input="value=>{settings.ir56bIncomes=value}"></ir56-income-mapping-table>
-              <table v-if="activeOptionGroup==='ir56b_income_mapping'" class="table-striped" style="width: 100%;">
-                <tr v-for="item in settings.ir56bIncomes"
-                    :key="item.id">
-                  <td class="particular-label salary-item" v-tooltip="$t('tax.'+item.name_tag)">{{ $t('tax.' +
-                    item.name_tag) }}
-                  </td>
-                  <td>
-                    <input v-if="item.is_default"
-                           type="text"
-                           readonly
-                           class="form-control-plaintext bg-lightgray text-darkgray px-2 border"
-                           :value="$t(item.description_tag)">
-                    <v-select v-else
-                              multiple
-                              label="code"
-                              v-model="item.pay_types"
-                              :options="payTypes">
-                      <template slot="option"
-                                slot-scope="option">
-                        <span>[{{ option.code }}]&nbsp;{{ option.name }}</span>
-                      </template>
-                    </v-select>
-                    <!--item.pay_type_ids: {{ item.pay_Type_ids}}<br/>-->
-                    <!--item.pay_types: {{ item.pay_types }}-->
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="2">
-                    <hr/>
-                    <h6 class="remark">* {{ $t('tax.others_placed_in_salary') }}</h6>
-                  </td>
-                </tr>
-
-              </table>
+              <!--<table v-if="activeOptionGroup==='ir56b_income_mapping'" class="table-striped" style="width: 100%;">-->
+                <!--<tr v-for="item in settings.ir56bIncomes"-->
+                    <!--:key="item.id">-->
+                  <!--<td class="particular-label salary-item" v-tooltip="$t('tax.'+item.name_tag)">{{ $t('tax.' +-->
+                    <!--item.name_tag) }}-->
+                  <!--</td>-->
+                  <!--<td>-->
+                    <!--<input v-if="item.is_default"-->
+                           <!--type="text"-->
+                           <!--readonly-->
+                           <!--class="form-control-plaintext bg-lightgray text-darkgray px-2 border"-->
+                           <!--:value="$t(item.description_tag)">-->
+                    <!--<v-select v-else-->
+                              <!--multiple-->
+                              <!--label="code"-->
+                              <!--v-model="item.pay_types"-->
+                              <!--:options="payTypes">-->
+                      <!--<template slot="option"-->
+                                <!--slot-scope="option">-->
+                        <!--<span>[{{ option.code }}]&nbsp;{{ option.name }}</span>-->
+                      <!--</template>-->
+                    <!--</v-select>-->
+                    <!--&lt;!&ndash;item.pay_type_ids: {{ item.pay_Type_ids}}<br/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;item.pay_types: {{ item.pay_types }}&ndash;&gt;-->
+                  <!--</td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                  <!--<td colspan="2">-->
+                    <!--<hr/>-->
+                    <!--<h6 class="remark">* {{ $t('tax.others_placed_in_salary') }}</h6>-->
+                  <!--</td>-->
+                <!--</tr>-->
+              <!--</table>-->
 
               <!-- ****************************************** -->
               <!--      IR56F Income particular mapping       -->
               <!-- ****************************************** -->
-              <table v-if="activeOptionGroup==='ir56f_income_mapping'" class="table-striped" style="width: 100%;">
-                <tr v-for="item in settings.ir56fIncomes"
-                    :key="item.id">
-                  <td class="particular-label salary-item" v-tooltip="$t('tax.'+item.name_tag)">{{ $t('tax.' +
-                    item.name_tag) }}
-                  </td>
-                  <td>
-                    <input v-if="item.is_default"
-                           type="text"
-                           readonly
-                           class="form-control-plaintext bg-lightgray text-darkgray px-2 border"
-                           :value="$t(item.description_tag)">
-                    <v-select v-else
-                              multiple
-                              label="code"
-                              v-model="item.pay_types"
-                              :options="payTypes">
-                      <template slot="option"
-                                slot-scope="option">
-                        <span>[{{ option.code }}]&nbsp;{{ option.name }}</span>
-                      </template>
-                    </v-select>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="2">
-                    <hr/>
-                    <h6 class="remark">* {{ $t('tax.others_placed_in_salary') }}</h6>
-                  </td>
-                </tr>
-              </table>
+              <ir56-income-mapping-table
+                v-if="activeOptionGroup==='ir56f_income_mapping'"
+                style="width: 100%;"
+                :payTypes="payTypes"
+                :incomeTypes="settings.ir56fIncomes"
+                @input="value=>{settings.ir56fIncomes=value}"></ir56-income-mapping-table>
+
+              <!--<table v-if="activeOptionGroup==='ir56f_income_mapping'" class="table-striped" style="width: 100%;">-->
+                <!--<tr v-for="item in settings.ir56fIncomes"-->
+                    <!--:key="item.id">-->
+                  <!--<td class="particular-label salary-item" v-tooltip="$t('tax.'+item.name_tag)">{{ $t('tax.' +-->
+                    <!--item.name_tag) }}-->
+                  <!--</td>-->
+                  <!--<td>-->
+                    <!--<input v-if="item.is_default"-->
+                           <!--type="text"-->
+                           <!--readonly-->
+                           <!--class="form-control-plaintext bg-lightgray text-darkgray px-2 border"-->
+                           <!--:value="$t(item.description_tag)">-->
+                    <!--<v-select v-else-->
+                              <!--multiple-->
+                              <!--label="code"-->
+                              <!--v-model="item.pay_types"-->
+                              <!--:options="payTypes">-->
+                      <!--<template slot="option"-->
+                                <!--slot-scope="option">-->
+                        <!--<span>[{{ option.code }}]&nbsp;{{ option.name }}</span>-->
+                      <!--</template>-->
+                    <!--</v-select>-->
+                  <!--</td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                  <!--<td colspan="2">-->
+                    <!--<hr/>-->
+                    <!--<h6 class="remark">* {{ $t('tax.others_placed_in_salary') }}</h6>-->
+                  <!--</td>-->
+                <!--</tr>-->
+              <!--</table>-->
+
+              <!-- ****************************************** -->
+              <!--      IR56M Income particular mapping       -->
+              <!-- ****************************************** -->
+              <ir56-income-mapping-table
+                v-if="activeOptionGroup==='ir56m_income_mapping'"
+                style="width: 100%;"
+                :payTypes="payTypes"
+                :incomeTypes="settings.ir56mIncomes"
+                @input="value=>{settings.ir56mIncomes=value}"></ir56-income-mapping-table>
             </td>
           </tr>
         </table>
@@ -254,7 +310,7 @@ import YoovCheckboxToggle from '@/components/forms/YoovCheckboxToggle'
 import vSelect from 'vue-select'
 import DatePicker from 'vue2-datepicker'
 import myMixin from '@/appHelpers'
-import Ir56IncomeMappingTable from './comps/Ir56IncomeMappingTable'
+import Ir56IncomeMappingTable from './Ir56IncomeMappingTable'
 
 export default {
   name: 'ird-form-setup',
@@ -273,7 +329,8 @@ export default {
         designation: '',
         signatureName: '',
         ir56bIncomes: [],
-        ir56fIncomes: []
+        ir56fIncomes: [],
+        ir56mIncomes: []
       }
       // ,
       // languageOptions: [
@@ -308,6 +365,7 @@ export default {
       let vm = this
       let ir56bIncomes = []
       let ir56fIncomes = []
+      let ir56mIncomes = []
       let i
       let particular
 
@@ -331,6 +389,16 @@ export default {
         })
       }
 
+      // IR56M
+      for (i = 0; i < vm.settings.ir56mIncomes.length; i++) {
+        particular = vm.settings.ir56mIncomes[i]
+        ir56mIncomes.push({
+          id: particular.id,
+          name: particular.name,
+          pay_type_ids: particular.pay_types.map(payType => payType.id)
+        })
+      }
+
       // save
       let data = {
         langId: vm.settings.langId,
@@ -339,6 +407,7 @@ export default {
         signatureName: vm.settings.signatureName,
         ir56bIncomes: ir56bIncomes,
         ir56fIncomes: ir56fIncomes,
+        ir56mIncomes: ir56mIncomes,
         teamId: vm.teamId
       }
       // console.log('onOkClicked >> UPDATE_TAX_FORM_SETTINGS  data:', data)
@@ -346,6 +415,12 @@ export default {
         console.log('UPDATE_INCOME: response: ', response)
         if (response.status) {
           vm.$emit('close')
+          vm.$dialog.alert({
+            title: vm.$t('general.information'),
+            body: vm.$t('messages.save_successfully')
+          }, {
+            okText: vm.$t('buttons.ok')
+          })
         } else {
           vm.$dialog.alert({
             title: 'Warning',
@@ -374,11 +449,8 @@ export default {
     getIconByFileType (fileType) {
       return constants.apiUrl + '/media/icons/defaults/' + fileType
     },
-    setIr56bIncomes (incomeParticulars) {
+    parseIrDataIncomes (incomeParticulars) {
       let vm = this
-      if (typeof incomeParticulars === 'undefined') {
-        incomeParticulars = vm.$store.getters.ir56bIncomes
-      }
       let userParticulars = []
       if (vm.payTypes) {
         let data = incomeParticulars
@@ -400,7 +472,14 @@ export default {
         }
         console.log('computed(ir56bIncomes) :: userParticulars: ', userParticulars)
       }
-      vm.settings.ir56bIncomes = userParticulars
+      return userParticulars
+    },
+    setIr56bIncomes (incomeParticulars) {
+      let vm = this
+      if (typeof incomeParticulars === 'undefined') {
+        incomeParticulars = vm.$store.getters.ir56bIncomes
+      }
+      vm.settings.ir56bIncomes = vm.parseIrDataIncomes(incomeParticulars)
     },
 
     setIr56fIncomes (incomeParticulars) {
@@ -408,28 +487,15 @@ export default {
       if (typeof incomeParticulars === 'undefined') {
         incomeParticulars = vm.$store.getters.ir56fIncomes
       }
-      let userParticulars = []
-      if (vm.payTypes) {
-        let data = incomeParticulars
-        for (var i = 0; i < data.length; i++) {
-          var item = data[i]
-          userParticulars.push({
-            id: item.id,
-            is_default: item.is_default,
-            description_tag: item.description_tag,
-            name: item.name,
-            name_tag: item.name_tag,
-            pay_type_ids: item.pay_type_ids,
-            pay_types: vm.payTypes
-              ? vm.payTypes.filter(payType => {
-                return item.pay_type_ids.indexOf(payType.id) >= 0
-              })
-              : []
-          })
-        }
-        console.log('computed(ir56fIncomes) :: userParticulars: ', userParticulars)
+      vm.settings.ir56fIncomes = vm.parseIrDataIncomes(incomeParticulars)
+    },
+
+    setIr56mIncomes (incomeParticulars) {
+      let vm = this
+      if (typeof incomeParticulars === 'undefined') {
+        incomeParticulars = vm.$store.getters.ir56mIncomes
       }
-      vm.settings.ir56fIncomes = userParticulars
+      vm.settings.ir56mIncomes = vm.parseIrDataIncomes(incomeParticulars)
     },
 
     // onSelectPayType (item, payTypes) {
@@ -481,6 +547,7 @@ export default {
         vm.$store.dispatch('FETCH_TAX_FORM_SETTINGS').then(function (result) {
           vm.setIr56bIncomes(result.ir56b_incomes)
           vm.setIr56fIncomes(result.ir56f_incomes)
+          vm.setIr56mIncomes(result.ir56m_incomes)
 
           vm.settings.langId = result.langId
           vm.settings.fileNo = result.fileNo
@@ -598,6 +665,12 @@ export default {
     ir56bIncomes: function (val) {
       this.setIr56bIncomes()
     },
+    ir56fIncomes: function (val) {
+      this.setIr56fIncomes()
+    },
+    ir56mIncomes: function (val) {
+      this.setIr56mIncomes()
+    },
     teamId: function (val) {
       alert('watch(teamId)')
       this.loadData()
@@ -652,7 +725,6 @@ export default {
   #ird-form-setup .salary-item.particular-label:hover {
     background-color: rgba(30, 132, 127, .2);
     border-radius: 0.4rem;
-    padding: 0 10px;
   }
 
   .bg-lightgray {

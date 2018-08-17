@@ -12,7 +12,6 @@
         </div>
       </main>
       <app-aside/>
-      <app-aside2/>
     </div>
     <app-footer/>
     <team-selection-dialog

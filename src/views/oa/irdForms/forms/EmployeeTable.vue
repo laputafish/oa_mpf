@@ -160,10 +160,11 @@ export default {
     selectEmployees () {
       let vm = this
       let selectedEmployeeIds = vm.employees.map(formEmployee => formEmployee.employee_id.toString())
+      console.log('selectedEmployeeIds: ', selectedEmployeeIds)
       // EventBus.$emit('showSelectEmployeeDialog', selectedEmployeeIds)
       vm.$emit('onCommand', {
         command: 'selectEmployee',
-        selectedEmployeeIds: selectedEmployeeIds
+        selectedFormEmployeeIds: selectedEmployeeIds
       })
     },
     updateData (query) {

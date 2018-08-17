@@ -6,8 +6,6 @@
         item.name_tag) }}
       </td>
       <td>
-        {{ payTypeList }}
-
         <input v-if="item.is_default"
                type="text"
                readonly
@@ -21,15 +19,16 @@
                      :clear-on-select="false"
                      :hide-selected="true"
                      :preserve-search="true"
+                     :placeholder="$t('general.please_select')"
                      label="code"
                      track-by="code"
                      :options="payTypeList">
-          <template slot="tag"
-                    slot-scope="props">
+          <template slot="tag" slot-scope="props">
             <span class="custom__tag">
               <span class="custom__tag-nowrap">
                 <span>{{ props.option.code }}</span>
-                <span class="custom__remove" @click="removeOption(props, $event)">❌</span>
+                <button class="border-0 bg-transparent btn btn-xs custom__remove"
+                  @click="removeOption(props, $event)"><i class="fa fa-fa-fw fa-close"></i></button>
               </span>&nbsp;
             </span>
           </template>
@@ -164,7 +163,7 @@ export default {
     max-width: 240px;
     width: 160px;
     overflow-x: hidden;
-    padding: 7px 10px 0 10px;
+    padding: 5px 10px 0 10px;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
@@ -172,7 +171,7 @@ export default {
   #ir56IncomeMappingTable .salary-item.particular-label:hover {
     background-color: rgba(30, 132, 127, .2);
     border-radius: 0.4rem;
-    padding: 0 10px;
+    /*padding: 0 10px;*/
   }
 
   #ir56IncomeMappingTable .multiselect__tags-wrap {
@@ -238,4 +237,7 @@ export default {
     padding: 0;
   }
 
+  #ir56IncomeMappingTable .multiselect {
+    padding: 0.2rem;
+  }
 </style>

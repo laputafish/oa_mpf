@@ -368,3 +368,12 @@ sidebar-fixed .main, .sidebar-fixed .app-footer {
   background-color: #fefefe;
   border-color: #28ada7;
 }
+
+.aside-menu a:hover {
+  text-decoration: none;
+}
+
+.navbar .navbar-toggler,
+.navbar .sidebar-toggler {
+  margin-top: -3px;
+}

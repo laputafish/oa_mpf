@@ -249,7 +249,6 @@
               :file="file"></form-file-item>
           </div>
         </div>
-
       </div>
     </div>
     <hr/>
@@ -781,11 +780,14 @@ export default {
       vm.loadingCommand = command
       switch (command) {
         case 'selectEmployee':
+
           let employeeStatus = vm.form.ird_form_type_id === 2 ? 'resigned' : 'active'
-          EventBus.$emit('showSelectEmployeeDialog', {
+          let data = {
             ...commandOptions,
             employeeStatus: employeeStatus
-          })
+          }
+          console.log('onCommandHandler :: data: ', data)
+          EventBus.$emit('showSelectEmployeeDialog', data)
           vm.loadingCommand = ''
           break
         case 'generate':

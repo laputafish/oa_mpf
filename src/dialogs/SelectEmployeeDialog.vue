@@ -22,7 +22,9 @@
                    :placeholder="$t('general.search_in_name_order')">
             <div class="input-group-append">
               <!-- Clear All Selection -->
-              <button type="button" class="btn btn-outline-primary">
+              <button type="button"
+                      @click="search=''"
+                      class="btn btn-outline-primary">
                 <i class="fa fa-close"></i></button>
             </div>
           </div>
@@ -39,7 +41,7 @@
       <div class="row flex-grow-1 d-flex flex-row employee-selection-pane">
         <div class="col-sm-6 align-items-stretch d-flex flex-column">
           <b-tabs>
-            <b-tab :active="tabIndex==0">
+            <b-tab :active="tabIndex==0" class="employee-selection-list">
               <template slot="title">
                 <i class="fa fa-user"></i>&nbsp;
                 {{ $t('general.employee') }} ({{ availableEmployees.length }})
@@ -99,9 +101,9 @@
           <h6>{{ $t('general.selected') }} {{ selectedCountLabel }}</h6>
           <div class="item-list-container flex-grow-1">
             <div v-if='allSelected'
-                 class="p-1 group-selection-item pb-1 pointer d-flex flex-row align-items-start"
+                 class="p-1 pl-2 group-selection-item pb-1 pointer d-flex flex-row align-items-start"
                  @click="onAllRemoved">
-              <span>{{ $t('general.all_employees') }}</span>
+              <span><i class="fa fa-users"></i>&nbsp;{{ $t('general.all_employees') }}</span>
             </div>
             <employee-selection-item
               v-if="!allSelected"
@@ -416,5 +418,31 @@ export default {
     width: 100%;
     border: 1px solid #dee2e6;
     height: 433px;
+  }
+
+  .employee-selection-list .employee-selection-item {
+    padding: 3px;
+  }
+
+  .employee-selection-list .employee-selection-item:nth-child(2n) {
+    background-color: rgba(32, 201, 151, .15);
+  }
+
+  .employee-selection-list .employee-selection-item:hover {
+    background-color: #28ada7;
+    color: white;
+  }
+
+  .item-list-container > div {
+    padding: 3px;
+  }
+
+  .item-list-container > div:nth-child(2n) {
+    background-color: rgba(32, 201, 151, .15);
+  }
+
+  .item-list-container > div:hover {
+    background-color: #28ada7;
+    color: white;
   }
 </style>

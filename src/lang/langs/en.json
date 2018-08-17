@@ -19,6 +19,7 @@
     "status": "Status",
     "form_status": "Form Status",
     "account": "Account",
+    "system": "System",
 
     "generating_": "Processing ...",
     "pending": "Idle",
@@ -44,7 +45,8 @@
     "no": "No",
     "no_data": "No Data",
 
-    "save_successfully": "Save Successfully"
+    "please_select": "Please Select",
+    "information": "Information"
   },
   "buttons": {
     "add": "Add",
@@ -92,7 +94,10 @@
     "departure": "Departure",
     "salary": "Salary",
     "salary_form_ir56b": "Salary Form (IR56B)",
+    "salary_form_ir56": "Salary Form (IR56)",
     "salary_form_ir56f": "Salary Form (IR56F)",
+    "salary_form_ir56m": "Salary Form (IR56M)",
+    "salary_form_ir56f_g": "Salary Form (IR56F/G)",
     "form_date": "Form Date",
     "no_of_employee": "No. of Employees",
     "employees": "Employees",
@@ -154,7 +159,18 @@
     "control_list": "Control List",
     "xml_data_file": "XML Data File",
     "xsd_file": "XSD File",
-    "employer_file_no": "Employer File No."
+    "employer_file_no": "Employer File No.",
+
+    "ird_form_setup": "IRD Form Setup",
+
+    "type1_subcontracting_fees": "Type 1: Subcontracting Fees",
+    "type2_commission": "Type 2: Commission",
+    "type3_writer_contributor_fees": "Type 3: Writer's / Contributor's Fees",
+    "others_artiste_fees": "Others: (a) Artiste Fees",
+    "others_copyright_royalties": "Others: (b) Copyright / Royalties",
+    "others_consultancy_management_fees": "Others: (c) Consultancy / Management Fees",
+    "others_service_fees": "Others: (d) Service Fees",
+    "others_other_nature": "Others: (e) Nature ____"
   },
   "mpf": {
     "mpf_management": "MPF Management"
@@ -176,6 +192,7 @@
     "basic_salary": "Basic Salary"
   },
   "messages": {
+    "save_successfully": "Save Successfully",
     "please_select_department_employee": "Please select department/employee",
     "access_denied": "Access Denied!",
     "are_you_sure": "Are you sure",

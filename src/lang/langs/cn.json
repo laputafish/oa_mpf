@@ -19,6 +19,7 @@
     "status": "状态",
     "form_status": "表格状态",
     "account": "帳戶",
+    "system": "系統",
 
     "generating_": "处理中...",
     "pending": "閒置中",
@@ -44,7 +45,8 @@
     "no": "否",
     "no_data": "未有资料",
 
-    "save_successfully": "已成功储存"
+    "please_select": "請選擇",
+    "information": "資訊"
   },
   "buttons": {
     "add": "新增",
@@ -92,7 +94,10 @@
     "departure": "离港",
     "salary": "薪酬",
     "salary_form_ir56b": "薪酬表格IR56B",
+    "salary_form_ir56": "薪酬表格IR56",
     "salary_form_ir56f": "薪酬表格IR56F",
+    "salary_form_ir56m": "薪酬表格IR56M",
+    "salary_form_ir56f_g": "薪酬表格IR56F/IR56G",
     "form_date": "表格日期",
     "no_of_employee": "员工人数",
     "employees": "员工",
@@ -154,7 +159,18 @@
     "control_list": "核对表",
     "xml_data_file": "XML资料档",
     "xsd_file": "资料结构描述档",
-    "employer_file_no": "僱主档案号码"
+    "employer_file_no": "僱主档案号码",
+
+    "ird_form_setup": "稅務表格設定",
+
+    "type1_subcontracting_fees": "第1類: 承判金",
+    "type2_commission": "第2類: 佣金",
+    "type3_writer_contributor_fees": "第3類: 作家/投稿費",
+    "others_artiste_fees": "其他: (a) 演藝費",
+    "others_copyright_royalties": "其他: (b) 版權費/專利費",
+    "others_consultancy_management_fees": "其他: (c) 顧問費",
+    "others_service_fees": "其他: (d) 服務費",
+    "others_other_nature": "其他: (e) 性質: __________"
   },
   "mpf": {
     "mpf_management": "MPF 管理"
@@ -176,6 +192,7 @@
     "basic_salary": "基本薪金"
   },
   "messages": {
+    "save_successfully": "已成功储存",
     "please_select_department_employee": "请选择部门/人员",
     "access_denied": "没有相关权限!",
     "are_you_sure": "是否确定",
