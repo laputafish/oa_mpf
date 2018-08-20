@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <span class="th-field">
     {{ $t(title) }}
   </span>
 </template>
@@ -12,3 +12,9 @@ export default {
   ]
 }
 </script>
+
+<style>
+.th-field {
+  white-space: nowrap;
+}
+</style>

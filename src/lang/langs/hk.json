@@ -48,7 +48,22 @@
     "please_select": "請選擇",
     "information": "資訊",
 
-    "supervisor_dashboard": "管理員控制台"
+    "supervisor_dashboard": "管理員控制台",
+
+    "is_default": "預設",
+    "is_letter": "信件",
+    "enabled": "啟用",
+    "is_control_list": "核對表格",
+    "is_cover_letter": "枱頭信件",
+    "can_use_softcopy": "伴隨軟拷貝",
+    "with_cover_letter": "可附上信件",
+    "requires_control_list": "需核對表",
+
+    "hand_writing": "Hand-Writing",
+    "computer_generated": "Computer-Generated",
+    "operation": "操作",
+    "currency": "貨幣",
+    "created_at": "建立日期"
   },
   "buttons": {
     "add": "新增",
@@ -173,7 +188,11 @@
     "others_consultancy_management_fees": "其他: (c) 顧問費",
     "others_service_fees": "其他: (d) 服務費",
     "others_other_nature": "其他: (e) 性質: .....",
-    "tax_form_manager": "稅務表格管理"
+    "tax_form_manager": "稅務表格管理",
+
+    "ird_code": "IRD表格",
+    "ird_form_code": "表格識別號",
+    "version": "版本"
   },
   "mpf": {
     "mpf_management": "MPF 管理"
@@ -189,7 +208,13 @@
   "team": {
     "company_team": "公司/團隊",
     "team_selection": "選擇團隊",
-    "team_settings": "團隊設定"
+    "team_settings": "團隊設定",
+    "team_manager": "團隊管理",
+    "logo": "圖標",
+    "team_name":"團隊名稱",
+    "team_id": "團隊編號",
+    "team_code": "團隊編碼",
+    "team_code": "團隊編碼"
   },
   "salary": {
     "basic_salary": "基本薪金"

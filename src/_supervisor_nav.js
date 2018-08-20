@@ -15,6 +15,11 @@ export default {
       icon: 'icon-layers'
     },
     {
+      name: 'team.team_manager',
+      url: '/team_manager',
+      icon: 'icon-people'
+    },
+    {
       title: true,
       name: 'UI elements'
     },

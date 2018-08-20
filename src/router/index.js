@@ -105,6 +105,7 @@ import MyIrdForms from '@/views/oa/myIrdForms/MyIrdForms'
 // Supervisor Modules
 import SuperDashboard from '@/views/oaAdmin/superDashboard/SuperDashboard'
 import IrdFormManager from '@/views/oaAdmin/irdFormManager/IrdFormManager'
+import TeamManager from '@/views/oaAdmin/teamManager/TeamManager'
 
 // import jQuery from 'jquery'
 // window.jQuery = jQuery
@@ -281,6 +282,9 @@ export default new VueRouter({
       //   }
       // },
       children: [
+        // *******************
+        // Supervisor
+        // *******************
         {
           path: '/super_dashboard',
           name: 'super.super_dashboard',
@@ -292,10 +296,18 @@ export default new VueRouter({
           component: IrdFormManager
         },
         {
+          path: '/team_manager',
+          name: 'team.team_manager',
+          component: TeamManager
+        },
+        {
           path: '/ird_form_setup',
           name: 'tax.ird_form_setup',
           component: IrdFormSetup
         },
+        // ********************
+        // General User
+        // ********************
         {
           path: 'profile',
           name: 'general.profile',

@@ -1,6 +1,6 @@
 <template>
  <span>
-   <i v-if="value"
+   <i v-if="value===1"
       class="fa fa-check-square-o"></i>
     <i v-else
        class="fa fa-square-o"></i>

@@ -33,20 +33,27 @@ const actions = {
   },
 
   [types.FETCH_IRD_FORMS] ({rootGetters, commit}, payload) {
-    let query = payload
-    let page = Math.floor(query.offset / query.limit)
-    let url = constants.apiUrl + '/ird_forms'
-    let config = {
-      ...rootGetters.apiHeaderConfig,
-      params: {
-        ...query,
-        page: page
+    return new Promise((resolve, reject) => {
+      let query = payload
+      let page = Math.floor(query.offset / query.limit)
+      let url = constants.apiUrl + '/ird_forms'
+      let config = {
+        ...rootGetters.apiHeaderConfig,
+        params: {
+          ...query,
+          page: page
+        }
       }
-    }
-    Vue.axios.get(url, config).then(function (response) {
-      if (response.data.status) {
-        commit('setIrdForms', response.data.result)
-      }
+      Vue.axios.get(url, config).then(function (response) {
+        if (response.data.status) {
+          resolve(response.data.result)
+          // commit('setIrdForms', response.data.result)
+        } else {
+          reject(new Error('error'))
+        }
+      }, function (error) {
+        reject(error)
+      })
     })
   },
 
