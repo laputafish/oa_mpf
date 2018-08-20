@@ -19,7 +19,7 @@
                      :clear-on-select="false"
                      :hide-selected="true"
                      :preserve-search="true"
-                     :placeholder="$t('general.please_select')"
+                     placeholder=""
                      label="code"
                      track-by="code"
                      :options="payTypeList">
@@ -172,6 +172,10 @@ export default {
     background-color: rgba(30, 132, 127, .2);
     border-radius: 0.4rem;
     /*padding: 0 10px;*/
+  }
+
+  #ir56IncomeMappingTable .multiselect__tags {
+    min-height: 29px;
   }
 
   #ir56IncomeMappingTable .multiselect__tags-wrap {

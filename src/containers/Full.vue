@@ -15,19 +15,21 @@
     </div>
     <app-footer/>
     <team-selection-dialog
-      v-show="showTeamSelection"
+      v-if="showTeamSelection"
       :teams="teams"
       @onTeamSelected="onTeamSelectedHandler"
       @close="closeTeamSelectionDialog"></team-selection-dialog>
     <tax-form-settings-dialog
       @close="closeTaxFormSettingsDialog"
-      v-show="showTaxFormSettings">
+      v-if="showTaxFormSettings">
     </tax-form-settings-dialog>
   </div>
 </template>
 
 <script>
-import nav from '../_nav'
+import userNav from '../_user_nav'
+import supervisorNav from '../_supervisor_nav'
+
 import {
   AppHeader as appHeader,
   AppSidebar as sidebar,
@@ -59,6 +61,9 @@ export default {
     isPayrollAdmin () {
       return this.$store.getters.isPayrollAdmin
     },
+    isUser () {
+      return !this.$store.getters.isSupervisor
+    },
     isOwner () {
       return this.$store.getters.isOwner
     },
@@ -69,6 +74,10 @@ export default {
     nav () {
       let vm = this
       let result = []
+      let nav = userNav
+      if (vm.$store.getters.isSupervisor) {
+        nav = supervisorNav
+      }
       for (var i = 0; i < nav.items.length; i++) {
         var item = nav.items[i]
         if (Object.keys(item).indexOf('authRole') >= 0) {
@@ -107,11 +116,10 @@ export default {
       return this.$store.getters.user
     },
     showTeamSelection () {
-      console.log('Full.vue :: computed(showTeamSelection)')
-      return this.$store.getters.showTeamSelection
+      return this.$store.getters.showTeamSelection && this.isUser
     },
     showTaxFormSettings () {
-      return this.$store.getters.showTaxFormSettings
+      return this.$store.getters.showTaxFormSettings && this.isUser
     },
     teams () {
       console.log('Full.vue :: computed(teams)')
@@ -122,58 +130,45 @@ export default {
     //   return this.$store.getters.isPayrollAdmin
     // }
   },
-  created () {
-    // let vm = this
-    console.log('Full.vue :: created')
-    // vm.$store.dispatch('checkToken', {
-    //   callback: function (status) {
-    //     if (!status) {
-    //       vm.$router.push({name: 'Login'})
-    //     }
-    //   }
-    // })
-  },
   mounted () {
-    // alert('Full.vue mounted')
     let vm = this
-    console.log('Full.vue :: mounted')
-    // if (!vm.user) {
-    //   console.log('Full.vue :: mounted : !vm.user => login')
-    //   vm.$router.push({name: 'Login'})
-    //   return
-    // }
-    console.log('Full.vue mounted user: ', vm.user)
     vm.$store.dispatch('FETCH_LANGUAGES')
     vm.$store.dispatch('GET_EQUIPMENTS').then(function () {
       console.log('finished: get equipments')
     })
-    if (vm.user) {
-      vm.loadGroupsAndEmployees()
+    if (vm.isUser) {
+      if (vm.user) {
+        vm.loadGroupsAndEmployees()
+      }
     }
   },
   watch: {
     user: function (val) {
       let vm = this
-      if (!val.oa_last_team_id) {
-        console.log('Full.vue watch(user) :: router.push(/login)  val: ', val)
-        vm.$router.push('/login')
-      } else {
-        vm.loadGroupsAndEmployees()
+      if (vm.isUser) {
+        if (!val.oa_last_team_id) {
+          console.log('Full.vue watch(user) :: router.push(/login)  val: ', val)
+          vm.$router.push('/login')
+        } else {
+          vm.loadGroupsAndEmployees()
+        }
       }
     }
   },
   methods: {
     loadGroupsAndEmployees () {
       let vm = this
-      vm.$store.dispatch('refreshOAToken').then(function (oaAuth) {
-        let payload = {oaAuth: oaAuth}
-        vm.$store.dispatch('FETCH_SELF', payload).then(function () {
-          vm.$store.dispatch('FETCH_EMPLOYEES', payload).then(function () {
-            vm.$store.dispatch('FETCH_OA_GROUPS', payload)
-            vm.$store.dispatch('FETCH_OA_PERMISSIONS', payload)
+      if (vm.isUser) {
+        vm.$store.dispatch('refreshOAToken').then(function (oaAuth) {
+          let payload = {oaAuth: oaAuth}
+          vm.$store.dispatch('FETCH_SELF', payload).then(function () {
+            vm.$store.dispatch('FETCH_EMPLOYEES', payload).then(function () {
+              vm.$store.dispatch('FETCH_OA_GROUPS', payload)
+              vm.$store.dispatch('FETCH_OA_PERMISSIONS', payload)
+            })
           })
         })
-      })
+      }
     },
     onTeamSelectedHandler (team) {
       let vm = this

@@ -25,7 +25,7 @@ const state = {
   // user.oa_expires_in
   // user.oa_refresh_token
 
-  isSupervisor: false,
+  // isSupervisor: false,
   activeMenu: '',
   publicFolder: null,
   availableFiscalStartYears: [],
@@ -420,6 +420,11 @@ const mutations = {
   //   }
   // }
 
+  // setIsSupervisor: (state, payload) => {
+  //   if (payload) {
+  //     state.isSupervisor = payload
+  //   }
+  // }
 }
 
 const actions = {
@@ -433,11 +438,13 @@ const actions = {
     }
 
     let token = localStorage.getItem('accessToken')
+    console.log('token = ' + token)
     let result = false
     if (token) {
       await dispatch(types.SET_TOKEN, token).then(function () {
         dispatch('FETCH_USER_BY_TOKEN').then(function (response) {
-          console.log('CHECK_TOKEN >> FETCH_USER_BY_TOKEN :; response: ', response)
+          console.log('CHECK_TOKEN >> FETCH_USER_BY_TOKEN :: response: ', response)
+          console.log('CHECK_TOKEN >> FETCH_USER_BY_TOKEN :: getters.user: ', getters.user)
           if (getters.user) {
             result = true
             if (typeof payload.callback === 'function') {
@@ -629,8 +636,11 @@ const actions = {
       Vue.axios.get(url, config).then(function (response) {
         console.log('system.js FETCH_USER_BY_TOKEN: response: ', response.data)
         console.log('system.js FETCH_USER_BY_TOKEN ready to call SET_USER')
+        let user = response.data
+        commit('setIsSupervisor', user.is_supervisor)
         dispatch(types.SET_USER, {
-          user: response.data
+          user: user,
+          isSupervisor: user.is_supervisor
         }).then(function (user) {
           resolve(user)
           // dispatch('FETCH_OA_USER_EMPLOYEE').then(function (userEmployee) {
@@ -671,10 +681,11 @@ const actions = {
   [types.SET_USER] ({commit, state}, payload) {
     console.log('action(SET_USER) system.js')
     return new Promise((resolve, reject) => {
+      // commit('setIsSupervisor', payload.isSupervisor)
       commit('setUser', payload)
       resolve({
         valid: true,
-        isSupervisor: state.isSupervisor
+        isSupervisor: payload.isSupervisor
       })
     })
   },

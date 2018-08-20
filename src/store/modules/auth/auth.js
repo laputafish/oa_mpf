@@ -15,7 +15,8 @@ const getters = {
     // alert('state.token = ' + state.token)
     return !!state.token
   },
-  authStatus: state => state.status
+  authStatus: state => state.status,
+  isSupervisor: state => state.isSupervisor
 }
 
 const mutations = {
@@ -98,6 +99,7 @@ const actions = {
         dispatch(types.AUTH_REQUEST_OA, {credentials, authorized}).then(
           function (response) {
             console.log('AUTH_REQUEST > AUTH_REQUEST_OA (authorized=true) :: response: ', response)
+            commit('setIsSupervisor', response.isSupervisor)
             resolve(response)
           }
         )

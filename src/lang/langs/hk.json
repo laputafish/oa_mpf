@@ -46,7 +46,9 @@
     "no_data": "未有資料",
 
     "please_select": "請選擇",
-    "information": "資訊"
+    "information": "資訊",
+
+    "supervisor_dashboard": "管理員控制台"
   },
   "buttons": {
     "add": "新增",
@@ -170,7 +172,8 @@
     "others_copyright_royalties": "其他: (b) 版權費/專利費",
     "others_consultancy_management_fees": "其他: (c) 顧問費",
     "others_service_fees": "其他: (d) 服務費",
-    "others_other_nature": "其他: (e) 性質: ....."
+    "others_other_nature": "其他: (e) 性質: .....",
+    "tax_form_manager": "稅務表格管理"
   },
   "mpf": {
     "mpf_management": "MPF 管理"

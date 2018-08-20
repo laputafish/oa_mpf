@@ -1,5 +1,5 @@
 <template>
-  <div class="animated fadeIn mx-3" id="ird-form-setup">
+  <div class="animated fadeIn mx-2" id="ird-form-setup">
     <b-card>
       <div slot="header">
         {{ $t('tax.setup') }}

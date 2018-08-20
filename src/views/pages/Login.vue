@@ -128,10 +128,10 @@ export default {
         })
       })
     },
-    setToken (value) {
-      console.log('setToken :: value:', value)
-      this.$store.dispatch('SET_TOKEN', value)
-    },
+    // setToken (value) {
+    //   console.log('setToken :: value:', value)
+    //   this.$store.dispatch('SET_TOKEN', value)
+    // },
     login () {
       let vm = this
       vm.loading = true

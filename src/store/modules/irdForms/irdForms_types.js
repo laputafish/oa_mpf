@@ -1,2 +1,3 @@
 export const FETCH_IRD_FORM_TYPES = 'FETCH_IRD_FORM_TYPES'
 export const FETCH_FORMS = 'FETCH_FORMS'
+export const FETCH_IRD_FORMS = 'FETCH_IRD_FORMS'

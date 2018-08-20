@@ -32,23 +32,23 @@ const actions = {
     })
   },
 
-  // [types.FETCH_IRD_FORMS] ({rootGetters, commit}, payload) {
-  //   let query = payload
-  //   let page = Math.floor(query.offset / query.limit)
-  //   let url = constants.apiUrl + '/ird_forms'
-  //   let config = {
-  //     ...rootGetters.apiHeaderConfig,
-  //     params: {
-  //       ...query,
-  //       page: page
-  //     }
-  //   }
-  //   Vue.axios.get(url, config).then(function (response) {
-  //     if (response.data.status) {
-  //       commit('setIrdForms', response.data.result)
-  //     }
-  //   })
-  // },
+  [types.FETCH_IRD_FORMS] ({rootGetters, commit}, payload) {
+    let query = payload
+    let page = Math.floor(query.offset / query.limit)
+    let url = constants.apiUrl + '/ird_forms'
+    let config = {
+      ...rootGetters.apiHeaderConfig,
+      params: {
+        ...query,
+        page: page
+      }
+    }
+    Vue.axios.get(url, config).then(function (response) {
+      if (response.data.status) {
+        commit('setIrdForms', response.data.result)
+      }
+    })
+  },
 
   [types.FETCH_FORMS] ({rootGetters, commit}, payload) {
     let query = payload

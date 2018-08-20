@@ -1,5 +1,5 @@
 <template>
-  <div class="animated fadeIn mx-3" id="ird-forms">
+  <div class="animated fadeIn mx-2" id="ird-forms">
     <b-card v-if="mode === 'setup'">
       <div slot="header">
         <div class="btn-group btn-group-gap card-header-toolbar">

@@ -102,7 +102,9 @@ import ApplyForIrdApproval from '@/views/oa/applyForIrdApproval/ApplyForIrdAppro
 import IrdFormSetup from '@/views/oa/irdFormSetup/IrdFormSetup'
 import MyIrdForms from '@/views/oa/myIrdForms/MyIrdForms'
 
-import SuperDashboard from '@/views/oa/superDashboard/SuperDashboard'
+// Supervisor Modules
+import SuperDashboard from '@/views/oaAdmin/superDashboard/SuperDashboard'
+import IrdFormManager from '@/views/oaAdmin/irdFormManager/IrdFormManager'
 
 // import jQuery from 'jquery'
 // window.jQuery = jQuery
@@ -170,39 +172,44 @@ const ifAuthenticated = (to, from, next) => {
     console.log('ifAuthenticated :: user is undefined')
     store.dispatch('CHECK_TOKEN', {
       callback: function (status) {
-        console.log('CHECK_TOKEN :: callback :: status = ' + (status ? 'yes' : ' no'))
+        let isSupervisor = store.getters.isSupervisor
+        console.log('CHECK_TOKEN :: callback :: status = ' + (status ? 'yes' : ' no') + ', isSupervisor: ' + (isSupervisor ? 'yes' : 'no'))
         if (status) {
-          store.dispatch('FETCH_OA_USER_EMPLOYEE', 'x').then(function (oaEmployee) {
-            if (adminModules.indexOf(to.path) >= 0) {
-              let roles = store.getters.roles
-              console.log('router/index.js/roles: ', roles)
-              let isPayrollAdmin = store.getters.isPayrollAdmin
-              let isOwner = store.getters.isOwner
-              if (isPayrollAdmin || isOwner) {
-                next()
+          if (isSupervisor) {
+            next()
+          } else {
+            store.dispatch('FETCH_OA_USER_EMPLOYEE', 'x').then(function (oaEmployee) {
+              if (adminModules.indexOf(to.path) >= 0) {
+                let roles = store.getters.roles
+                console.log('router/index.js/roles: ', roles)
+                let isPayrollAdmin = store.getters.isPayrollAdmin
+                let isOwner = store.getters.isOwner
+                if (isPayrollAdmin || isOwner) {
+                  next()
+                } else {
+                  next('/login')
+                }
+
+                // if (checkRole(roles, 'Payroll Management')) {
+                //   next()
+                // } else {
+                //   console.log('ifAuthenticated :; next(my_ird_forms)')
+                //   next('/my_ird_forms')
+                // }
+
+                // store.dispatch('FETCH_OA_PERMISSIONS').then((roles) => {
+                //   console.log('FETCH OA PERMISSIONS: roles: ', roles)
+                //   if (checkRole(roles, 'Payroll Management')) {
+                //     next()
+                //   } else {
+                //     next('/my_ird_forms')
+                //   }
+                // })
               } else {
-                next('/login')
+                next()
               }
-
-            // if (checkRole(roles, 'Payroll Management')) {
-            //   next()
-            // } else {
-            //   console.log('ifAuthenticated :; next(my_ird_forms)')
-            //   next('/my_ird_forms')
-            // }
-
-            // store.dispatch('FETCH_OA_PERMISSIONS').then((roles) => {
-            //   console.log('FETCH OA PERMISSIONS: roles: ', roles)
-            //   if (checkRole(roles, 'Payroll Management')) {
-            //     next()
-            //   } else {
-            //     next('/my_ird_forms')
-            //   }
-            // })
-            } else {
-              next()
-            }
-          })
+            })
+          }
         } else {
           next('/login')
         }
@@ -278,6 +285,11 @@ export default new VueRouter({
           path: '/super_dashboard',
           name: 'super.super_dashboard',
           component: SuperDashboard
+        },
+        {
+          path: '/ird_form_manager',
+          name: 'tax.tax_form_manager',
+          component: IrdFormManager
         },
         {
           path: '/ird_form_setup',
